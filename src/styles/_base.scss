@@ -1,0 +1,61 @@
+@import "./mixins";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  font-family: "Pretendard", "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+}
+
+/* 큰글씨 모드가 적용될 엘리먼트 */
+.font-scale-applied,
+[data-font-scale-applied] {
+  font-size: calc(1rem * var(--font-scale));
+}
+
+/* 하위 모든 텍스트 요소에도 적용 */
+.font-scale-applied *,
+[data-font-scale-applied] * {
+  font-size: inherit;
+}
+
+/* 초기 로드 후 transition 활성화 */
+body.loaded {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+button {
+  font: inherit;
+}
+
+

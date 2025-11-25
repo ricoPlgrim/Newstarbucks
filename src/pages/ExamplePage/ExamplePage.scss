@@ -1,0 +1,238 @@
+@import "../../styles/index.scss";
+
+.example-section {
+  &__title {
+    @include px-to-rem(font-size, 24);
+    @include px-to-rem(margin-bottom, 16);
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  &__text {
+    @include px-to-rem(font-size, 16);
+    @include px-to-rem(margin-bottom, 24);
+    @include px-to-rem(line-height, 24);
+    color: var(--color-text);
+  }
+
+  &__card {
+    @include px-to-rem(padding, 20);
+    @include px-to-rem(margin-bottom, 24);
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: px-to-rem(8);
+    box-shadow: var(--shadow-soft);
+  }
+
+  &__font-demo {
+    @include px-to-rem(padding, 20);
+    @include px-to-rem(margin-bottom, 24);
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: px-to-rem(8);
+    box-shadow: var(--shadow-soft);
+  }
+}
+
+.example-font {
+  &__live-demo {
+    @include px-to-rem(margin-bottom, 24);
+    display: flex;
+    flex-direction: column;
+    gap: px-to-rem(16);
+  }
+
+  &__demo-item {
+    @include px-to-rem(padding, 16);
+    background: var(--color-bg);
+    border: 2px solid var(--color-accent);
+    border-radius: px-to-rem(8);
+  }
+
+  &__demo-title {
+    @include px-to-rem(font-size, 18);
+    @include px-to-rem(margin-bottom, 8);
+    @include px-to-rem(margin-top, 0);
+    font-weight: 700;
+    color: var(--color-accent);
+  }
+
+  &__demo-text {
+    @include px-to-rem(font-size, 14);
+    @include px-to-rem(line-height, 22);
+    @include px-to-rem(margin, 0);
+    color: var(--color-text);
+  }
+}
+
+.example-card {
+  &__title {
+    @include px-to-rem(font-size, 18);
+    @include px-to-rem(margin-bottom, 12);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  &__text {
+    @include px-to-rem(font-size, 14);
+    @include px-to-rem(margin-bottom, 16);
+    @include px-to-rem(line-height, 20);
+    color: var(--color-muted);
+  }
+
+  &__button {
+    @include px-to-rem(padding, 12, 24);
+    @include px-to-rem(font-size, 14);
+    background: var(--color-accent);
+    color: #ffffff;
+    border: none;
+    border-radius: px-to-rem(6);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+
+    &:hover {
+      background: var(--color-accent);
+      filter: brightness(0.9);
+    }
+
+    &:focus {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+.example-grid {
+  &__item {
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: px-to-rem(8);
+    overflow: hidden;
+  }
+
+  &__image {
+    width: 100%;
+    @include px-to-rem(min-height, 200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-border) 100%);
+    border-bottom: 1px solid var(--color-border);
+    position: relative;
+  }
+
+  &__placeholder {
+    @include px-to-rem(font-size, 14);
+    color: var(--color-muted);
+    font-weight: 500;
+    text-align: center;
+  }
+
+  &__caption {
+    @include px-to-rem(padding, 12);
+    @include px-to-rem(font-size, 14);
+    color: var(--color-text);
+    text-align: center;
+  }
+}
+
+.example-font {
+  &__title {
+    @include px-to-rem(font-size, 18);
+    @include px-to-rem(margin-bottom, 12);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  &__description {
+    @include px-to-rem(font-size, 14);
+    @include px-to-rem(margin-bottom, 20);
+    @include px-to-rem(line-height, 20);
+    color: var(--color-muted);
+  }
+
+  &__samples {
+    display: flex;
+    flex-direction: column;
+    gap: px-to-rem(16);
+    @include px-to-rem(margin-bottom, 20);
+  }
+
+  &__sample {
+    display: flex;
+    flex-direction: column;
+    gap: px-to-rem(8);
+    @include px-to-rem(padding, 12);
+    background: var(--color-bg);
+    border-radius: px-to-rem(6);
+    border: 1px solid var(--color-border);
+  }
+
+  &__label {
+    @include px-to-rem(font-size, 12);
+    font-weight: 600;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__text {
+    @include px-to-rem(font-size, 12);
+    @include px-to-rem(line-height, 18);
+    color: var(--color-text);
+
+    &--small {
+      @include px-to-rem(font-size, 12);
+      @include px-to-rem(line-height, 18);
+    }
+
+    &--normal {
+      @include px-to-rem(font-size, 14);
+      @include px-to-rem(line-height, 20);
+    }
+
+    &--large {
+      @include px-to-rem(font-size, 16);
+      @include px-to-rem(line-height, 24);
+    }
+
+    &--xlarge {
+      @include px-to-rem(font-size, 18);
+      @include px-to-rem(line-height, 26);
+    }
+  }
+
+  &__info {
+    @include px-to-rem(padding, 16);
+    background: rgba(12, 124, 89, 0.08);
+    border-radius: px-to-rem(6);
+    border: 1px solid rgba(12, 124, 89, 0.2);
+  }
+
+  &__info-text {
+    @include px-to-rem(font-size, 13);
+    @include px-to-rem(line-height, 20);
+    color: var(--color-text);
+    margin: 0;
+
+    strong {
+      font-weight: 600;
+      color: var(--color-accent);
+    }
+
+    code {
+      @include px-to-rem(padding, 2, 6);
+      @include px-to-rem(font-size, 12);
+      background: var(--color-bg);
+      border-radius: px-to-rem(3);
+      font-family: "Courier New", monospace;
+      color: var(--color-accent);
+    }
+  }
+}
+

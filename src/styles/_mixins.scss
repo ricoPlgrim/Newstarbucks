@@ -1,0 +1,26 @@
+@function px-to-rem($value, $base: 16) {
+  @if unitless($value) {
+    $value: $value * 1px;
+  }
+
+  @if unit($value) != "px" {
+    @error "px-to-rem expects pixel values, got #{unit($value)}.";
+  }
+
+  $unitless-value: $value / 1px;
+  @return ($unitless-value / $base) * 1rem;
+}
+
+@mixin px-to-rem($property, $value, $max: null, $base: 16, $max-property: null) {
+  #{$property}: px-to-rem($value, $base);
+
+  @if $max != null {
+    @if $max-property == null {
+      $max-property: unquote("max-#{$property}");
+    }
+
+    #{$max-property}: px-to-rem($max, $base);
+  }
+}
+
+
