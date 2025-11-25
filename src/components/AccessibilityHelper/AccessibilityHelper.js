@@ -41,7 +41,7 @@ function AccessibilityHelper({ isDarkMode, setIsDarkMode, fontScale, setFontScal
         <span className="accessibility-helper__icon" aria-hidden="true">
           {isOpen ? "◀" : "▶"}
         </span>
-        <span className="accessibility-helper__label">접근성<br />도우미</span>
+        <span className="accessibility-helper__label">옵션</span>
       </button>
 
       {isOpen && (
@@ -94,25 +94,6 @@ function AccessibilityHelper({ isDarkMode, setIsDarkMode, fontScale, setFontScal
           </div>
 
           <div className="accessibility-helper__section">
-            <h3 className="accessibility-helper__title">접근성 체크리스트</h3>
-            <ul className="accessibility-helper__checklist" role="list">
-              {checklist.map((item) => (
-                <li key={item.id} className="accessibility-helper__checklist-item">
-                  <label className="accessibility-helper__checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={item.checked}
-                      onChange={() => toggleChecklist(item.id)}
-                      className="accessibility-helper__checkbox"
-                    />
-                    <span>{item.label}</span>
-                  </label>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="accessibility-helper__section">
             <h3 className="accessibility-helper__title">사용법 가이드</h3>
             <div className="accessibility-helper__guide">
               <p><strong>px-to-rem 믹스인 사용법:</strong></p>
@@ -125,15 +106,6 @@ function AccessibilityHelper({ isDarkMode, setIsDarkMode, fontScale, setFontScal
               <pre className="accessibility-helper__code">
 {`@include px-to-rem(max-width, 1200, 16);`}
               </pre>
-
-              <p><strong>접근성 체크 포인트:</strong></p>
-              <ul className="accessibility-helper__guide-list">
-                <li>모든 이미지에 alt 속성 추가</li>
-                <li>버튼과 링크에 명확한 레이블 제공</li>
-                <li>키보드로 모든 기능 접근 가능</li>
-                <li>색상 대비 비율 확인 (WCAG AA 기준)</li>
-                <li>포커스 스타일 명확히 표시</li>
-              </ul>
             </div>
           </div>
         </div>
