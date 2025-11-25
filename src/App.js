@@ -1,8 +1,8 @@
-import ExamplePage from "./pages/ExamplePage/ExamplePage";
+import PublishingGuidePage from "./pages/PublishingGuidePage/PublishingGuidePage";
 import "./App.scss";
 
 function App() {
-  return <ExamplePage />;
+  return <PublishingGuidePage />;
 }
 
 export default App;
