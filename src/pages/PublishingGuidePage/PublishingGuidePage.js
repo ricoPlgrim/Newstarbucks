@@ -1,5 +1,6 @@
 import { useState } from "react";
 import PageTemplate from "../../components/PageTemplate/PageTemplate";
+import Image from "../../components/Image/Image";
 import "./PublishingGuidePage.scss";
 
 const LayoutPreview = () => (
@@ -149,6 +150,56 @@ const TabPreview = () => {
   );
 };
 
+const ImagePreview = () => (
+  <div className="guide-preview guide-preview--images">
+    <div className="image-examples">
+      {/* 정상 이미지 */}
+      <div className="image-example">
+        <h4>정상 이미지</h4>
+        <Image
+          src="https://picsum.photos/300/200"
+          alt="가로형 이미지 예시"
+          width="200"
+          height="150"
+        />
+      </div>
+
+      {/* 세로형 이미지 */}
+      <div className="image-example">
+        <h4>세로형 이미지</h4>
+        <Image
+          src="https://picsum.photos/200/300"
+          alt="세로형 이미지 예시"
+          width="150"
+          height="200"
+        />
+      </div>
+
+      {/* 정사각형 이미지 */}
+      <div className="image-example">
+        <h4>정사각형 이미지</h4>
+        <Image
+          src="https://picsum.photos/200/200"
+          alt="정사각형 이미지 예시"
+          width="150"
+          height="150"
+        />
+      </div>
+
+      {/* 로드 실패 이미지 */}
+      <div className="image-example">
+        <h4>noimage 이미지 (폴백)</h4>
+        <Image
+          src="https://invalid-url-that-will-fail.com/image.jpg"
+          alt="로드 실패 이미지"
+          width="150"
+          height="150"
+        />
+      </div>
+    </div>
+  </div>
+);
+
 const guideSections = [
   {
     id: "layout",
@@ -226,6 +277,22 @@ const guideSections = [
   <button role="tab" aria-selected="false">Q&A</button>
 </div>`,
     PreviewComponent: TabPreview,
+  },
+  {
+    id: "image",
+    label: "이미지",
+    title: "이미지 컴포넌트",
+    description:
+      "이미지 로드 실패 시 자동으로 'noimage' 이미지를 표시하고, 원본 이미지의 가로/세로 비율에 따라 자동으로 클래스를 부여합니다.",
+    code: `<Image
+  src="https://example.com/image.jpg"
+  alt="이미지 설명"
+  width="300"
+  height="200"
+  onLoad={() => console.log('이미지 로드됨')}
+  onError={() => console.log('이미지 로드 실패')}
+/>`,
+    PreviewComponent: ImagePreview,
   },
 ];
 

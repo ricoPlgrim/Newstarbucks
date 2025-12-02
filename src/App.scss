@@ -136,4 +136,43 @@
   }
 }
 
+/* Page Navigation */
+.app-nav {
+  display: flex;
+  gap: 0;
+  background: var(--color-card);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.app-nav-btn {
+  flex: 1;
+  padding: 1rem;
+  background: none;
+  border: none;
+  color: var(--color-text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  border-bottom: 2px solid transparent;
+
+  &:hover {
+    background: rgba(12, 124, 89, 0.05);
+  }
+
+  &.active {
+    color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
+    background: rgba(12, 124, 89, 0.05);
+  }
+
+  &:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+  }
+}
+
 

@@ -1,10 +1,11 @@
 @import "../../styles/index.scss";
 
 .publishing-url-page {
-  padding: px-to-rem(32);
+  width: 100%;
+  padding: 0;
 
   &__header {
-    margin-bottom: px-to-rem(32);
+    margin-bottom: 0;
 
     h2 {
       margin: 0;
@@ -16,11 +17,10 @@
   }
 
   &__table-container {
+    width: 100%;
     background-color: var(--color-card);
-    border-radius: px-to-rem(16);
     border: 1px solid var(--color-border);
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
 }
 
@@ -84,7 +84,7 @@
     padding: px-to-rem(20);
 
     &__header {
-      margin-bottom: px-to-rem(24);
+      margin-bottom: 0;
 
       h2 {
         font-size: 1.5rem;
@@ -92,8 +92,8 @@
     }
 
     &__table-container {
-      overflow-x: auto;
-      border-radius: px-to-rem(12);
+      width: 100%;
+      border-radius: 0;
     }
   }
 

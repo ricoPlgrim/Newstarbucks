@@ -1,0 +1,57 @@
+@import "../../styles/index.scss";
+
+.image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  transition: opacity 0.3s ease;
+
+  &--loading {
+    opacity: 0.5;
+    filter: blur(2px);
+  }
+
+  &--error {
+    opacity: 0.7;
+  }
+
+  // 가로/세로 비율에 따른 클래스
+  &--landscape {
+    // 가로가 긴 이미지 (비율 > 1.1)
+  }
+
+  &--portrait {
+    // 세로가 긴 이미지 (비율 < 0.9)
+  }
+
+  &--square {
+    // 정사각형에 가까운 이미지 (비율 0.9 ~ 1.1)
+  }
+
+  // 폴백 표시 (이미지 로드 실패 시)
+  &--fallback {
+    background-color: var(--color-card);
+    border: 2px dashed var(--color-border);
+    border-radius: px-to-rem(8);
+    object-fit: cover;
+  }
+}
+
+
+// 반응형
+@media (max-width: 768px) {
+  .image {
+    &--fallback {
+      min-height: px-to-rem(100);
+    }
+
+    .image__fallback-content {
+      padding: px-to-rem(12);
+    }
+
+    .image__fallback-icon {
+      font-size: 1.5rem;
+    }
+  }
+}
+
