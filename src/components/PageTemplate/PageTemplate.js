@@ -98,10 +98,6 @@ function PageTemplate({ children, title = "페이지 제목" }) {
 
   return (
     <div className="page-template">
-      <header className="page-template__header">
-        <h1 className="page-template__title">{title}</h1>
-      </header>
-
       <main className="page-template__main font-scale-applied">
         {children}
       </main>

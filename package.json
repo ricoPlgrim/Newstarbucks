@@ -4,19 +4,22 @@
   "private": true,
   "homepage": "https://ricoplgrim.github.io/Newstarbucks",
   "dependencies": {
-      "@testing-library/dom": "^10.4.1",
-      "@testing-library/jest-dom": "^6.9.1",
-      "@testing-library/react": "^16.3.0",
-      "@testing-library/user-event": "^13.5.0",
-      "react": "^19.2.0",
-      "react-dom": "^19.2.0",
-      "react-scripts": "5.0.1",
-      "sass": "^1.94.2",
-      "web-vitals": "^2.1.4"
-    },
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "date-fns": "^4.1.0",
+    "react": "^19.2.0",
+    "react-beautiful-dnd": "^13.1.1",
+    "react-day-picker": "^8.10.1",
+    "react-dom": "^19.2.0",
+    "react-scripts": "5.0.1",
+    "sass": "npm:sass-embedded@^1.79.4",
+    "web-vitals": "^2.1.4"
+  },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "cross-env BUILD_PATH=docs SASS_SILENCE_DEPRECATIONS=all react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "storybook dev -p 6006",
@@ -45,9 +48,14 @@
     "@storybook/addon-docs": "^10.0.8",
     "@storybook/preset-create-react-app": "^10.0.8",
     "@storybook/react-webpack5": "^10.0.8",
+    "cross-env": "^7.0.3",
     "eslint-plugin-storybook": "^10.0.8",
     "prop-types": "^15.8.1",
+    "sass-embedded": "^1.93.3",
     "storybook": "^10.0.8",
     "webpack": "^5.103.0"
+  },
+  "overrides": {
+    "sass-loader": "^14.1.1"
   }
 }

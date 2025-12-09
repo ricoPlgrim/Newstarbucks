@@ -1,13 +1,13 @@
-@import "../../styles/index.scss";
+@use "../../styles/index.scss" as *;
 
 .page-template {
   min-height: 100vh;
   background: var(--color-bg);
 
   &__header {
-    @include px-to-rem(padding, 20);
+    @include px(padding, 20);
     background: var(--color-card);
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: px(1) solid var(--color-border);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -15,16 +15,16 @@
   }
 
   &__title {
-    @include px-to-rem(font-size, 20);
-    @include px-to-rem(max-width, 1200, 16);
+    @include px(font-size, 20);
+    @include px(max-width, 1200, 16);
     margin: 0 auto;
     font-weight: 700;
     color: var(--color-text);
   }
 
   &__main {
-    @include px-to-rem(max-width, 1200, 16);
-    @include px-to-rem(padding, 20);
+    @include px(max-width, 1200, 16);
+    @include px(padding, 20);
     margin: 0 auto;
   }
 }

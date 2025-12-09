@@ -54,10 +54,6 @@ const PublishingUrlPage = () => {
   return (
     <PageTemplate title="퍼블리싱 URL 목록">
       <div className="publishing-url-page">
-        <div className="publishing-url-page__header">
-          <h2>퍼블리싱 URL 목록</h2>
-        </div>
-
         <div className="publishing-url-page__table-container">
           <table className="publishing-url-table">
             <thead>

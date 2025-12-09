@@ -5,7 +5,11 @@ import Header from "../../components/Header/Header";
 import FileUpload from "../../components/FileUpload/FileUpload";
 import FormSample from "../../components/FormSample/FormSample";
 import Tabs from "../../components/Tabs/Tabs";
-import { BasicPopup, BottomSheetPopup, FullscreenPopup } from "../../components/Popup/Popup";
+import TableDemo from "../../components/TableDemo/TableDemo";
+import DatePicker from "../../components/DatePicker/DatePicker";
+import Tooltip from "../../components/Tooltip/Tooltip";
+import DragDropList from "../../components/DragDropList/DragDropList";
+import "../../components/Popup/Popup.scss";
 import "./PublishingGuidePage.scss";
 
 const PaginationPreview = () => {
@@ -218,126 +222,6 @@ const IconPreview = () => {
   );
 };
 
-const FormPreview = () => {
-  const [form, setForm] = useState({ name: "", phone: "", address: "", email: "", password: "" });
-  const [errors, setErrors] = useState({});
-  const [message, setMessage] = useState("");
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-    setMessage("");
-  };
-
-  const validate = () => {
-    const nextErrors = {};
-    if (!form.name.trim()) {
-      nextErrors.name = "이름을 입력해주세요.";
-    }
-    if (!/^01[0-9]-?\d{3,4}-?\d{4}$/.test(form.phone)) {
-      nextErrors.phone = "휴대폰 번호를 010-1234-5678 형식으로 입력해주세요.";
-    }
-    if (!form.address.trim()) {
-      nextErrors.address = "주소를 입력해주세요.";
-    }
-    if (!/\S+@\S+\.\S+/.test(form.email)) {
-      nextErrors.email = "유효한 이메일을 입력해주세요.";
-    }
-    if (form.password.length < 8) {
-      nextErrors.password = "비밀번호는 8자 이상이어야 합니다.";
-    }
-    return nextErrors;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const nextErrors = validate();
-    setErrors(nextErrors);
-    if (Object.keys(nextErrors).length === 0) {
-      setMessage("유효성 검사가 완료되었습니다!");
-    }
-  };
-
-  return (
-    <form className="guide-preview guide-preview--form" onSubmit={handleSubmit}>
-      <label className="field">
-        <span className="field__label">이름</span>
-        <input
-          type="text"
-          name="name"
-          placeholder="홍길동"
-          value={form.name}
-          onChange={handleChange}
-          aria-invalid={!!errors.name}
-        />
-        <small className={`field__help ${errors.name ? "is-error" : ""}`}>
-          {errors.name || "본인 확인이 가능한 이름을 입력하세요."}
-        </small>
-      </label>
-      <label className="field">
-        <span className="field__label">휴대폰 번호</span>
-        <input
-          type="tel"
-          name="phone"
-          placeholder="010-1234-5678"
-          value={form.phone}
-          onChange={handleChange}
-          aria-invalid={!!errors.phone}
-        />
-        <small className={`field__help ${errors.phone ? "is-error" : ""}`}>
-          {errors.phone || "숫자만 입력해도 자동으로 처리됩니다."}
-        </small>
-      </label>
-      <label className="field">
-        <span className="field__label">주소</span>
-        <input
-          type="text"
-          name="address"
-          placeholder="도로명 주소를 입력하세요"
-          value={form.address}
-          onChange={handleChange}
-          aria-invalid={!!errors.address}
-        />
-        <small className={`field__help ${errors.address ? "is-error" : ""}`}>
-          {errors.address || "배송 또는 연락 가능한 주소를 입력하세요."}
-        </small>
-      </label>
-      <label className="field">
-        <span className="field__label">이메일</span>
-        <input
-          type="email"
-          name="email"
-          placeholder="name@example.com"
-          value={form.email}
-          onChange={handleChange}
-          aria-invalid={!!errors.email}
-        />
-        <small className={`field__help ${errors.email ? "is-error" : ""}`}>
-          {errors.email || "가입 시 사용한 이메일을 입력하세요."}
-        </small>
-      </label>
-      <label className="field">
-        <span className="field__label">비밀번호</span>
-        <input
-          type="password"
-          name="password"
-          placeholder="8자 이상 입력"
-          value={form.password}
-          onChange={handleChange}
-          aria-invalid={!!errors.password}
-        />
-        <small className={`field__help ${errors.password ? "is-error" : ""}`}>
-          {errors.password || "문자, 숫자 조합으로 8자 이상 입력하세요."}
-        </small>
-      </label>
-      <button type="submit" className="btn btn--primary btn--md">
-        유효성 검사
-      </button>
-      {message && <p className="form-success">{message}</p>}
-    </form>
-  );
-};
-
 const ButtonPreview = () => (
   <div className="guide-preview guide-preview--buttons">
     <h4 className="button-list__title">버튼 사이즈 가이드</h4>
@@ -496,54 +380,6 @@ const CardPreview = () => (
     </p>
   </article>
 );
-
-const TabPreview = () => {
-  const tabItems = [
-    {
-      id: "detail",
-      label: "상세",
-      description: "상품 이미지, 설명, 원두 정보 등을 제공합니다.",
-    },
-    {
-      id: "review",
-      label: "리뷰",
-      description: "구매자 후기와 평점을 정렬/필터링하여 보여줍니다.",
-    },
-    {
-      id: "qa",
-      label: "Q&A",
-      description: "자주 묻는 질문과 답변을 탭 안에서 바로 확인할 수 있습니다.",
-    },
-  ];
-  const [activeTab, setActiveTab] = useState(tabItems[0].id);
-  const activeItem = tabItems.find((item) => item.id === activeTab);
-
-  return (
-    <div className="guide-preview guide-preview--tabs">
-      <div className="guide-preview__tablist" role="tablist" aria-label="콘텐츠 탭 예시">
-        {tabItems.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            role="tab"
-            aria-selected={activeTab === item.id}
-            onClick={() => setActiveTab(item.id)}
-          >
-            {item.label}
-          </button>
-        ))}
-      </div>
-      <div
-        className="guide-preview__tabpanel"
-        role="tabpanel"
-        aria-live="polite"
-        aria-label={`${activeItem?.label} 탭 내용`}
-      >
-        {activeItem?.description}
-      </div>
-    </div>
-  );
-};
 
 const ImagePreview = () => (
   <div className="guide-preview guide-preview--images">
@@ -711,107 +547,6 @@ const ScriptPreview = () => {
           {message}
         </div>
       )}
-    </div>
-  );
-};
-
-const FileUploadPreview = () => {
-  const [fileInfo, setFileInfo] = useState(null);
-  const MAX_SIZE = 300 * 1024 * 1024; // 300MB
-
-  const allowedTypes = ["application/pdf"];
-
-  const isAllowed = (file) => {
-    return file.type.startsWith("image/") || allowedTypes.includes(file.type);
-  };
-
-  const handleClear = () => {
-    setFileInfo(null);
-    const input = document.getElementById("guide-file-input");
-    if (input) input.value = "";
-  };
-
-  const handleFileChange = (event) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // 용량 체크
-    if (file.size > MAX_SIZE) {
-      alert("최대 300MB까지 첨부할 수 있습니다.");
-      event.target.value = "";
-      return;
-    }
-
-    // 타입 체크
-    if (!isAllowed(file)) {
-      alert("지원하지 않는 파일입니다. (허용: 이미지, PDF)");
-      event.target.value = "";
-      return;
-    }
-
-    setFileInfo({
-      name: file.name,
-      size: file.size,
-      type: file.type,
-    });
-  };
-
-  const formatSize = (bytes) => {
-    if (bytes >= 1024 * 1024 * 1024) {
-      return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
-    }
-    if (bytes >= 1024 * 1024) {
-      return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-    }
-    if (bytes >= 1024) {
-      return `${(bytes / 1024).toFixed(1)} KB`;
-    }
-    return `${bytes} B`;
-  };
-
-  return (
-    <div className="guide-preview guide-preview--file">
-      <div className="file-upload-demo">
-        <div className="file-upload-demo__field">
-          <label className="file-upload-demo__label" htmlFor="guide-file-input">
-            파일 첨부
-          </label>
-          <input
-            id="guide-file-input"
-            type="file"
-            accept="image/*,application/pdf"
-            onChange={handleFileChange}
-          />
-          <p className="file-upload-demo__hint">
-            • 최대 300MB&nbsp;&nbsp;• 허용: 이미지, PDF&nbsp;&nbsp;• 기타 파일은 업로드 불가
-          </p>
-        </div>
-
-        <div className="file-upload-demo__status">
-          {fileInfo ? (
-            <>
-              <div className="file-upload-demo__status-head">
-                <p className="file-upload-demo__status-title">업로드 정보</p>
-                <button
-                  type="button"
-                  className="file-upload-demo__clear"
-                  onClick={handleClear}
-                  aria-label="첨부 파일 삭제"
-                >
-                  ✕
-                </button>
-              </div>
-              <ul>
-                <li><strong>이름:</strong> {fileInfo.name}</li>
-                <li><strong>크기:</strong> {formatSize(fileInfo.size)}</li>
-                <li><strong>타입:</strong> {fileInfo.type}</li>
-              </ul>
-            </>
-          ) : (
-            <p className="file-upload-demo__placeholder">선택된 파일이 없습니다.</p>
-          )}
-        </div>
-      </div>
     </div>
   );
 };
@@ -1085,6 +820,34 @@ return (
     PreviewComponent: CardPreview,
   },
   {
+    id: "table",
+    label: "테이블",
+    title: "테이블 패턴",
+    description: "기본 테이블(번호/제목/등록일/첨부/조회수/경쟁률)과 가로 스크롤 테이블 예시입니다.",
+    code: `<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>번호</th><th>제목</th><th>등록일</th><th>첨부</th><th>조회수</th><th>경쟁률</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td><td>모집 공고 A</td><td>2025-01-03</td><td>guide.pdf</td><td>1,280</td><td>12:1</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 열이 많은 경우 -->
+<div class="table-wrap is-scrollable">
+  <table class="is-wide">
+    <!-- 다수 컬럼 -->
+  </table>
+</div>`,
+    PreviewComponent: TableDemo,
+  },
+  {
     id: "popup",
     label: "팝업",
     title: "팝업 UI",
@@ -1098,6 +861,72 @@ const [isFullOpen, setIsFullOpen] = useState(false);
 // 바텀시트 드래그 종료 시
 if (dragDistance > threshold) closeSheet();`,
     PreviewComponent: PopupPreview,
+  },
+  {
+    id: "datepicker",
+    label: "데이터피커",
+    title: "데이터 피커",
+    description: "간단한 캘린더 UI로 날짜를 선택합니다. (센터 팝업 기반)",
+    code: `<DatePicker />`,
+    PreviewComponent: DatePicker,
+  },
+  {
+    id: "tooltip",
+    label: "툴팁",
+    title: "툴팁 컴포넌트",
+    description: "물음표 아이콘을 클릭하면 툴팁이 토글되는 UI입니다. top/right/bottom/left 위치를 지원합니다.",
+    code: `<div class="tooltip-row">
+  <Tooltip text="위쪽 툴팁" placement="top" />
+  <Tooltip text="오른쪽 툴팁" placement="right" />
+  <Tooltip text="아래쪽 툴팁" placement="bottom" />
+  <Tooltip text="왼쪽 툴팁" placement="left" />
+</div>`,
+    PreviewComponent: () => (
+      <div className="guide-preview guide-preview--tooltip">
+        <div className="tooltip-row">
+          <Tooltip text="기본 상단 툴팁입니다." placement="top" />
+          <Tooltip text="오른쪽에 표시되는 툴팁" placement="right" />
+          <Tooltip text="아래쪽 툴팁" placement="bottom" />
+          <Tooltip text="왼쪽 툴팁" placement="left" />
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: "dnd",
+    label: "드래그앤드랍",
+    title: "드래그앤드랍 리스트",
+    description: "react-beautiful-dnd를 사용한 기본 리스트 드래그앤드랍 예시입니다.",
+    code: `import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+
+const onDragEnd = (result) => {
+  if (!result.destination) return;
+  // reorder(prev, result.source.index, result.destination.index)
+};
+
+<DragDropContext onDragEnd={onDragEnd}>
+  <Droppable droppableId="list">
+    {(provided) => (
+      <div ref={provided.innerRef} {...provided.droppableProps}>
+        {items.map((item, index) => (
+          <Draggable key={item.id} draggableId={item.id} index={index}>
+            {(dragProvided) => (
+              <div
+                ref={dragProvided.innerRef}
+                {...dragProvided.draggableProps}
+                {...dragProvided.dragHandleProps}
+              >
+                {item.title}
+              </div>
+            )}
+          </Draggable>
+        ))}
+        {provided.placeholder}
+      </div>
+    )}
+  </Droppable>
+</DragDropContext>`,
+    PreviewComponent: DragDropList,
   },
   {
     id: "tab",
@@ -1227,13 +1056,13 @@ const guideGroups = [
   },
   {
     id: "input-group",
-    label: "입력 / 첨부",
+    label: "폼 요소",
     items: ["file-upload", "form"],
   },
   {
     id: "ui-group",
     label: "UI 컴포넌트",
-    items: ["icon", "button", "component", "tab", "image", "more", "pagination", "popup"],
+    items: ["icon", "button", "component", "table", "tab", "image", "more", "pagination", "popup", "datepicker", "tooltip", "dnd"],
   },
 ];
 
@@ -1396,9 +1225,9 @@ function PublishingGuidePage() {
               return (
                 <article key={currentSection.id} id={currentSection.id} className="guide-section">
                   <header className="guide-section__header">
-                    <p className="guide-section__eyebrow">{currentSection.label}</p>
+                    <p className="guide-section__title" >{currentSection.label}</p>
                     <div>
-                      <h3 className="guide-section__title">{currentSection.title}</h3>
+                      {/* <h3 className="guide-section__title">{currentSection.title}</h3> */}
                       <p className="guide-section__description">{currentSection.description}</p>
                     </div>
                   </header>

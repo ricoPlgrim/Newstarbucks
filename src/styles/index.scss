@@ -1,5 +1,5 @@
-@import "./variables";  // 변수 파일 (색상, 폰트 크기 등의 상수 값들)
-@import "./mixins";     // 믹스인 파일 (재사용 가능한 스타일 함수들, px-to-rem 등)
-@import "./utilities";  // 유틸리티 파일 (mt-10, pt-20 같은 편의 클래스들)
-@import "./base";       // 기본 스타일 파일 (reset, 기본 요소 스타일링)
+@forward "./variables";
+@forward "./mixins";
+@forward "./utilities";
+@forward "./base";
 

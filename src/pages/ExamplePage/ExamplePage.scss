@@ -1,39 +1,39 @@
-@import "../../styles/index.scss";
+@use "../../styles/index.scss" as *;
 
 .page-guide {
-  @include px-to-rem(margin-top, 8);
+  @include px(margin-top, 8);
 
   &__grid {
     display: grid;
     grid-template-columns: minmax(12rem, 16rem) 1fr;
-    gap: px-to-rem(16);
+    gap: px(16);
   }
 
   &__lnb {
     position: sticky;
-    top: px-to-rem(16);
+    top: px(16);
     align-self: start;
-    padding: px-to-rem(20);
+    padding: px(20);
     border: 1px solid var(--color-border);
-    border-radius: px-to-rem(12);
+    border-radius: px(12);
     background-color: var(--color-card);
     box-shadow: var(--shadow-soft);
   }
 
   &__lnb-label {
-    @include px-to-rem(font-size, 12);
+    @include px(font-size, 12);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-muted);
-    margin: 0 0 px-to-rem(12);
+    margin: 0 0 px(12);
   }
 
   &__lnb-item {
     width: 100%;
     border: 1px solid var(--color-border);
-    border-radius: px-to-rem(10);
-    padding: px-to-rem(12) px-to-rem(14);
+    border-radius: px(10);
+    padding: px(12) px(14);
     background-color: transparent;
     color: var(--color-text);
     font-weight: 600;
@@ -49,16 +49,16 @@
   }
 
   &__lnb-help {
-    @include px-to-rem(font-size, 13);
+    @include px(font-size, 13);
     color: var(--color-muted);
-    margin: px-to-rem(12) 0 0;
+    margin: px(12) 0 0;
     line-height: 1.4;
   }
 
   &__content {
-    padding: px-to-rem(24);
+    padding: px(24);
     border: 1px solid var(--color-border);
-    border-radius: px-to-rem(16);
+    border-radius: px(16);
     background-color: var(--color-card);
     box-shadow: var(--shadow-soft);
   }
@@ -66,12 +66,12 @@
   &__header {
     display: flex;
     flex-direction: column;
-    gap: px-to-rem(12);
-    margin-bottom: px-to-rem(20);
+    gap: px(12);
+    margin-bottom: px(20);
   }
 
   &__eyebrow {
-    @include px-to-rem(font-size, 12);
+    @include px(font-size, 12);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-muted);
@@ -79,14 +79,14 @@
   }
 
   &__title {
-    @include px-to-rem(font-size, 26);
+    @include px(font-size, 26);
     margin: 0;
     font-weight: 700;
     color: var(--color-text);
   }
 
   &__description {
-    @include px-to-rem(font-size, 14);
+    @include px(font-size, 14);
     margin: 0;
     line-height: 1.5;
     color: var(--color-muted);
@@ -95,7 +95,7 @@
   &__table-wrapper {
     overflow-x: auto;
     border: 1px solid var(--color-border);
-    border-radius: px-to-rem(12);
+    border-radius: px(12);
     background-color: var(--color-bg);
   }
 
@@ -106,10 +106,10 @@
 
     th,
     td {
-      @include px-to-rem(font-size, 14);
-      padding: px-to-rem(12) px-to-rem(16);
+      @include px(font-size, 14);
+      padding: px(12) px(16);
       text-align: left;
-      border-bottom: 1px solid var(--color-border);
+      border-bottom: px(1) solid var(--color-border);
       color: var(--color-text);
     }
 
@@ -127,7 +127,7 @@
       font-family: "Fira Code", "Courier New", monospace;
       background-color: rgba(0, 0, 0, 0.08);
       padding: 0.1rem 0.4rem;
-      border-radius: px-to-rem(4);
+      border-radius: px(4);
     }
 
     a {

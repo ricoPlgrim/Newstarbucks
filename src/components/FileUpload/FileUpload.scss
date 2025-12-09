@@ -1,9 +1,9 @@
-@import "../../styles/index.scss";
+@use "../../styles/index.scss" as *;
 
 .file-upload-demo {
-  border: 1px solid var(--color-border);
-  border-radius: px-to-rem(12);
-  padding: px-to-rem(20);
+  border: px(1) solid var(--color-border);
+  border-radius: px(12);
+  padding: px(20);
   background-color: var(--color-card);
   box-shadow: var(--shadow-soft);
   display: flex;
@@ -14,7 +14,7 @@
 .file-upload-demo__field {
   display: flex;
   flex-direction: column;
-  gap: px-to-rem(8);
+  gap: px(8);
 }
 
 .file-upload-demo__label {
@@ -23,9 +23,9 @@
 }
 
 .file-upload-demo input[type="file"] {
-  border: 1px dashed var(--color-border);
-  padding: px-to-rem(12);
-  border-radius: px-to-rem(10);
+  border: px(1) dashed var(--color-border);
+  padding: px(12);
+  border-radius: px(10);
   background-color: rgba(12, 124, 89, 0.03);
   cursor: pointer;
 }
@@ -33,14 +33,14 @@
 .file-upload-demo__hint {
   margin: 0;
   color: var(--color-muted);
-  font-size: px-to-rem(13);
+  font-size: px(13);
   line-height: 1.5;
 }
 
 .file-upload-demo__status {
-  border: 1px solid var(--color-border);
-  border-radius: px-to-rem(10);
-  padding: px-to-rem(14);
+  border: px(1) solid var(--color-border);
+  border-radius: px(10);
+  padding: px(14);
   background-color: var(--color-bg);
 }
 
@@ -48,19 +48,19 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: px-to-rem(8);
-  margin-bottom: px-to-rem(6);
+  gap: px(8);
+  margin-bottom: px(6);
 }
 
 .file-upload-demo__status-title {
-  margin: 0 0 px-to-rem(8) 0;
+  margin: 0 0 px(8) 0;
   font-weight: 700;
   color: var(--color-text);
 }
 
 .file-upload-demo__status ul {
   margin: 0;
-  padding-left: px-to-rem(18);
+  padding-left: px(18);
   color: var(--color-text);
   line-height: 1.6;
 }
@@ -71,9 +71,9 @@
 }
 
 .file-upload-demo__clear {
-  width: px-to-rem(28);
-  height: px-to-rem(28);
-  border: 1px solid var(--color-border);
+  width: px(28);
+  height: px(28);
+  border: px(1) solid var(--color-border);
   border-radius: 50%;
   background: none;
   cursor: pointer;

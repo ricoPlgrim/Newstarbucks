@@ -1,0 +1,124 @@
+import { useEffect, useRef, useState } from "react";
+import { DayPicker } from "react-day-picker";
+import ko from "date-fns/locale/ko";
+import "react-day-picker/dist/style.css";
+import "./DatePicker.scss";
+
+function formatDate(date) {
+  if (!date) return "YYYY-MM-DD";
+  const yyyy = date.getFullYear();
+  const mm = `${date.getMonth() + 1}`.padStart(2, "0");
+  const dd = `${date.getDate()}`.padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+function formatRange(range) {
+  if (!range?.from && !range?.to) return "YYYY-MM-DD ~ YYYY-MM-DD";
+  const from = range?.from ? formatDate(range.from) : "";
+  const to = range?.to ? formatDate(range.to) : "";
+  return `${from} ~ ${to}`;
+}
+
+function DatePicker() {
+  const [openSingle, setOpenSingle] = useState(false);
+  const [openRange, setOpenRange] = useState(false);
+  const [openMulti, setOpenMulti] = useState(false);
+
+  const [selected, setSelected] = useState(null);
+  const [range, setRange] = useState({ from: null, to: null });
+  const [multiRange, setMultiRange] = useState({ from: null, to: null });
+
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (!openSingle && !openRange && !openMulti) return;
+    const handleClick = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setOpenSingle(false);
+        setOpenRange(false);
+        setOpenMulti(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [openSingle, openRange, openMulti]);
+
+  return (
+    <div className="date-picker" ref={containerRef}>
+      <div className="date-picker__group">
+        <p className="date-picker__group-title">싱글 선택</p>
+        <div className="date-picker__input" onClick={() => setOpenSingle((v) => !v)}>
+          <span>{formatDate(selected)}</span>
+          <span className="date-picker__icon">📅</span>
+        </div>
+        {openSingle && (
+          <div className="date-picker__popover" role="dialog" aria-modal="true">
+            <DayPicker
+              mode="single"
+              selected={selected}
+              onSelect={(day) => {
+                setSelected(day);
+                setOpenSingle(false);
+              }}
+              weekStartsOn={0}
+              locale={ko}
+              showOutsideDays
+              fixedWeeks
+            />
+          </div>
+        )}
+      </div>
+
+      <div className="date-picker__group">
+        <p className="date-picker__group-title">기간 선택</p>
+        <div className="date-picker__input" onClick={() => setOpenRange((v) => !v)}>
+          <span>{formatRange(range)}</span>
+          <span className="date-picker__icon">📅</span>
+        </div>
+        {openRange && (
+          <div className="date-picker__popover" role="dialog" aria-modal="true">
+            <DayPicker
+              mode="range"
+              selected={range}
+              onSelect={(dayRange) => {
+                setRange(dayRange || { from: null, to: null });
+              }}
+              weekStartsOn={0}
+              locale={ko}
+              showOutsideDays
+              fixedWeeks
+            />
+          </div>
+        )}
+      </div>
+
+      <div className="date-picker__group">
+        <p className="date-picker__group-title">2개월 범위 선택 (멀티 캘린더)</p>
+        <div className="date-picker__input" onClick={() => setOpenMulti((v) => !v)}>
+          <span>{formatRange(multiRange)}</span>
+          <span className="date-picker__icon">📅</span>
+        </div>
+        {openMulti && (
+          <div className="date-picker__popover" role="dialog" aria-modal="true">
+            <DayPicker
+              mode="range"
+              selected={multiRange}
+              onSelect={(dayRange) => {
+                setMultiRange(dayRange || { from: null, to: null });
+              }}
+              numberOfMonths={2}
+              pagedNavigation
+              weekStartsOn={0}
+              locale={ko}
+              showOutsideDays
+              fixedWeeks
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default DatePicker;
+

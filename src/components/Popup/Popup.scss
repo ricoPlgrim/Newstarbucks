@@ -1,4 +1,4 @@
-@import "../../styles/index.scss";
+@use "../../styles/index.scss" as *;
 
 .popup-overlay {
   position: fixed;
@@ -21,16 +21,16 @@
 
 .popup {
   background: #fff;
-  border-radius: px-to-rem(18);
-  padding: px-to-rem(20);
-  min-width: min(360px, 92vw);
-  max-width: 420px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.28);
+  border-radius: px(18);
+  padding: px(20);
+  min-width: min(px(360), 92vw);
+  max-width: px(420);
+  box-shadow: 0 px(16) px(48) rgba(0, 0, 0, 0.28);
   color: #111;
   line-height: 1.5;
   display: flex;
   flex-direction: column;
-  gap: px-to-rem(14);
+  gap: px(14);
 
   &--basic {
     text-align: center;
@@ -42,13 +42,13 @@
     right: 0;
     bottom: 0;
     margin: 0 auto;
-    max-width: 640px;
-    border-radius: px-to-rem(20) px-to-rem(20) 0 0;
-    padding-top: px-to-rem(12);
+    max-width: px(640);
+    border-radius: px(20) px(20) 0 0;
+    padding-top: px(12);
     transition: transform 0.2s ease;
     touch-action: none;
-    padding-bottom: px-to-rem(20);
-    gap: px-to-rem(8);
+    padding-bottom: px(20);
+    gap: px(8);
   }
 
   &--full {
@@ -56,14 +56,14 @@
     inset: 0;
     border-radius: 0;
     max-width: none;
-    padding: px-to-rem(24);
+    padding: px(24);
     display: flex;
     flex-direction: column;
-    gap: px-to-rem(12);
+    gap: px(12);
   }
 
   h4 {
-    margin: 0 0 px-to-rem(6) 0;
+    margin: 0 0 px(6) 0;
     font-weight: 800;
     color: #111;
   }
@@ -104,7 +104,7 @@
     line-height: 1.6;
     display: flex;
     flex-direction: column;
-    gap: px-to-rem(6);
+    gap: px(6);
     align-items: center;
     text-align: center;
 
@@ -136,8 +136,8 @@
     justify-content: center;
 
     span {
-      width: px-to-rem(6);
-      height: px-to-rem(6);
+      width: px(6);
+      height: px(6);
       border-radius: 50%;
       background: var(--color-border);
 
@@ -151,19 +151,19 @@
     &--stack {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: px-to-rem(10);
-      margin-top: px-to-rem(4);
+      gap: px(10);
+      margin-top: px(4);
       width: 100%;
     }
   }
 
   &__btn {
-    border-radius: px-to-rem(10);
-    padding: px-to-rem(12);
+    border-radius: px(10);
+    padding: px(12);
     font-weight: 700;
-    font-size: px-to-rem(14);
+    font-size: px(14);
     cursor: pointer;
-    border: 1px solid #dcdcdc;
+    border: px(1) solid #dcdcdc;
     background: #f9f9f9;
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
     width: 100%;
