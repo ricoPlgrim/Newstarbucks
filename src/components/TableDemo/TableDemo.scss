@@ -1,5 +1,10 @@
 @use "../../styles/index.scss" as *;
 
+.table-demo__table--freeze {
+  --freeze-first: 110px;
+  --freeze-second: 250px;
+}
+
 .guide-preview--table {
   display: flex;
   flex-direction: column;
@@ -64,12 +69,16 @@
 
 .table-demo__table--wide th:nth-child(1),
 .table-demo__table--wide td:nth-child(1) {
-  min-width: 90px;
+  min-width: var(--freeze-first);
+  width: var(--freeze-first);
+  max-width: var(--freeze-first);
 }
 
 .table-demo__table--wide th:nth-child(2),
 .table-demo__table--wide td:nth-child(2) {
-  min-width: 240px;
+  min-width: var(--freeze-second);
+  width: var(--freeze-second);
+  max-width: var(--freeze-second);
 }
 
 .table-demo__table--wide th:not(:nth-child(1)):not(:nth-child(2)),
@@ -83,6 +92,7 @@
   text-align: left;
   border-bottom: px(1) solid rgba(0, 0, 0, 0.06);
   background: #ffffff;
+  position: relative; // z-index 제어 가능
 }
 
 .table-demo__table thead th {
@@ -102,24 +112,28 @@
 .table-demo__table--freeze .is-sticky {
   position: sticky;
   background: #ffffff;
-  z-index: 2;
+  z-index: 6; // 일반 셀보다 높게
+  border-right: px(1) solid rgba(0, 0, 0, 0.06);
 }
 
 .table-demo__table--freeze .is-sticky--first {
   left: 0;
-  min-width: 90px;
-  box-shadow: 6px 0 12px rgba(0, 0, 0, 0.04);
-  z-index: 3;
+  min-width: var(--freeze-first);
+  width: var(--freeze-first);
+  box-shadow: 8px 0 14px rgba(0, 0, 0, 0.05);
+  z-index: 8;
 }
 
 .table-demo__table--freeze .is-sticky--second {
-  left: 90px;
-  min-width: 240px;
-  box-shadow: 6px 0 12px rgba(0, 0, 0, 0.04);
+  left: var(--freeze-first);
+  min-width: var(--freeze-second);
+  width: var(--freeze-second);
+  box-shadow: 8px 0 14px rgba(0, 0, 0, 0.05);
+  z-index: 7;
 }
 
 .table-demo__table--freeze thead .is-sticky {
-  z-index: 4;
+  z-index: 10; // 헤더가 본문보다 항상 위
 }
 
 .table-demo__table--freeze thead th.is-sticky--first,

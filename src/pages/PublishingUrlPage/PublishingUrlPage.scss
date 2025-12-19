@@ -29,7 +29,7 @@
 
 .publishing-url-table {
   width: 100%;
-  min-width: 100%;
+  min-width: 840px; // 가로 스크롤을 위한 최소 너비 확보
   border-collapse: collapse;
 
   thead {
@@ -62,10 +62,12 @@
     td {
       padding: px-to-rem(20) px-to-rem(16);
       vertical-align: middle;
+      white-space: nowrap; // 뎁스 열 줄바꿈 방지
       
       &:first-child {
         font-weight: 600;
         color: var(--color-accent);
+        min-width: 120px; // 뎁스1 컬럼 최소 너비 확장
       }
 
       a {
@@ -94,7 +96,7 @@
   }
 
   .publishing-url-table {
-    min-width: 100%; // 테블릿에서도 100% 폭 유지
+    min-width: 900px; // 테블릿에서도 스크롤 여유 확보
   }
 }
 
@@ -117,12 +119,34 @@
   }
 
   .publishing-url-table {
-    min-width: 100%;
+    min-width: 720px; // 모바일에서 스크롤로 대응
 
     thead th,
     tbody td {
       padding: px-to-rem(16) px-to-rem(12);
       font-size: 0.85rem;
+    }
+  }
+}
+
+// 테블릿 이상에서 thead 고정
+@media (min-width: 769px) {
+  .publishing-url-page__table-container {
+    position: relative;
+  }
+
+  .publishing-url-table {
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+
+      th {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      }
     }
   }
 }

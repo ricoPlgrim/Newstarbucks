@@ -81,7 +81,11 @@ function DatePicker() {
               mode="range"
               selected={range}
               onSelect={(dayRange) => {
-                setRange(dayRange || { from: null, to: null });
+                const nextRange = dayRange || { from: null, to: null };
+                setRange(nextRange);
+                if (nextRange?.from && nextRange?.to) {
+                  setOpenRange(false);
+                }
               }}
               weekStartsOn={0}
               locale={ko}
@@ -104,7 +108,11 @@ function DatePicker() {
               mode="range"
               selected={multiRange}
               onSelect={(dayRange) => {
-                setMultiRange(dayRange || { from: null, to: null });
+                const nextRange = dayRange || { from: null, to: null };
+                setMultiRange(nextRange);
+                if (nextRange?.from && nextRange?.to) {
+                  setOpenMulti(false);
+                }
               }}
               numberOfMonths={2}
               pagedNavigation
