@@ -19,6 +19,17 @@ import ListSync from "../../components/ListSync/ListSync";
 import Footer from "../../components/Footer/Footer";
 import "../../components/Popup/Popup.scss";
 import "./PublishingGuidePage.scss";
+import {
+  fetchMockData,
+  fetchMockToastMessages,
+  fetchMockTabs,
+  fetchMockDropdownOptions,
+  fetchMockListSyncOptions,
+  fetchMockCarouselSlides,
+  fetchMockTableWide,
+} from "../../mocks/mockData";
+import Skeleton from "../../components/Skeleton/Skeleton";
+import Loading from "../../components/Loading/Loading";
 
 const PaginationPreview = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -37,31 +48,9 @@ const PaginationPreview = () => {
   const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
   const currentItems = Array.from({ length: endIndex - startIndex }, (_, idx) => startIndex + idx + 1);
 
-  // 현재 페이지 주변 페이지 계산 (최대 5개 표시)
+  // 전체 페이지 번호 리스트를 반환
   const getVisiblePages = () => {
-    const delta = 2;
-    const range = [];
-    const rangeWithDots = [];
-
-    for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
-      range.push(i);
-    }
-
-    if (currentPage - delta > 2) {
-      rangeWithDots.push(1, '...');
-    } else {
-      rangeWithDots.push(1);
-    }
-
-    rangeWithDots.push(...range);
-
-    if (currentPage + delta < totalPages - 1) {
-      rangeWithDots.push('...', totalPages);
-    } else if (totalPages > 1) {
-      rangeWithDots.push(totalPages);
-    }
-
-    return rangeWithDots;
+    return Array.from({ length: totalPages }, (_, idx) => idx + 1);
   };
 
   return (
@@ -106,9 +95,8 @@ const PaginationPreview = () => {
               {getVisiblePages().map((page, index) => (
                 <button
                   key={index}
-                  className={`pagination-btn ${page === currentPage ? 'is-active' : ''} ${page === '...' ? 'is-dots' : ''}`}
-                  disabled={page === '...'}
-                  onClick={() => typeof page === 'number' && handlePageChange(page)}
+                  className={`pagination-btn ${page === currentPage ? 'is-active' : ''}`}
+                  onClick={() => handlePageChange(page)}
                 >
                   {page}
                 </button>
@@ -303,26 +291,58 @@ const TogglePreview = () => {
 
 const ToastPreview = () => {
   const [toast, setToast] = useState({ message: "", type: "info", key: 0 });
+  const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const showToast = (type, message) => {
+  useEffect(() => {
+    fetchMockToastMessages()
+      .then(setMessages)
+      .catch((err) => {
+        console.error("토스트 데이터 로드 실패:", err);
+        setError("토스트 데이터를 불러오지 못했습니다.");
+      })
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  const showToast = (type) => {
+    const found = messages.find((m) => m.type === type);
+    const message = found?.message ?? "데이터가 없습니다.";
     setToast({ message, type, key: Date.now() });
   };
 
-  const clearToast = () => setToast({ message: "", type: "info", key: toast.key });
+  const clearToast = () => setToast((prev) => ({ message: "", type: "info", key: prev.key }));
+
+  if (isLoading) {
+    return (
+      <div className="guide-preview guide-preview--toast">
+        <div className="toast-actions" style={{ display: "flex", gap: 8 }}>
+          <Skeleton width="110px" height={32} />
+          <Skeleton width="110px" height={32} />
+          <Skeleton width="110px" height={32} />
+        </div>
+        <div className="toast-stack" style={{ marginTop: 12 }}>
+          <Skeleton width="260px" height={48} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="guide-preview guide-preview--toast">
       <div className="toast-actions">
-        <button className="btn btn--primary btn--sm" onClick={() => showToast("success", "저장되었습니다.")}>
-          성공 토스트
+        <button className="btn btn--primary btn--sm" disabled={isLoading} onClick={() => showToast("success")}>
+          {isLoading ? "불러오는 중..." : "성공 토스트"}
         </button>
-        <button className="btn btn--secondary btn--sm" onClick={() => showToast("warning", "네트워크가 불안정합니다.")}>
-          경고 토스트
+        <button className="btn btn--secondary btn--sm" disabled={isLoading} onClick={() => showToast("warning")}>
+          {isLoading ? "불러오는 중..." : "경고 토스트"}
         </button>
-        <button className="btn btn--ghost btn--sm" onClick={() => showToast("danger", "저장에 실패했습니다.")}>
-          에러 토스트
+        <button className="btn btn--ghost btn--sm" disabled={isLoading} onClick={() => showToast("danger")}>
+          {isLoading ? "불러오는 중..." : "에러 토스트"}
         </button>
       </div>
+
+      {error && <p className="toast-error">{error}</p>}
 
       <div className="toast-stack">
         <Toast key={toast.key} message={toast.message} type={toast.type} onClose={clearToast} />
@@ -353,14 +373,39 @@ const BottomDockPreview = () => {
 };
 
 const ListSyncPreview = () => {
-  const options = [
-    { value: "react", label: "React" },
-    { value: "vue", label: "Vue" },
-    { value: "svelte", label: "Svelte" },
-    { value: "next", label: "Next.js" },
-    { value: "astro", label: "Astro" },
-  ];
+  const [options, setOptions] = useState([]);
   const [selected, setSelected] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchMockListSyncOptions()
+      .then(setOptions)
+      .catch((err) => {
+        console.error("리스트 동기화 데이터 로드 실패:", err);
+        setError("리스트 데이터를 불러오지 못했습니다.");
+      })
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="guide-preview guide-preview--listsync">
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          {[1, 2, 3, 4].map((i) => (
+            <Skeleton key={i} width="88px" height={32} />
+          ))}
+        </div>
+        <div className="listsync-status" style={{ marginTop: 12 }}>
+          <Skeleton width="140px" height={16} />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="guide-preview guide-preview--listsync">{error}</div>;
+  }
 
   return (
     <div className="guide-preview guide-preview--listsync">
@@ -373,37 +418,140 @@ const ListSyncPreview = () => {
   );
 };
 
-const ComponentPropPreview = () => {
-  const Title = () => <h4 className="slot-card__title">슬롯 타이틀</h4>;
-  const Body = () => (
-    <div className="slot-card__body">
-      <p>컴포넌트 props로 다른 컴포넌트를 주입해 레이아웃을 재사용할 수 있습니다.</p>
-      <ul>
-        <li>HeaderComponent, ContentComponent, FooterComponent를 교체</li>
-        <li>필요 시 children 조합도 가능</li>
-      </ul>
-    </div>
-  );
-  const FooterSlot = () => (
-    <div className="slot-card__footer">
-      <button className="btn btn--primary btn--sm">확인</button>
-      <button className="btn btn--ghost btn--sm">취소</button>
-    </div>
-  );
+const DropdownPreview = () => {
+  const [options, setOptions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const SlotCard = ({ HeaderComponent, ContentComponent, FooterComponent }) => (
-    <div className="slot-card">
-      <HeaderComponent />
-      <ContentComponent />
-      <FooterComponent />
-    </div>
-  );
+  useEffect(() => {
+    fetchMockDropdownOptions()
+      .then(setOptions)
+      .catch((err) => {
+        console.error("드롭다운 데이터 로드 실패:", err);
+        setError("드롭다운 데이터를 불러오지 못했습니다.");
+      })
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="guide-preview guide-preview--dropdown" style={{ display: "grid", gap: 12 }}>
+        <Skeleton width="200px" height={38} />
+        <Skeleton width="200px" height={38} />
+        <Skeleton width="200px" height={38} />
+      </div>
+    );
+  }
+  if (error) return <div className="guide-preview guide-preview--dropdown">{error}</div>;
 
   return (
-    <div className="guide-preview guide-preview--slot">
-      <SlotCard HeaderComponent={Title} ContentComponent={Body} FooterComponent={FooterSlot} />
+    <div className="guide-preview guide-preview--dropdown">
+      <Dropdown options={options} />
+      <Dropdown options={options} variant="filled" />
+      <Dropdown options={options} variant="ghost" />
     </div>
   );
+};
+
+const TabsPreview = () => {
+  const [items, setItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchMockTabs()
+      .then(setItems)
+      .catch((err) => {
+        console.error("탭 데이터 로드 실패:", err);
+        setError("탭 데이터를 불러오지 못했습니다.");
+      })
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="guide-preview guide-preview--tabs">
+        <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+          <Skeleton width="80px" height={32} />
+          <Skeleton width="80px" height={32} />
+          <Skeleton width="80px" height={32} />
+        </div>
+        <Skeleton width="100%" height={48} />
+      </div>
+    );
+  }
+  if (error) return <div className="guide-preview guide-preview--tabs">{error}</div>;
+
+  return (
+    <div className="guide-preview guide-preview--tabs">
+      <Tabs items={items} />
+    </div>
+  );
+};
+
+const CarouselPreview = () => {
+  const [slides, setSlides] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchMockCarouselSlides()
+      .then(setSlides)
+      .catch((err) => {
+        console.error("캐러셀 데이터 로드 실패:", err);
+        setError("캐러셀 데이터를 불러오지 못했습니다.");
+      })
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="guide-preview guide-preview--carousel">
+        <Skeleton width="100%" height={140} />
+      </div>
+    );
+  }
+  if (error) return <div className="guide-preview guide-preview--carousel">{error}</div>;
+
+  return <Carousel slides={slides} showOptionsPanel />;
+};
+
+const TableDemoPreview = () => {
+  const [wideHeaders, setWideHeaders] = useState([]);
+  const [wideRows, setWideRows] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const wide = await fetchMockTableWide();
+        setWideHeaders(wide.headers ?? []);
+        setWideRows(wide.rows ?? []);
+      } catch (err) {
+        console.error("테이블 데이터 로드 실패:", err);
+        setError("테이블 데이터를 불러오지 못했습니다.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    load();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="guide-preview guide-preview--table" style={{ display: "grid", gap: 12 }}>
+        <Skeleton width="60%" height={22} />
+        {[1, 2, 3].map((i) => (
+          <Skeleton key={i} width="100%" height={18} />
+        ))}
+      </div>
+    );
+  }
+  if (error) return <div className="guide-preview guide-preview--table">{error}</div>;
+
+  return <TableDemo wideHeaders={wideHeaders} wideRows={wideRows} />;
 };
 
 const PopupPreview = () => {
@@ -523,16 +671,6 @@ const PopupPreview = () => {
   );
 };
 
-const CardPreview = () => (
-  <article className="guide-preview guide-preview--card">
-    <p className="card__eyebrow">NEW</p>
-    <h4>하이라이트 카드</h4>
-    <p className="card__desc">
-      퍼블리싱 가이드를 따르면, 컴포넌트 간 여백과 타이포가 일관되게 유지됩니다.
-    </p>
-  </article>
-);
-
 const ImagePreview = () => (
   <div className="guide-preview guide-preview--images">
     <div className="image-examples">
@@ -596,24 +734,22 @@ const ScriptPreview = () => {
     setTimeout(() => setMessage(''), 2000);
   };
 
-  // 데이터 로드 시뮬레이션
+  // 목업 데이터 로드
   const handleLoadData = async () => {
     setIsLoading(true);
     setMessage('데이터를 불러오는 중...');
 
-    // 2초 후에 데이터 로드 시뮬레이션
-    setTimeout(() => {
-      const mockData = {
-        id: 1,
-        title: "샘플 데이터",
-        content: "스크립트 인터랙션 예시",
-        timestamp: new Date().toLocaleString()
-      };
-      setData(mockData);
-      setIsLoading(false);
+    try {
+      const result = await fetchMockData();
+      setData(result);
       setMessage('데이터가 성공적으로 로드되었습니다!');
+    } catch (error) {
+      console.error('목업 데이터 로드 실패:', error);
+      setMessage('데이터 로드에 실패했습니다.');
+    } finally {
+      setIsLoading(false);
       setTimeout(() => setMessage(''), 3000);
-    }, 2000);
+    }
   };
 
   // 폼 제출 핸들러
@@ -742,6 +878,14 @@ const FooterPreview = () => {
     </div>
   );
 };
+
+const LoadingPreview = () => (
+  <div className="guide-preview guide-preview--loading">
+    <div className="loading-preview__box">
+      <Loading size={52} thickness={5} label="로딩 중..." />
+    </div>
+  </div>
+);
 
 // 가이드 섹션 정의
 const guideSections = [
@@ -999,70 +1143,53 @@ const [selected, setSelected] = useState([]);
     PreviewComponent: ListSyncPreview,
   },
   {
-    id: "component",
-    label: "컴포넌트",
-    title: "카드 컴포넌트",
-    description:
-      "카드는 정형화된 높이를 갖고, 본문은 2줄까지 잘라내어 목록 가독성을 높입니다.",
-    code: `<article class="card">
-  <p class="card__eyebrow">NEW</p>
-  <h4>하이라이트 카드</h4>
-  <p class="card__desc">2줄에서 말줄임 처리를 적용합니다.</p>
-</article>`,
-    PreviewComponent: CardPreview,
-  },
-  {
-    id: "component-props",
-    label: "컴포넌트 조합",
-    title: "컴포넌트를 props로 주입",
-    description:
-      "레이아웃 컴포넌트에 Header/Content/Footer를 props로 전달해 원하는 UI를 끼워 넣을 수 있습니다. children 패턴과 병행해 재사용성을 높입니다.",
-    code: `const CardShell = ({ HeaderComponent, ContentComponent, FooterComponent }) => (
-  <div className="card-shell">
-    <HeaderComponent />
-    <ContentComponent />
-    <FooterComponent />
-  </div>
-);
-
-const Title = () => <h4>슬롯 타이틀</h4>;
-const Body = () => <p>필요한 본문을 컴포넌트로 전달</p>;
-const Footer = () => <button>확인</button>;
-
-<CardShell
-  HeaderComponent={Title}
-  ContentComponent={Body}
-  FooterComponent={Footer}
-/>`,
-    PreviewComponent: ComponentPropPreview,
-  },
-  {
     id: "table",
     label: "테이블",
-    title: "테이블 패턴",
-    description: "기본 테이블(번호/제목/등록일/첨부/조회수/경쟁률)과 가로 스크롤 테이블 예시입니다.",
-    code: `<div class="table-wrap">
-  <table>
+    title: "가로 스크롤 · 열 고정 테이블",
+    description: "좌우 스크롤 시 첫 두 열(번호·제목)을 고정해 식별성을 유지합니다. `position: sticky`와 고정 너비를 사용합니다.",
+    code: `<div class="table-wrap is-scrollable">
+  <table class="table is-wide is-freeze">
     <thead>
       <tr>
-        <th>번호</th><th>제목</th><th>등록일</th><th>첨부</th><th>조회수</th><th>경쟁률</th>
+        <th class="is-sticky is-sticky--first">번호</th>
+        <th class="is-sticky is-sticky--second">제목</th>
+        <th>등록일</th>
+        <th>첨부</th>
+        <th>조회수</th>
+        <th>경쟁률</th>
+        <th>상태</th>
+        <th>분류</th>
+        <th>담당자</th>
+        <th>마감일</th>
+        <th>비고</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>1</td><td>모집 공고 A</td><td>2025-01-03</td><td>guide.pdf</td><td>1,280</td><td>12:1</td>
+        <td class="is-sticky is-sticky--first">1</td>
+        <td class="is-sticky is-sticky--second">데이터 분석가 채용</td>
+        <td>2025-01-07</td>
+        <td>jd.pdf</td>
+        <td>3,210</td>
+        <td>15:1</td>
+        <td>진행중</td>
+        <td>채용</td>
+        <td>홍길동</td>
+        <td>2025-02-01</td>
+        <td>온라인 면접</td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<!-- 열이 많은 경우 -->
-<div class="table-wrap is-scrollable">
-  <table class="is-wide">
-    <!-- 다수 컬럼 -->
-  </table>
-</div>`,
-    PreviewComponent: TableDemo,
+/* 핵심 스타일 */
+.is-freeze {
+  width: max-content;
+}
+.is-freeze .is-sticky { position: sticky; background: #fff; z-index: 2; }
+.is-freeze .is-sticky--first { left: 0; min-width: 90px; z-index: 3; }
+.is-freeze .is-sticky--second { left: 90px; min-width: 240px; }`,
+    PreviewComponent: TableDemoPreview,
   },
   {
     id: "popup",
@@ -1158,18 +1285,31 @@ const handleStop = (startIndex, data) => {
     id: "carousel",
     label: "캐러셀",
     title: "Swiper 캐러셀",
-    description: "react + swiper로 구현한 기본 캐러셀(내비게이션/페이지네이션 포함) 예시입니다.",
+    description:
+      "react + swiper 캐러셀. 기본 네비게이션/페이지네이션 + loop/간격 옵션을 사용하며, breakpoints로 반응형 슬라이드 수를 조절합니다.",
     code: `import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-<Swiper modules={[Navigation, Pagination]} navigation pagination={{ clickable: true }}>
+<Swiper
+  modules={[Navigation, Pagination]}
+  navigation               // 좌·우 화살표
+  pagination={{ clickable: true }} // bullet + 클릭 이동
+  loop                     // 마지막 뒤로 순환
+  spaceBetween={16}        // 슬라이드 간격(px)
+  slidesPerView={1}        // 기본 1장
+  breakpoints={{           // 반응형: 해상도별 슬라이드 수/간격
+    640: { slidesPerView: 1.2, spaceBetween: 12 },
+    900: { slidesPerView: 2, spaceBetween: 14 },
+    1200: { slidesPerView: 3, spaceBetween: 16 },
+  }}
+>
   <SwiperSlide>슬라이드 1</SwiperSlide>
   <SwiperSlide>슬라이드 2</SwiperSlide>
 </Swiper>`,
-    PreviewComponent: Carousel,
+    PreviewComponent: CarouselPreview,
   },
   {
     id: "dropdown",
@@ -1178,27 +1318,10 @@ import "swiper/css/pagination";
     description: "클릭으로 열고 닫는 기본/filled/ghost 드롭다운. 선택 값 표시와 선택 이벤트 예시를 포함합니다.",
     code: `import Dropdown from "./Dropdown";
 
-// 기본 아웃라인
-<Dropdown />
-
-// 배경 강조형
-<Dropdown variant="filled" />
-
-// 고스트형 (테두리 최소화)
-<Dropdown variant="ghost" />
-
-// API
-// - variant: "outline" | "filled" | "ghost"
-// - disabled: boolean
-// - fullWidth: boolean
-// - onChange: (option) => void`,
-    PreviewComponent: () => (
-      <div className="guide-preview guide-preview--dropdown">
-        <Dropdown />
-        <Dropdown variant="filled" />
-        <Dropdown variant="ghost" />
-      </div>
-    ),
+<Dropdown options={options} />
+<Dropdown options={options} variant="filled" />
+<Dropdown options={options} variant="ghost" />`,
+    PreviewComponent: DropdownPreview,
   },
   {
     id: "tab",
@@ -1211,7 +1334,7 @@ import "swiper/css/pagination";
   <button role="tab" aria-selected="false">리뷰</button>
   <button role="tab" aria-selected="false">Q&A</button>
 </div>`,
-    PreviewComponent: Tabs,
+    PreviewComponent: TabsPreview,
   },
   {
     id: "image",
@@ -1228,6 +1351,18 @@ import "swiper/css/pagination";
   onError={() => console.log('이미지 로드 실패')}
 />`,
     PreviewComponent: ImagePreview,
+  },
+  {
+    id: "loading",
+    label: "로딩",
+    title: "로딩 인디케이터",
+    description:
+      "로딩 상태를 명확히 알려주는 스피너형 인디케이터입니다. size와 thickness로 크기를 조절하고, label로 접근성 텍스트를 제공합니다.",
+    code: `import Loading from "./Loading";
+
+// 로딩 상태에서 표시
+<Loading size={48} thickness={4} label="불러오는 중..." />`,
+    PreviewComponent: LoadingPreview,
   },
   {
     id: "script",
@@ -1334,7 +1469,27 @@ const guideGroups = [
   {
     id: "ui-group",
     label: "UI 컴포넌트",
-    items: ["icon", "toggle", "button", "toast", "dock", "listsync", "component", "component-props", "table", "tab", "image", "more", "pagination", "popup", "datepicker", "tooltip", "dnd", "carousel", "dropdown", "image-zoom"],
+    items: [
+      "more",           // 더보기
+      "datepicker",     // 데이터피커
+      "dock",           // 돗바
+      "dnd",            // 드래그앤드랍
+      "dropdown",       // 드롭다운
+      "loading",        // 로딩
+      "listsync",       // 리스트 동기화
+      "button",         // 버튼
+      "icon",           // 아이콘
+      "image",          // 이미지
+      "image-zoom",     // 이미지 줌 팝업
+      "carousel",       // 캐러셀
+      "tab",            // 탭
+      "table",          // 테이블
+      "toggle",         // 토글
+      "toast",          // 토스트
+      "tooltip",        // 툴팁
+      "popup",          // 팝업
+      "pagination",     // 페이지네이션
+    ],
   },
 ];
 

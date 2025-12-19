@@ -29,6 +29,7 @@
 
 .publishing-url-table {
   width: 100%;
+  min-width: 100%;
   border-collapse: collapse;
 
   thead {
@@ -93,7 +94,7 @@
   }
 
   .publishing-url-table {
-    min-width: 1000px; // 테블릿에서도 모든 컬럼이 보이도록 최소 너비 증가
+    min-width: 100%; // 테블릿에서도 100% 폭 유지
   }
 }
 
@@ -116,7 +117,7 @@
   }
 
   .publishing-url-table {
-    min-width: 800px;
+    min-width: 100%;
 
     thead th,
     tbody td {

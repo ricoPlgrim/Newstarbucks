@@ -1,0 +1,31 @@
+@use "../../styles/index.scss" as *;
+
+.loading {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: px(10);
+  color: var(--color-muted);
+}
+
+.loading__spinner {
+  display: inline-block;
+  border: solid var(--color-border);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: loading-spin 0.9s linear infinite;
+  box-sizing: border-box;
+}
+
+.loading__label {
+  font-size: px(13);
+}
+
+@keyframes loading-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -29,6 +29,11 @@ const Dropdown = ({
     return () => document.removeEventListener("click", onClickOutside);
   }, []);
 
+  useEffect(() => {
+    // 옵션이 바뀌면 선택값을 첫 항목으로 리셋
+    setSelected(options[0] || null);
+  }, [options]);
+
   const handleSelect = (opt) => {
     setSelected(opt);
     setOpen(false);
@@ -59,9 +64,9 @@ const Dropdown = ({
             <li key={opt.value}>
               <button
                 type="button"
-                className={`dropdown__option ${selected.value === opt.value ? "is-selected" : ""}`}
+                className={`dropdown__option ${selected?.value === opt.value ? "is-selected" : ""}`}
                 role="option"
-                aria-selected={selected.value === opt.value}
+                aria-selected={selected?.value === opt.value}
                 onClick={() => handleSelect(opt)}
               >
                 {opt.label}

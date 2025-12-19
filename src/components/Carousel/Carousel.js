@@ -5,13 +5,17 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "./Carousel.scss";
 
-const slides = [
+const defaultSlides = [
   { id: 1, title: "배너 1", desc: "이곳에 주요 메시지를 노출하세요." },
   { id: 2, title: "배너 2", desc: "슬라이드를 넘겨 다양한 정보를 전달합니다." },
   { id: 3, title: "배너 3", desc: "모바일/데스크탑 반응형 지원." },
 ];
 
-const Carousel = () => {
+const Carousel = ({ slides = defaultSlides, showOptionsPanel = false }) => {
+  if (!slides || slides.length === 0) {
+    return <div className="guide-preview guide-preview--carousel">슬라이드 데이터가 없습니다.</div>;
+  }
+
   return (
     <div className="guide-preview guide-preview--carousel">
       <Swiper
@@ -31,6 +35,22 @@ const Carousel = () => {
           </SwiperSlide>
         ))}
       </Swiper>
+      {showOptionsPanel && (
+        <div className="carousel-options">
+          <h5>사용 옵션</h5>
+          <ul>
+            <li><strong>modules</strong>: Navigation, Pagination</li>
+            <li><strong>navigation</strong>: 좌·우 화살표 노출</li>
+            <li><strong>pagination</strong>: bullet + clickable</li>
+            <li><strong>spaceBetween</strong>: 슬라이드 간격 16px</li>
+            <li><strong>slidesPerView</strong>: 기본 1장, 반응형 조정 가능</li>
+            <li><strong>loop</strong>: 마지막 뒤로 순환</li>
+          </ul>
+          <div className="carousel-options__tip">
+            breakpoints로 `slidesPerView`와 `spaceBetween`을 디바이스 폭에 맞춰 조정하세요.
+          </div>
+        </div>
+      )}
     </div>
   );
 };

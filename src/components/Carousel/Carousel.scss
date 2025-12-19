@@ -21,6 +21,42 @@
   }
 }
 
+.carousel-options {
+  margin-top: px(14);
+  padding: px(14);
+  border: px(1) solid var(--color-border);
+  border-radius: px(12);
+  background: #f8f9fb;
+  display: grid;
+  gap: px(8);
+
+  h5 {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--color-text);
+  }
+
+  ul {
+    margin: 0;
+    padding-left: px(18);
+    display: grid;
+    gap: px(4);
+    color: var(--color-muted);
+    li strong {
+      color: var(--color-text);
+      margin-right: 4px;
+    }
+  }
+
+  &__tip {
+    font-size: 0.88rem;
+    color: var(--color-text);
+    background: #eef2f7;
+    border-radius: px(8);
+    padding: px(10) px(12);
+  }
+}
+
 .carousel-card {
   border: px(1) solid var(--color-border);
   border-radius: px(12);

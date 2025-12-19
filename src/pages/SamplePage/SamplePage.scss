@@ -112,6 +112,26 @@
   }
 }
 
+.sample-card--skeleton {
+  border: none;
+  background: #fdfdfd;
+  box-shadow: 0 px(10) px(22) rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: px(12);
+}
+
+.skeleton-card__thumb {
+  display: block;
+  width: 100%;
+}
+
+.skeleton-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: px(8);
+}
+
 .sample-footer {
   border-top: px(1) solid var(--color-border);
   background: var(--color-card);

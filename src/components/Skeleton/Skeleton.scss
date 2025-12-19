@@ -1,0 +1,23 @@
+@use "../../styles/index.scss" as *;
+
+.skeleton {
+  display: inline-block;
+  background: linear-gradient(90deg, #f2f3f5 25%, #e6e8ec 50%, #f2f3f5 75%);
+  background-size: 320% 100%;
+  animation: skeleton-shimmer 1.6s ease infinite;
+  border: 1px solid #eef0f4;
+}
+
+.skeleton--circle {
+  border-radius: 50%;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 120% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
