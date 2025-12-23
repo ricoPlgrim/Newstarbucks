@@ -1715,3 +1715,87 @@
     flex-wrap: wrap;
   }
 }
+
+// Lottie 애니메이션 프리뷰
+.guide-preview--lottie {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: px(20);
+}
+
+.lottie-preview__container {
+  display: flex;
+  flex-direction: column;
+  gap: px(20);
+  align-items: center;
+  padding: px(20);
+  border: 1px solid var(--color-border);
+  border-radius: px(12);
+  background-color: var(--color-card);
+}
+
+.lottie-preview__animation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: px(20);
+  background-color: rgba(12, 124, 89, 0.05);
+  border-radius: px(12);
+  border: 1px dashed var(--color-border);
+}
+
+.lottie-preview__controls {
+  display: flex;
+  flex-direction: column;
+  gap: px(12);
+  width: 100%;
+  max-width: px(300);
+}
+
+.lottie-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: px(8);
+}
+
+.lottie-control-label {
+  display: flex;
+  align-items: center;
+  gap: px(8);
+  font-size: px(14);
+  color: var(--color-text);
+
+  input[type="checkbox"] {
+    width: px(18);
+    height: px(18);
+    cursor: pointer;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    cursor: pointer;
+  }
+
+  span {
+    min-width: px(100);
+  }
+}
+
+.lottie-preview__info {
+  padding: px(16);
+  background-color: rgba(12, 124, 89, 0.05);
+  border-radius: px(10);
+  border: 1px solid rgba(12, 124, 89, 0.2);
+
+  p {
+    margin: 0 0 px(8) 0;
+    font-size: px(13);
+    color: var(--color-muted);
+    line-height: 1.6;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

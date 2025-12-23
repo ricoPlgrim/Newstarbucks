@@ -24,12 +24,6 @@ function Header({ currentPage, onPageChange }) {
     setExpandedItems({});
   };
 
-  // 페이지 변경 및 메뉴 닫기
-  const handlePageChange = (page) => {
-    onPageChange(page);
-    closeMenu();
-  };
-
   // GNB 메뉴 데이터 (3뎁스 구조)
   const gnbMenu = [
     {

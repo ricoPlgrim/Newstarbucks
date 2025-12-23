@@ -30,6 +30,7 @@ import {
 } from "../../mocks/mockData";
 import Skeleton from "../../components/Skeleton/Skeleton";
 import Loading from "../../components/Loading/Loading";
+import LottieAnimation from "../../components/Lottie/Lottie";
 
 const PaginationPreview = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -887,6 +888,89 @@ const LoadingPreview = () => (
   </div>
 );
 
+const LottiePreview = () => {
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [speed, setSpeed] = useState(1);
+  const [loop, setLoop] = useState(true);
+
+  // 공개된 Lottie 샘플 URL 사용 (실제 작동하는 애니메이션)
+  const sampleUrl = "https://assets5.lottiefiles.com/packages/lf20_jcikwtux.json";
+  
+  // 또는 로컬 JSON 데이터 사용 (주석 해제하여 사용)
+  // const loadingAnimation = {
+  //   v: "5.7.4",
+  //   fr: 30,
+  //   ip: 0,
+  //   op: 60,
+  //   w: 200,
+  //   h: 200,
+  //   nm: "Loading Circle",
+  //   ddd: 0,
+  //   assets: [],
+  //   layers: [...]
+  // };
+
+  return (
+    <div className="guide-preview guide-preview--lottie">
+      <div className="lottie-preview__container">
+        <div className="lottie-preview__animation">
+          <LottieAnimation
+            animationData={sampleUrl}
+            loop={loop}
+            autoplay={isPlaying}
+            speed={speed}
+            width={200}
+            height={200}
+          />
+        </div>
+        
+        <div className="lottie-preview__controls">
+          <div className="lottie-control-group">
+            <label className="lottie-control-label">
+              <input
+                type="checkbox"
+                checked={isPlaying}
+                onChange={(e) => setIsPlaying(e.target.checked)}
+              />
+              <span>자동 재생</span>
+            </label>
+          </div>
+
+          <div className="lottie-control-group">
+            <label className="lottie-control-label">
+              <input
+                type="checkbox"
+                checked={loop}
+                onChange={(e) => setLoop(e.target.checked)}
+              />
+              <span>반복 재생</span>
+            </label>
+          </div>
+
+          <div className="lottie-control-group">
+            <label className="lottie-control-label">
+              <span>재생 속도: {speed}x</span>
+              <input
+                type="range"
+                min="0.5"
+                max="2"
+                step="0.1"
+                value={speed}
+                onChange={(e) => setSpeed(parseFloat(e.target.value))}
+              />
+            </label>
+          </div>
+        </div>
+
+        <div className="lottie-preview__info">
+          <p>Lottie 애니메이션은 JSON 형식의 벡터 애니메이션을 웹에서 재생할 수 있게 해줍니다.</p>
+          <p>After Effects에서 Bodymovin 플러그인으로 내보낸 JSON 파일을 사용합니다.</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // 가이드 섹션 정의
 const guideSections = [
   {
@@ -1365,6 +1449,32 @@ import "swiper/css/pagination";
     PreviewComponent: LoadingPreview,
   },
   {
+    id: "lottie",
+    label: "로티",
+    title: "Lottie 애니메이션",
+    description:
+      "After Effects에서 제작한 애니메이션을 JSON 형식으로 내보내 웹에서 재생할 수 있는 Lottie 애니메이션 컴포넌트입니다. 반복 재생, 재생 속도, 자동 재생 등을 제어할 수 있습니다.",
+    code: `import LottieAnimation from "./Lottie";
+
+// 기본 사용법
+<LottieAnimation
+  animationData={animationJson}
+  loop={true}
+  autoplay={true}
+  speed={1}
+  width={200}
+  height={200}
+/>
+
+// URL에서 로드
+<LottieAnimation
+  animationData="https://example.com/animation.json"
+  loop={false}
+  onComplete={() => console.log("완료")}
+/>`,
+    PreviewComponent: LottiePreview,
+  },
+  {
     id: "script",
     label: "스크립트",
     title: "JavaScript 인터랙션",
@@ -1476,6 +1586,7 @@ const guideGroups = [
       "dnd",            // 드래그앤드랍
       "dropdown",       // 드롭다운
       "loading",        // 로딩
+      "lottie",         // 로티
       "listsync",       // 리스트 동기화
       "button",         // 버튼
       "icon",           // 아이콘

@@ -24,7 +24,7 @@ function App() {
         window.scrollTo(0, parseInt(savedScrollY, 10));
       }, 0);
     }
-  }, []);
+  }, [currentPage]);
 
   // 페이지 변경 시 스크롤 위치 저장
   const handlePageChange = (page) => {

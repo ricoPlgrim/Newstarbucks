@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Header from "../../components/Header/Header";
-import Footer from "../../components/Footer/Footer";
 import Skeleton from "../../components/Skeleton/Skeleton";
 import LoadingGrid from "../../components/LoadingGrid/LoadingGrid";
 import "./SamplePage.scss";

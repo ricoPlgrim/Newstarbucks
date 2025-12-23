@@ -1,0 +1,22 @@
+@use "../../styles/index.scss" as *;
+
+.lottie-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+
+  .lottie-loading,
+  .lottie-error {
+    padding: px(20);
+    text-align: center;
+    color: var(--color-muted);
+    font-size: px(14);
+  }
+
+  .lottie-error {
+    color: #d64545;
+  }
+}
+
