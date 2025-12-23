@@ -27,7 +27,7 @@ src/
 │       └── ExamplePage.scss
 ├── styles/
 │   ├── _variables.scss          # CSS 변수 (다크모드, 폰트 스케일)
-│   ├── _mixins.scss             # SCSS 믹스인 (px-to-rem)
+│   ├── _mixins.scss             # SCSS 믹스인 (px)
 │   ├── _base.scss               # 기본 스타일
 │   └── index.scss               # 스타일 통합 파일
 ├── App.js                       # 메인 앱 컴포넌트
@@ -63,17 +63,27 @@ function MyPage() {
 
 ## SCSS 믹스인 사용법
 
-### px-to-rem 믹스인
+### px 믹스인
 
 피그마에서 가져온 픽셀 값을 그대로 사용하면 자동으로 rem 단위로 변환됩니다.
 
-#### 기본 사용법
+#### 기본 사용법 (px() 함수)
 
 ```scss
 .my-element {
-  @include px-to-rem(font-size, 16);        // 16px → 1rem
-  @include px-to-rem(padding, 20);          // 20px → 1.25rem
-  @include px-to-rem(margin, 12, 16);       // 12px → 0.75rem (기준값 16px)
+  padding: px(20);              // 20px → 1.25rem
+  margin: px(16);               // 16px → 1rem
+  font-size: px(14);            // 14px → 0.875rem
+}
+```
+
+#### 믹스인 사용법 (@include px)
+
+```scss
+.my-element {
+  @include px(font-size, 16);        // 16px → 1rem
+  @include px(padding, 20);          // 20px → 1.25rem
+  @include px(margin, 12);          // 12px → 0.75rem
 }
 ```
 
@@ -81,7 +91,7 @@ function MyPage() {
 
 ```scss
 .container {
-  @include px-to-rem(max-width, 1200, 16);  // max-width: 75rem
+  @include px(max-width, 1200);      // max-width: 75rem
 }
 ```
 
@@ -89,14 +99,29 @@ function MyPage() {
 
 ```scss
 .card {
-  @include px-to-rem(padding, 20, 16);
-  @include px-to-rem(margin-bottom, 24, 16);
-  @include px-to-rem(border-radius, 8, 16);
+  padding: px(20);
+  margin-bottom: px(24);
+  border-radius: px(8);
+}
+```
+
+또는
+
+```scss
+.card {
+  @include px(padding, 20);
+  @include px(margin-bottom, 24);
+  @include px(border-radius, 8);
 }
 ```
 
 #### 매개변수 설명
 
+**px() 함수:**
+- `$value`: 피그마에서 가져온 픽셀 값 (숫자만 입력)
+- `$base`: (선택) 기준 픽셀 값, 기본값 16px
+
+**@include px 믹스인:**
 - `$property`: CSS 속성명 (font-size, padding, margin 등)
 - `$value`: 피그마에서 가져온 픽셀 값 (숫자만 입력)
 - `$max`: (선택) 최대값 설정 시 사용
@@ -125,7 +150,7 @@ function MyPage() {
    - 실시간으로 체크박스로 관리 가능
 
 3. **사용법 가이드**
-   - px-to-rem 믹스인 사용법
+   - px 믹스인 사용법
    - 접근성 체크 포인트
 
 ### 접근성 도우미 열기/닫기

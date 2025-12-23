@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import PageTemplate from "../../components/PageTemplate/PageTemplate";
 import "./PublishingUrlPage.scss";
 import { fetchMockUrls } from "../../mocks/mockData";
 
-const PublishingUrlPage = ({ onPageChange }) => {
+const PublishingUrlPage = () => {
   const [urls, setUrls] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -51,8 +52,7 @@ const PublishingUrlPage = ({ onPageChange }) => {
                 </tr>
               )}
               {!isLoading && !error && urls.map((item) => {
-                const isLocalPage = item.url.startsWith('#');
-                const pageId = isLocalPage ? item.url.substring(1) : null;
+                const isLocalPage = item.url.startsWith('/');
                 
                 return (
                   <tr key={item.id}>
@@ -62,14 +62,12 @@ const PublishingUrlPage = ({ onPageChange }) => {
                     <td>{item.depth4 || "-"}</td>
                     <td>
                       {isLocalPage ? (
-                        <a
-                          href={`${window.location.origin}${window.location.pathname}?page=${pageId}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <Link
+                          to={item.url}
                           style={{ cursor: 'pointer', color: 'var(--color-accent)' }}
                         >
-                          {item.url} (로컬 페이지)
-                        </a>
+                          {item.url} 
+                        </Link>
                       ) : (
                         <a href={item.url} target="_blank" rel="noopener noreferrer">
                           {item.url}

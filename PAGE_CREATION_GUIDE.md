@@ -15,7 +15,7 @@ src/
 │   └── ...            # 기타 컴포넌트들
 ├── styles/            # 전역 스타일
 │   ├── _variables.scss  # CSS 변수
-│   ├── _mixins.scss    # SCSS 믹스인 (px-to-rem 등)
+│   ├── _mixins.scss    # SCSS 믹스인 (px 등)
 │   ├── _utilities.scss # 유틸리티 클래스
 │   └── _base.scss      # 기본 스타일
 └── mocks/             # 목업 데이터
@@ -195,7 +195,7 @@ const [currentPage, setCurrentPage] = useState(() => {
 @use "../../styles/index.scss" as *;
 
 .your-element {
-  // px-to-rem 변환 (피그마 수치값 그대로 사용)
+  // px 함수 사용 (피그마 수치값 그대로 사용, 자동으로 rem 변환)
   padding: px(20);
   margin: px(16);
   font-size: px(14);

@@ -1,0 +1,29 @@
+@use "../../styles/index.scss" as *;
+
+.skeleton-placeholder {
+  display: flex;
+  align-items: center;
+  gap: px(12);
+  width: 100%;
+
+  &__avatar {
+    flex-shrink: 0;
+  }
+
+  &__body {
+    flex: 1;
+    display: grid;
+    gap: px(8);
+  }
+
+  &__line {
+    border-radius: px(6);
+  }
+
+  &__actions {
+    display: grid;
+    gap: px(6);
+    flex-shrink: 0;
+  }
+}
+

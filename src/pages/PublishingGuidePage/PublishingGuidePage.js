@@ -29,7 +29,9 @@ import {
   fetchMockTableWide,
 } from "../../mocks/mockData";
 import Skeleton from "../../components/Skeleton/Skeleton";
+import SkeletonPlaceholder from "../../components/Skeleton/SkeletonPlaceholder";
 import Loading from "../../components/Loading/Loading";
+import Notice from "../../components/Notice/Notice";
 import LottieAnimation from "../../components/Lottie/Lottie";
 
 const PaginationPreview = () => {
@@ -888,6 +890,20 @@ const LoadingPreview = () => (
   </div>
 );
 
+const SkeletonPlaceholderPreview = () => (
+  <div className="guide-preview guide-preview--loading" style={{ gap: 12 }}>
+    <SkeletonPlaceholder withAvatar withActions lines={3} />
+    <SkeletonPlaceholder withAvatar lines={2} />
+    <SkeletonPlaceholder lines={2} />
+  </div>
+);
+
+const NoticePreview = () => (
+  <div className="guide-preview guide-preview--notice">
+    <Notice />
+  </div>
+);
+
 const LottiePreview = () => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [speed, setSpeed] = useState(1);
@@ -1449,6 +1465,47 @@ import "swiper/css/pagination";
     PreviewComponent: LoadingPreview,
   },
   {
+    id: "notice",
+    label: "공지사항",
+    title: "공지사항 리스트",
+    description:
+      "타이틀/날짜/뱃지 형태의 공지사항 리스트 컴포넌트입니다. 기본 데이터가 내장되어 있으며 items로 교체 가능하며, 로딩 상태를 skeleton으로 표시할 수 있습니다.",
+    code: `import Notice from "./Notice";
+
+// 기본 데이터 사용
+<Notice />
+
+// 커스텀 데이터 사용
+const items = [
+  { id: 1, title: "시스템 점검 안내", date: "2025-01-23", badge: "안내" },
+  { id: 2, title: "정책 변경 안내", date: "2025-01-20", badge: "중요" },
+];
+
+<Notice title="새 소식" linkText="전체보기" items={items} />
+
+// 로딩 상태 (스켈레톤)
+<Notice loading skeletonCount={3} />`,
+    PreviewComponent: NoticePreview,
+  },
+  {
+    id: "skeleton-placeholder",
+    label: "스켈레톤",
+    title: "스켈레톤 플레이스홀더",
+    description:
+      "리스트·카드 로딩 상태에 자주 쓰는 아바타/텍스트/버튼 조합 스켈레톤을 즉시 렌더링하는 헬퍼입니다.",
+    code: `import SkeletonPlaceholder from "./Skeleton/SkeletonPlaceholder";
+
+// 기본: 텍스트 3줄
+<SkeletonPlaceholder />
+
+// 아바타 + 텍스트 2줄
+<SkeletonPlaceholder withAvatar lines={2} />
+
+// 아바타 + 텍스트 3줄 + 우측 버튼
+<SkeletonPlaceholder withAvatar withActions lines={3} />`,
+    PreviewComponent: SkeletonPlaceholderPreview,
+  },
+  {
     id: "lottie",
     label: "로티",
     title: "Lottie 애니메이션",
@@ -1580,26 +1637,28 @@ const guideGroups = [
     id: "ui-group",
     label: "UI 컴포넌트",
     items: [
-      "more",           // 더보기
-      "datepicker",     // 데이터피커
-      "dock",           // 돗바
-      "dnd",            // 드래그앤드랍
-      "dropdown",       // 드롭다운
-      "loading",        // 로딩
-      "lottie",         // 로티
-      "listsync",       // 리스트 동기화
-      "button",         // 버튼
-      "icon",           // 아이콘
-      "image",          // 이미지
-      "image-zoom",     // 이미지 줌 팝업
-      "carousel",       // 캐러셀
-      "tab",            // 탭
-      "table",          // 테이블
-      "toggle",         // 토글
-      "toast",          // 토스트
-      "tooltip",        // 툴팁
-      "popup",          // 팝업
-      "pagination",     // 페이지네이션
+      "notice",                // 공지사항
+      "more",                  // 더보기
+      "datepicker",            // 데이터피커
+      "dock",                  // 돗바
+      "dnd",                   // 드래그앤드랍
+      "dropdown",              // 드롭다운
+      "loading",               // 로딩
+      "lottie",                // 로티
+      "listsync",              // 리스트 동기화
+      "button",                // 버튼
+      "skeleton-placeholder",  // 스켈레톤
+      "icon",                  // 아이콘
+      "image",                 // 이미지
+      "image-zoom",            // 이미지 줌 팝업
+      "carousel",              // 캐러셀
+      "tab",                   // 탭
+      "table",                 // 테이블
+      "toggle",                // 토글
+      "toast",                 // 토스트
+      "tooltip",               // 툴팁
+      "popup",                 // 팝업
+      "pagination",            // 페이지네이션
     ],
   },
 ];

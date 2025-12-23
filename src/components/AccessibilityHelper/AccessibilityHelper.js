@@ -97,15 +97,18 @@ function AccessibilityHelper({ isDarkMode, setIsDarkMode, fontScale, setFontScal
           <div className="accessibility-helper__section">
             <h3 className="accessibility-helper__title">사용법 가이드</h3>
             <div className="accessibility-helper__guide">
-              <p><strong>px-to-rem 믹스인 사용법:</strong></p>
+              <p><strong>px 믹스인 사용법:</strong></p>
               <pre className="accessibility-helper__code">
-{`@include px-to-rem(font-size, 16);
-@include px-to-rem(margin, 20, 16);`}
-              </pre>
-              
-              <p><strong>max-width 설정:</strong></p>
-              <pre className="accessibility-helper__code">
-{`@include px-to-rem(max-width, 1200, 16);`}
+                {`// px() 함수 사용
+                padding: px(20);
+                font-size: px(16);
+
+                // @include px 믹스인 사용
+                @include px(font-size, 16);
+                @include px(margin, 20);
+
+                // max-width 설정
+                @include px(max-width, 1200);`}
               </pre>
             </div>
           </div>
