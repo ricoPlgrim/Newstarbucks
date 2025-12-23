@@ -2,11 +2,19 @@ import { useState, useEffect } from "react";
 import PublishingGuidePage from "./pages/PublishingGuidePage/PublishingGuidePage";
 import PublishingUrlPage from "./pages/PublishingUrlPage/PublishingUrlPage";
 import SamplePage from "./pages/SamplePage/SamplePage";
+import AmericanoPage from "./pages/AmericanoPage/AmericanoPage";
 import Footer from "./components/Footer/Footer";
 import "./App.scss";
 
 function App() {
   const [currentPage, setCurrentPage] = useState(() => {
+    // URL 파라미터에서 페이지 확인 (새 창에서 열 때 사용)
+    const urlParams = new URLSearchParams(window.location.search);
+    const pageFromUrl = urlParams.get('page');
+    if (pageFromUrl) {
+      sessionStorage.setItem('currentPage', pageFromUrl);
+      return pageFromUrl;
+    }
     // 초기 페이지는 sessionStorage에서 가져옴 (없으면 'url')
     return sessionStorage.getItem('currentPage') || 'url';
   });
@@ -72,8 +80,9 @@ function App() {
       </nav>
 
       {currentPage === "guide" && <PublishingGuidePage />}
-      {currentPage === "url" && <PublishingUrlPage />}
+      {currentPage === "url" && <PublishingUrlPage onPageChange={handlePageChange} />}
       {currentPage === "sample" && <SamplePage />}
+      {currentPage === "americano" && <AmericanoPage />}
 
       <Footer />
     </div>

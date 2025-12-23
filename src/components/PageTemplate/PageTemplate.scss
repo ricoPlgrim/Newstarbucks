@@ -23,7 +23,6 @@
   }
 
   &__main {
-    @include px(max-width, 1200, 16);
     @include px(padding, 20);
     margin: 0 auto;
   }

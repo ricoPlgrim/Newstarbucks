@@ -3,7 +3,7 @@ import PageTemplate from "../../components/PageTemplate/PageTemplate";
 import "./PublishingUrlPage.scss";
 import { fetchMockUrls } from "../../mocks/mockData";
 
-const PublishingUrlPage = () => {
+const PublishingUrlPage = ({ onPageChange }) => {
   const [urls, setUrls] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -50,20 +50,36 @@ const PublishingUrlPage = () => {
                   <td colSpan={6}>{error}</td>
                 </tr>
               )}
-              {!isLoading && !error && urls.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.depth1 || "-"}</td>
-                  <td>{item.depth2 || "-"}</td>
-                  <td>{item.depth3 || "-"}</td>
-                  <td>{item.depth4 || "-"}</td>
-                  <td>
-                    <a href={item.url} target="_blank" rel="noopener noreferrer">
-                      {item.url}
-                    </a>
-                  </td>
-                  <td>{item.description}</td>
-                </tr>
-              ))}
+              {!isLoading && !error && urls.map((item) => {
+                const isLocalPage = item.url.startsWith('#');
+                const pageId = isLocalPage ? item.url.substring(1) : null;
+                
+                return (
+                  <tr key={item.id}>
+                    <td>{item.depth1 || "-"}</td>
+                    <td>{item.depth2 || "-"}</td>
+                    <td>{item.depth3 || "-"}</td>
+                    <td>{item.depth4 || "-"}</td>
+                    <td>
+                      {isLocalPage ? (
+                        <a
+                          href={`${window.location.origin}${window.location.pathname}?page=${pageId}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ cursor: 'pointer', color: 'var(--color-accent)' }}
+                        >
+                          {item.url} (로컬 페이지)
+                        </a>
+                      ) : (
+                        <a href={item.url} target="_blank" rel="noopener noreferrer">
+                          {item.url}
+                        </a>
+                      )}
+                    </td>
+                    <td>{item.description}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

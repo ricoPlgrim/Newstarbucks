@@ -35,7 +35,7 @@ export const mockUrlData = [
     depth2: "커피",
     depth3: "아메리카노",
     depth4: "",
-    url: "https://example.com/menu/coffee/americano",
+    url: "#americano",
     description: "아메리카노 메뉴 페이지",
   },
   {
