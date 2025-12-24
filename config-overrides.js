@@ -1,6 +1,16 @@
 const { override } = require('customize-cra');
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 
-module.exports = override(
+// 빌드 시간 측정 플러그인 (환경 변수로 제어)
+const shouldAnalyze = process.env.ANALYZE_BUILD === 'true';
+const smp = shouldAnalyze
+  ? new SpeedMeasurePlugin({
+      outputFormat: 'human', // 'human' | 'json' | 'humanVerbose'
+      loaderTopFiles: 10, // 가장 오래 걸리는 로더 상위 10개 표시
+    })
+  : null;
+
+const webpackConfig = override(
   (config) => {
     // webpack의 ignoreWarnings 옵션 추가 - Sass deprecation 경고 필터링
     config.ignoreWarnings = [
@@ -73,4 +83,7 @@ module.exports = override(
     return config;
   }
 );
+
+// 빌드 시간 분석이 활성화된 경우에만 래핑
+module.exports = shouldAnalyze && smp ? smp.wrap(webpackConfig) : webpackConfig;
 

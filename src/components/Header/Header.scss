@@ -60,7 +60,7 @@
         }
 
         &:nth-child(3) {
-          transform: rotate(-45deg) translate(7px, -6px);
+          transform: rotate(-45deg) translate(4px, -5px); 
         }
       }
     }
@@ -96,7 +96,6 @@
       height: px-to-rem(40);
       background: none;
       border: none;
-      font-size: px-to-rem(24);
       cursor: pointer;
       color: var(--color-text);
       display: flex;
@@ -104,6 +103,13 @@
       justify-content: center;
       border-radius: 50%;
       transition: background-color 0.2s ease;
+      padding: 0;
+
+      svg {
+        width: px-to-rem(20);
+        height: px-to-rem(20);
+        display: block;
+      }
 
       &:hover {
         background-color: rgba(0, 0, 0, 0.1);
@@ -154,7 +160,8 @@
       font-weight: 500;
       text-align: left;
       cursor: pointer;
-      transition: all 0.2s ease;
+      // all 대신 구체적인 속성만 transition (자식 요소의 transform에 영향 주지 않도록)
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -173,19 +180,54 @@
 
       &--expandable {
         .header__nav-arrow {
-          font-size: px-to-rem(12);
-          color: var(--color-text-light);
-          transition: transform 0.2s ease;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: px-to-rem(14);
+          height: px-to-rem(14);
+          color: var(--color-text);
+          opacity: 0.6;
+          transition: transform 0.1s ease;
+          // 화살표를 회전 중심점으로 설정
+          transform-origin: center;
+          // 초기 상태 명시 (닫힘 상태: 0도)
+          transform: rotate(0deg);
+          flex-shrink: 0;
+          
+          svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+          }
+        }
+        
+        // aria-expanded="true"일 때 화살표 90도 회전 (▶ → ▼)
+        &[aria-expanded="true"] .header__nav-arrow {
+          transform: rotate(90deg);
         }
       }
     }
 
     &-sublist {
       list-style: none;
-      margin: px-to-rem(8) 0 0 px-to-rem(16);
+      margin: 0;
+      padding: 0;
+      // 아코디언 애니메이션을 위한 초기 설정
+      max-height: 0;
+      overflow: hidden;
+      // 높이만 애니메이션 (margin, padding은 즉시 적용)
+      transition: max-height 0.3s ease;
+      // 닫혀있을 때도 마진/패딩은 유지 (텍스트는 보이지 않지만 공간은 확보)
+      margin-left: px-to-rem(16);
       padding: 0;
 
+      // 열려있을 때 스타일 (마진만 추가 조정)
+      &.is-open {
+        margin-top: px-to-rem(8);
+      }
+
       &--depth3 {
+        // 3뎁스는 2뎁스보다 더 안쪽으로 들여쓰기
         margin-left: px-to-rem(32);
       }
     }
@@ -201,7 +243,8 @@
       font-size: px-to-rem(14);
       text-decoration: none;
       border-radius: px-to-rem(6);
-      transition: all 0.2s ease;
+      // all 대신 구체적인 속성만 transition (자식 요소의 transform에 영향 주지 않도록)
+      transition: background-color 0.2s ease, color 0.2s ease;
       cursor: pointer;
       background: none;
       border: none;
@@ -219,15 +262,50 @@
         justify-content: space-between;
 
         .header__nav-arrow {
-          font-size: px-to-rem(10);
-          color: var(--color-text-light);
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: px-to-rem(14);
+          height: px-to-rem(14);
+          color: var(--color-text);
+          opacity: 0.6;
+          transition: transform 0.1s ease;
+          // 화살표를 회전 중심점으로 설정
+          transform-origin: center;
+          // 초기 상태 명시 (닫힘 상태: 0도)
+          transform: rotate(0deg);
+          flex-shrink: 0;
+          
+          svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+          }
+        }
+        
+        // aria-expanded="true"일 때 화살표 90도 회전 (▶ → ▼)
+        &[aria-expanded="true"] .header__nav-arrow {
+          transform: rotate(90deg);
         }
       }
     }
 
     &-arrow {
       margin-left: auto;
-      transition: transform 0.2s ease;
+      transition: transform 0.1s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      // 화살표를 회전 중심점으로 설정
+      transform-origin: center;
+      // 초기 상태 명시 (닫힘 상태: 0도)
+      transform: rotate(0deg);
+      
+      svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
     }
   }
 }

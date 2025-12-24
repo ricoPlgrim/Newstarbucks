@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import Image from "../Image/Image";
+import Loading from "../Loading/Loading";
 import "./FileUpload.scss";
 
 const MAX_SIZE = 300 * 1024 * 1024; // 300MB
-const allowedTypes = ["application/pdf"];
+const MAX_FILES = 3;
 
-const isAllowed = (file) => file.type.startsWith("image/") || allowedTypes.includes(file.type);
+const isImage = (file) => file.type.startsWith("image/");
 
 const formatSize = (bytes) => {
   if (bytes >= 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
@@ -14,81 +16,235 @@ const formatSize = (bytes) => {
 };
 
 function FileUpload() {
-  const [fileInfo, setFileInfo] = useState(null);
+  const [files, setFiles] = useState([]);
+  const [loadingFiles, setLoadingFiles] = useState(new Set());
+  const inputRef = useRef(null);
 
-  const handleClear = () => {
-    setFileInfo(null);
-    const input = document.getElementById("component-file-input");
-    if (input) input.value = "";
+  /**
+   * 파일 선택 변경 이벤트 핸들러
+   * 파일 input의 onChange 이벤트에서 호출됨
+   * @param {Event} event - input change 이벤트 객체
+   */
+  const handleFileChange = (event) => {
+    // 선택된 파일들을 배열로 변환
+    const selectedFiles = Array.from(event.target.files || []);
+    if (selectedFiles.length === 0) return;
+
+    // 이미지 파일만 필터링 (image/* 타입만 허용)
+    const imageFiles = selectedFiles.filter(isImage);
+
+    // 이미지 파일이 없으면 경고 후 종료
+    if (imageFiles.length === 0) {
+      alert("이미지 파일만 업로드할 수 있습니다.");
+      event.target.value = ""; // input 초기화
+      return;
+    }
+
+    // 최대 개수 체크 (현재 파일 수 + 새로 선택한 파일 수가 MAX_FILES를 초과하는지 확인)
+    const remainingSlots = MAX_FILES - files.length;
+    if (imageFiles.length > remainingSlots) {
+      alert(`최대 ${MAX_FILES}개까지 업로드할 수 있습니다. (현재 ${files.length}개, 추가 가능 ${remainingSlots}개)`);
+      event.target.value = ""; // input 초기화
+      return;
+    }
+
+    // 파일 크기 체크 (각 파일이 MAX_SIZE(300MB)를 초과하는지 확인)
+    const oversizedFiles = imageFiles.filter((file) => file.size > MAX_SIZE);
+    if (oversizedFiles.length > 0) {
+      alert("최대 300MB까지 첨부할 수 있습니다.");
+      event.target.value = ""; // input 초기화
+      return;
+    }
+
+    // 미리보기 URL 생성 (Blob URL을 생성하여 이미지 미리보기용으로 사용)
+    const newFiles = imageFiles.map((file) => ({
+      id: Date.now() + Math.random(), // 고유 ID 생성
+      file, // 원본 File 객체
+      name: file.name, // 파일명
+      size: file.size, // 파일 크기
+      type: file.type, // MIME 타입
+      preview: URL.createObjectURL(file), // Blob URL 생성 (미리보기용)
+    }));
+
+    // 로딩 상태 추가 (이미지 로드 완료 전까지 로딩 표시)
+    const newFileIds = newFiles.map((f) => f.id);
+    setLoadingFiles((prev) => {
+      const newSet = new Set(prev);
+      newFileIds.forEach((id) => newSet.add(id)); // 새 파일들의 ID를 로딩 Set에 추가
+      return newSet;
+    });
+
+    // 파일 목록에 새 파일들 추가
+    setFiles((prev) => [...prev, ...newFiles]);
+    event.target.value = ""; // input 초기화 (같은 파일 다시 선택 가능하도록)
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    if (file.size > MAX_SIZE) {
-      alert("최대 300MB까지 첨부할 수 있습니다.");
-      event.target.value = "";
-      return;
-    }
-
-    if (!isAllowed(file)) {
-      alert("지원하지 않는 파일입니다. (허용: 이미지, PDF)");
-      event.target.value = "";
-      return;
-    }
-
-    setFileInfo({
-      name: file.name,
-      size: file.size,
-      type: file.type,
+  /**
+   * 개별 파일 삭제 이벤트 핸들러
+   * 삭제 버튼 클릭 시 호출됨
+   * @param {string|number} id - 삭제할 파일의 고유 ID
+   */
+  const handleRemove = (id) => {
+    setFiles((prev) => {
+      // 삭제할 파일 찾기
+      const fileToRemove = prev.find((f) => f.id === id);
+      // Blob URL 메모리 해제 (메모리 누수 방지)
+      if (fileToRemove && fileToRemove.preview) {
+        URL.revokeObjectURL(fileToRemove.preview);
+      }
+      // 해당 ID를 가진 파일 제외하고 반환
+      return prev.filter((f) => f.id !== id);
+    });
+    // 로딩 상태에서도 제거
+    setLoadingFiles((prev) => {
+      const newSet = new Set(prev);
+      newSet.delete(id);
+      return newSet;
     });
   };
 
+  /**
+   * 이미지 로드 완료 이벤트 핸들러
+   * Image 컴포넌트의 onLoad 이벤트에서 호출됨
+   * @param {string|number} id - 로드 완료된 파일의 고유 ID
+   */
+  const handleImageLoad = (id) => {
+    // 로딩 상태에서 제거 (이미지 로드 완료)
+    setLoadingFiles((prev) => {
+      const newSet = new Set(prev);
+      newSet.delete(id);
+      return newSet;
+    });
+  };
+
+  /**
+   * 이미지 로드 실패 이벤트 핸들러
+   * Image 컴포넌트의 onError 이벤트에서 호출됨
+   * @param {string|number} id - 로드 실패한 파일의 고유 ID
+   */
+  const handleImageError = (id) => {
+    // 로딩 상태에서 제거 (에러 발생 시에도 로딩 표시 제거)
+    setLoadingFiles((prev) => {
+      const newSet = new Set(prev);
+      newSet.delete(id);
+      return newSet;
+    });
+  };
+
+  /**
+   * 모든 파일 삭제 이벤트 핸들러
+   * "전체 삭제" 버튼 클릭 시 호출됨
+   */
+  const handleClearAll = () => {
+    // 모든 파일의 Blob URL 메모리 해제
+    files.forEach((file) => {
+      if (file.preview) {
+        URL.revokeObjectURL(file.preview);
+      }
+    });
+    // 파일 목록 초기화
+    setFiles([]);
+    // 로딩 상태 초기화
+    setLoadingFiles(new Set());
+    // input 초기화
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+  };
+
+  const canAddMore = files.length < MAX_FILES;
+
   return (
     <div className="file-upload-demo">
-      <div className="file-upload-demo__field">
-        <label className="file-upload-demo__label" htmlFor="component-file-input">
-          파일 첨부
-        </label>
-        <input
-          id="component-file-input"
-          type="file"
-          accept="image/*,application/pdf"
-          onChange={handleFileChange}
-        />
-        <p className="file-upload-demo__hint">
-          • 최대 300MB&nbsp;&nbsp;• 허용: 이미지, PDF&nbsp;&nbsp;• 기타 파일은 업로드 불가
-        </p>
-      </div>
+      {canAddMore && (
+        <div className="file-upload-demo__field">
+          <label className="file-upload-demo__label" htmlFor="component-file-input">
+            이미지 첨부 ({files.length}/{MAX_FILES})
+          </label>
+          <input
+            ref={inputRef}
+            id="component-file-input"
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleFileChange}
+          />
+          <p className="file-upload-demo__hint">
+            • 최대 {MAX_FILES}개까지 업로드 가능&nbsp;&nbsp;• 최대 300MB&nbsp;&nbsp;• 이미지 파일만 업로드 가능
+          </p>
+        </div>
+      )}
 
-      <div className="file-upload-demo__status">
-        {fileInfo ? (
-          <>
-            <div className="file-upload-demo__status-head">
-              <p className="file-upload-demo__status-title">업로드 정보</p>
+      {files.length > 0 && (
+        <div className="file-upload-demo__preview">
+          <div className="file-upload-demo__preview-header">
+            <p className="file-upload-demo__preview-title">업로드된 이미지 ({files.length}/{MAX_FILES})</p>
+            {files.length > 0 && (
               <button
                 type="button"
-                className="file-upload-demo__clear"
-                onClick={handleClear}
-                aria-label="첨부 파일 삭제"
+                className="file-upload-demo__clear-all"
+                onClick={handleClearAll}
+                aria-label="모든 이미지 삭제"
               >
-                ✕
+                전체 삭제
               </button>
-            </div>
-            <ul>
-              <li><strong>이름:</strong> {fileInfo.name}</li>
-              <li><strong>크기:</strong> {formatSize(fileInfo.size)}</li>
-              <li><strong>타입:</strong> {fileInfo.type}</li>
-            </ul>
-          </>
-        ) : (
-          <p className="file-upload-demo__placeholder">선택된 파일이 없습니다.</p>
-        )}
-      </div>
+            )}
+          </div>
+          <div className="file-upload-demo__preview-grid">
+            {files.map((file) => {
+              const isLoading = loadingFiles.has(file.id);
+              return (
+                <div key={file.id} className="file-upload-demo__preview-item">
+                  <div className="file-upload-demo__preview-image-wrapper">
+                    {isLoading && (
+                      <div className="file-upload-demo__preview-loading">
+                        <Loading size={32} thickness={3} label="" />
+                      </div>
+                    )}
+                    <Image
+                      src={file.preview}
+                      alt={file.name}
+                      className="file-upload-demo__preview-image"
+                      onLoad={() => handleImageLoad(file.id)}
+                      onError={() => handleImageError(file.id)}
+                    />
+                    <button
+                      type="button"
+                      className="file-upload-demo__preview-remove"
+                      onClick={() => handleRemove(file.id)}
+                      aria-label={`${file.name} 삭제`}
+                    >
+                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <path
+                          d="M13.5 4.5L4.5 13.5M4.5 4.5L13.5 13.5"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  <div className="file-upload-demo__preview-info">
+                    <p className="file-upload-demo__preview-name" title={file.name}>
+                      {file.name}
+                    </p>
+                    <p className="file-upload-demo__preview-size">{formatSize(file.size)}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {files.length === 0 && (
+        <div className="file-upload-demo__empty">
+          <p className="file-upload-demo__placeholder">선택된 이미지가 없습니다.</p>
+        </div>
+      )}
     </div>
   );
 }
 
 export default FileUpload;
-

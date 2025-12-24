@@ -1,16 +1,25 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import "./Header.scss";
 
 function Header({ currentPage, onPageChange }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [expandedItems, setExpandedItems] = useState({});
+  // 각 서브메뉴의 DOM 참조 (2뎁스, 3뎁스 애니메이션용)
+  const submenuRefs = useRef({});
 
-  // 메뉴 토글
+  /**
+   * 메뉴 토글 이벤트 핸들러
+   * 햄버거 버튼 클릭 시 사이드 메뉴 열기/닫기
+   */
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // 2뎁스, 3뎁스 메뉴 토글
+  /**
+   * 2뎁스, 3뎁스 메뉴 토글 이벤트 핸들러
+   * 서브메뉴 클릭 시 해당 메뉴 열기/닫기
+   * @param {string} key - 메뉴 ID
+   */
   const toggleExpanded = (key) => {
     setExpandedItems(prev => ({
       ...prev,
@@ -18,11 +27,34 @@ function Header({ currentPage, onPageChange }) {
     }));
   };
 
-  // 메뉴 클릭 시 닫기
+  /**
+   * 메뉴 클릭 시 사이드 메뉴 닫기
+   * 링크 클릭 시 호출됨
+   */
   const closeMenu = () => {
     setIsMenuOpen(false);
     setExpandedItems({});
   };
+
+  /**
+   * 서브메뉴의 max-height 설정 (아코디언 애니메이션용)
+   * expandedItems가 변경될 때마다 실행됨
+   */
+  useEffect(() => {
+    // 모든 서브메뉴에 대해 max-height 업데이트
+    Object.keys(submenuRefs.current).forEach((key) => {
+      const ref = submenuRefs.current[key];
+      if (ref) {
+        if (expandedItems[key]) {
+          // 열려있으면 실제 콘텐츠 높이만큼 max-height 설정
+          ref.style.maxHeight = ref.scrollHeight + "px";
+        } else {
+          // 닫혀있으면 max-height를 0으로 설정 (CSS transition으로 애니메이션)
+          ref.style.maxHeight = "0";
+        }
+      }
+    });
+  }, [expandedItems]);
 
   // GNB 메뉴 데이터 (3뎁스 구조)
   const gnbMenu = [
@@ -117,7 +149,9 @@ function Header({ currentPage, onPageChange }) {
             onClick={closeMenu}
             aria-label="메뉴 닫기"
           >
-            ✕
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </button>
 
           {/* 메뉴 리스트 */}
@@ -132,14 +166,19 @@ function Header({ currentPage, onPageChange }) {
                     aria-expanded={expandedItems[menu.id]}
                   >
                     {menu.label}
-                    <span className="header__nav-arrow">
-                      {expandedItems[menu.id] ? "▼" : "▶"}
+                    <span className="header__nav-arrow" aria-hidden="true">
+                      <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4.5 3L7.5 6L4.5 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
                     </span>
                   </button>
 
-                  {/* 2뎁스 메뉴 */}
-                  {expandedItems[menu.id] && menu.children && (
-                    <ul className="header__nav-sublist">
+                  {/* 2뎁스 메뉴 (아코디언 애니메이션) */}
+                  {menu.children && (
+                    <ul
+                      ref={(el) => (submenuRefs.current[menu.id] = el)}
+                      className={`header__nav-sublist ${expandedItems[menu.id] ? "is-open" : ""}`}
+                    >
                       {menu.children.map((submenu) => (
                         <li key={submenu.id} className="header__nav-subitem">
                           {submenu.children ? (
@@ -150,14 +189,19 @@ function Header({ currentPage, onPageChange }) {
                                 aria-expanded={expandedItems[submenu.id]}
                               >
                                 {submenu.label}
-                                <span className="header__nav-arrow">
-                                  {expandedItems[submenu.id] ? "▼" : "▶"}
+                                <span className="header__nav-arrow" aria-hidden="true">
+                                  <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M4.5 3L7.5 6L4.5 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                  </svg>
                                 </span>
                               </button>
 
-                              {/* 3뎁스 메뉴 */}
-                              {expandedItems[submenu.id] && submenu.children && (
-                                <ul className="header__nav-sublist header__nav-sublist--depth3">
+                              {/* 3뎁스 메뉴 (아코디언 애니메이션) */}
+                              {submenu.children && (
+                                <ul
+                                  ref={(el) => (submenuRefs.current[submenu.id] = el)}
+                                  className={`header__nav-sublist header__nav-sublist--depth3 ${expandedItems[submenu.id] ? "is-open" : ""}`}
+                                >
                                   {submenu.children.map((depth3) => (
                                     <li key={depth3.id} className="header__nav-subitem">
                                       <a

@@ -57,6 +57,22 @@ npm run build
 
 프로덕션 빌드가 `docs` 폴더에 생성됩니다. (GitHub Pages 배포용)
 
+### 빌드 시간 분석
+
+빌드 시 어떤 파일이나 로더가 오래 걸리는지 확인하려면:
+
+```bash
+npm run build:analyze
+```
+
+이 명령어는 다음 정보를 제공합니다:
+- 각 로더(loader)의 실행 시간
+- 각 플러그인(plugin)의 실행 시간
+- 가장 오래 걸리는 상위 10개 파일
+- 전체 빌드 시간
+
+빌드 최적화 시 유용한 도구입니다.
+
 ---
 
 ## 프로젝트 구조
@@ -226,6 +242,65 @@ function MyPage() {
 4. 이미지 alt 텍스트 제공
 5. ARIA 레이블 적절히 사용
 6. 시맨틱 HTML 태그 사용
+
+### 사용 가능한 컴포넌트 목록
+
+프로젝트에 구현된 주요 컴포넌트들입니다. 자세한 사용법은 `PublishingGuidePage`에서 확인할 수 있습니다.
+
+#### 레이아웃
+- **Header** - 모바일 헤더 (햄버거 메뉴)
+- **Footer** - 푸터
+- **PageTemplate** - 페이지 템플릿 (다크모드, 폰트 스케일 지원)
+
+#### 입력 컴포넌트
+- **Input** - 텍스트 입력 (text, password, number, validation states)
+- **Select** - 셀렉트 박스 (native select with custom styling)
+- **Textarea** - 여러 줄 텍스트 입력
+- **FileUpload** - 파일 업로드 (이미지 미리보기, 최대 3개, 삭제 기능)
+- **SearchField** - 검색 필드 (검색 아이콘, 클리어 버튼)
+
+#### 선택 컴포넌트
+- **Checkbox** - 체크박스 (단일/그룹 사용)
+- **Radio** - 라디오 버튼 (단일/그룹 사용)
+
+#### 리스트 & 카드
+- **Card** - 카드 컴포넌트 (상품 카드, 콘텐츠 카드, hover 효과)
+- **List / ListItem** - 리스트 컴포넌트 (텍스트 리스트, 아이콘 리스트)
+- **Notice** - 공지사항 리스트 (스켈레톤 로딩 지원)
+
+#### 네비게이션
+- **Tabs** - 탭 인터페이스 (default, scroll, swiper 타입, 가운데 정렬)
+- **Pagination** - 페이지네이션
+- **Accordion** - 아코디언 (exclusive, independent 타입)
+- **BottomDock** - 하단 돗바
+
+#### 피드백
+- **Toast** - 토스트 알림
+- **Tooltip** - 툴팁
+- **Popup** - 팝업 (기본, 시트, 풀스크린)
+
+#### 미디어
+- **Image** - 이미지 컴포넌트 (에러 처리, 비율 자동 판단, landscape/portrait/square)
+- **Carousel** - 캐러셀 (Swiper 기반)
+- **Lottie** - Lottie 애니메이션
+
+#### 상태 & 로딩
+- **Loading** - 로딩 인디케이터
+- **Skeleton** - 스켈레톤 로딩
+- **SkeletonPlaceholder** - 스켈레톤 플레이스홀더
+- **Badge** - 뱃지 (다양한 variant, size, outlined)
+- **EmptyState** - 빈 상태 UI (데이터 없을 때)
+- **ErrorState** - 에러 상태 UI (error, nodata, network, notfound)
+
+#### 기타 UI
+- **Button** - 버튼 (Primary, Secondary, Ghost)
+- **Toggle** - 토글 스위치
+- **Dropdown** - 드롭다운
+- **DatePicker** - 날짜 선택
+- **TableDemo** - 테이블
+- **FormSample** - 폼 요소
+- **DragDropList** - 드래그앤드랍 리스트
+- **ListSync** - 리스트 동기화
 
 ---
 
@@ -449,10 +524,11 @@ export default MyPage;
 ### PublishingGuidePage (퍼블리싱 가이드)
 퍼블리싱을 위한 UI 컴포넌트 가이드 페이지입니다.
 
-- 🎨 **더보기, 아이콘, 폼, 버튼, 컴포넌트, 탭, 이미지, 스크립트, 페이지네이션, 드래그앤드랍, 툴팁** 섹션별 예시
+- 🎨 **레이아웃, 입력 컴포넌트, 선택 컴포넌트, 리스트 & 카드, 네비게이션, 피드백, 미디어, 상태 & 로딩, 기타 UI, 폼 예제** 카테고리별 컴포넌트 예시
 - 💻 코드 예시와 실제 UI 미리보기 동시 표시
-- 🎯 아이콘 클릭 시 클래스명 클립보드 복사 기능
-- 📱 탭 인터랙션 및 상태 관리
+- 🎯 컴포넌트별 사용법 및 Props 설명
+- 📱 반응형 디자인 및 인터랙션 예시
+- ♿ 접근성 기능 포함 (다크모드, 큰글씨 모드)
 
 ### PublishingUrlPage (퍼블리싱 URL 관리)
 퍼블리싱된 페이지들의 URL을 체계적으로 관리하는 페이지입니다.
@@ -483,6 +559,7 @@ export default MyPage;
 ## 추가 문서
 
 - [PAGE_GUIDE.md](./PAGE_GUIDE.md): 페이지 개발 상세 가이드
+- [PAGE_CREATION_GUIDE.md](./PAGE_CREATION_GUIDE.md): 페이지 생성 가이드 및 컴포넌트 목록
 
 ---
 

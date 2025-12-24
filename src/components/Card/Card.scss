@@ -1,0 +1,166 @@
+@use "../../styles/index.scss" as *;
+
+.card {
+  border: px(1) solid var(--color-border);
+  border-radius: px(12);
+  background: var(--color-card);
+  overflow: hidden;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+
+  &--hoverable {
+    &:hover {
+      border-color: var(--color-accent);
+      box-shadow: 0 px(4) px(16) rgba(12, 124, 89, 0.12);
+      transform: translateY(px(-2));
+    }
+  }
+
+  &--clickable {
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: px(2) solid var(--color-accent);
+      outline-offset: px(2);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  // Product variant
+  &--product {
+    .card__image {
+      position: relative;
+      width: 100%;
+      min-height: px(200);
+      background: var(--color-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .card__content {
+      padding: px(16);
+      display: flex;
+      flex-direction: column;
+      gap: px(12);
+    }
+
+    .card__title {
+      margin: 0;
+      @include px(font-size, 18);
+      font-weight: 700;
+      color: var(--color-text);
+      line-height: 1.3;
+    }
+
+    .card__description {
+      margin: 0;
+      @include px(font-size, 14);
+      color: var(--color-muted);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card__price {
+      @include px(font-size, 20);
+      font-weight: 700;
+      color: var(--color-accent);
+      margin-top: auto;
+    }
+  }
+
+  // Content variant
+  &--content {
+    .card__image {
+      position: relative;
+      width: 100%;
+      min-height: px(150);
+      background: var(--color-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .card__content {
+      padding: px(20);
+      display: flex;
+      flex-direction: column;
+      gap: px(10);
+    }
+
+    .card__title {
+      margin: 0;
+      @include px(font-size, 16);
+      font-weight: 700;
+      color: var(--color-text);
+      line-height: 1.4;
+    }
+
+    .card__description {
+      margin: 0;
+      @include px(font-size, 14);
+      color: var(--color-muted);
+      line-height: 1.6;
+    }
+  }
+
+  &__image {
+    position: relative;
+  }
+
+  &__image-element {
+    width: 100%;
+    height: auto;
+
+    &.image--landscape {
+      width: 100%;
+      height: auto;
+    }
+
+    &.image--portrait {
+      width: auto;
+      height: 100%;
+    }
+
+    &.image--square {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__badge {
+    position: absolute;
+    top: px(12);
+    left: px(12);
+    z-index: 1;
+  }
+
+  &__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__title {
+    margin: 0;
+  }
+
+  &__description {
+    margin: 0;
+  }
+
+  &__price {
+    margin: 0;
+  }
+}
+

@@ -1,0 +1,85 @@
+@use "../../styles/index.scss" as *;
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  border-radius: px(999);
+  transition: all 0.2s ease;
+
+  // Size variants
+  &--small {
+    @include px(font-size, 10);
+    padding: px(4) px(8);
+  }
+
+  &--medium {
+    @include px(font-size, 12);
+    padding: px(6) px(10);
+  }
+
+  &--large {
+    @include px(font-size, 14);
+    padding: px(8) px(14);
+  }
+
+  // Variant styles (filled)
+  &--default {
+    background: rgba(12, 124, 89, 0.12);
+    color: var(--color-accent);
+  }
+
+  &--success {
+    background: rgba(34, 197, 94, 0.12);
+    color: #22c55e;
+  }
+
+  &--warning {
+    background: rgba(251, 191, 36, 0.12);
+    color: #fbbf24;
+  }
+
+  &--error {
+    background: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+  }
+
+  &--info {
+    background: rgba(59, 130, 246, 0.12);
+    color: #3b82f6;
+  }
+
+  // Outlined variant
+  &--outlined {
+    background: transparent;
+
+    &.badge--default {
+      border: px(1) solid var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    &.badge--success {
+      border: px(1) solid #22c55e;
+      color: #22c55e;
+    }
+
+    &.badge--warning {
+      border: px(1) solid #fbbf24;
+      color: #fbbf24;
+    }
+
+    &.badge--error {
+      border: px(1) solid #ef4444;
+      color: #ef4444;
+    }
+
+    &.badge--info {
+      border: px(1) solid #3b82f6;
+      color: #3b82f6;
+    }
+  }
+}
+

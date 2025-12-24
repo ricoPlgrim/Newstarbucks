@@ -1,0 +1,87 @@
+@use "../../styles/index.scss" as *;
+
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: px(8);
+  cursor: pointer;
+  user-select: none;
+
+  &--disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &__input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+
+    &:focus-visible + .checkbox__box {
+      outline: px(2) solid var(--color-accent);
+      outline-offset: px(2);
+    }
+
+    &:disabled + .checkbox__box {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  }
+
+  &__box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: px(20);
+    height: px(20);
+    border: px(2) solid var(--color-border);
+    border-radius: px(4);
+    background: var(--color-bg);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+
+    svg {
+      color: #fff;
+      display: block;
+    }
+  }
+
+  &__input:checked + &__box {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  &__input:disabled:checked + &__box {
+    background: var(--color-muted);
+    border-color: var(--color-muted);
+  }
+
+  &__label {
+    @include px(font-size, 14);
+    color: var(--color-text);
+    line-height: 1.4;
+  }
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: px(12);
+
+  &__label {
+    @include px(font-size, 14);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: px(4);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: px(10);
+  }
+}
+

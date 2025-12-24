@@ -1,28 +1,36 @@
 @use "../../styles/index.scss" as *;
 
-.tabs-demo {
+.tabs {
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: px-to-rem(16);
+  gap: px(16);
 
   &__tablist {
     display: flex;
-    gap: px-to-rem(8);
+    gap: px(8);
     width: 100%;
   }
 
-  button {
+  &__button {
     flex: 1;
-    border: 1px solid var(--color-border);
+    border: px(1) solid var(--color-border);
     background-color: var(--color-card);
-    padding: px-to-rem(10) px-to-rem(16);
-    border-radius: px-to-rem(999);
+    padding: px(10) px(16);
+    border-radius: px(999);
     font-weight: 600;
     color: var(--color-text);
     cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
 
-    &[aria-selected="true"] {
+    &:hover {
+      background-color: rgba(var(--color-accent-rgb), 0.1);
+      border-color: var(--color-accent);
+    }
+
+    &[aria-selected="true"],
+    &.is-active {
       background-color: var(--color-accent);
       color: #fff;
       border-color: var(--color-accent);
@@ -30,12 +38,101 @@
   }
 
   &__tabpanel {
-    border: 1px solid var(--color-border);
-    border-radius: px-to-rem(12);
-    padding: px-to-rem(16);
+    border: px(1) solid var(--color-border);
+    border-radius: px(12);
+    padding: px(16);
     background-color: var(--color-card);
     color: var(--color-text);
     line-height: 1.5;
+  }
+
+  // Swiper 타입
+  &--swiper {
+    .tabs__wrapper {
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .tabs__swiper {
+      width: 100%;
+      max-width: 100%;
+      padding: px(4) 0; // 스크롤 영역 확보
+      margin: 0;
+    }
+
+    .tabs__slide {
+      width: auto;
+      flex-shrink: 0;
+    }
+
+    .tabs__button {
+      flex: none;
+      min-width: fit-content;
+      white-space: nowrap;
+    }
+  }
+
+  // Scroll 타입
+  &--scroll {
+    .tabs__scroll-container {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-border) transparent;
+      position: relative;
+
+      &::-webkit-scrollbar {
+        height: px(4);
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: var(--color-border);
+        border-radius: px(2);
+      }
+    }
+
+    .tabs__tablist {
+      display: inline-flex;
+      min-width: 100%;
+      width: auto;
+      padding: px(4) 0;
+      gap: px(8);
+    }
+
+    .tabs__button {
+      flex: none;
+      min-width: fit-content;
+      white-space: nowrap;
+    }
+  }
+
+  // Default 타입
+  &--default {
+    .tabs__tablist {
+      display: flex;
+      gap: px(8);
+      width: 100%;
+    }
+
+    .tabs__button {
+      flex: 1;
+    }
+  }
+}
+
+// Swiper 커스텀 스타일
+.tabs__swiper {
+  .swiper-slide {
+    width: auto;
   }
 }
 

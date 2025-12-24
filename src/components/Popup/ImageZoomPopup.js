@@ -1,8 +1,11 @@
 import { useRef, useState } from "react";
+import Image from "../Image/Image";
+import Loading from "../Loading/Loading";
 import "./Popup.scss";
 
 const ImageZoomPopup = ({ src, alt = "Zoom image", open, onClose }) => {
   const [scale, setScale] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
   const pinchRef = useRef(null);
 
   const clampScale = (value) => Math.min(3, Math.max(1, value));
@@ -57,11 +60,19 @@ const ImageZoomPopup = ({ src, alt = "Zoom image", open, onClose }) => {
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          <img
+          {isLoading && (
+            <div className="popup__image-loading">
+              <Loading size={48} thickness={4} label="이미지 로딩 중..." />
+            </div>
+          )}
+          <Image
             src={src}
             alt={alt}
+            className="popup__image-zoom-element"
             style={{ transform: `scale(${scale})` }}
-            draggable={false}
+            onLoad={() => setIsLoading(false)}
+            onError={() => setIsLoading(false)}
+            showFallback={true}
           />
         </div>
       </div>

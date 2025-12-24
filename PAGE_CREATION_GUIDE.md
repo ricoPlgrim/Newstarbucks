@@ -239,25 +239,59 @@ const [currentPage, setCurrentPage] = useState(() => {
 
 프로젝트에 이미 구현된 컴포넌트들을 활용하세요:
 
+### 레이아웃
 - **Header** - 모바일 헤더 (햄버거 메뉴)
 - **Footer** - 푸터
-- **Button** - 버튼 (Primary, Secondary, Ghost)
-- **FormSample** - 폼 요소
-- **TableDemo** - 테이블
-- **Carousel** - 캐러셀
-- **Tabs** - 탭
-- **Dropdown** - 드롭다운
+- **PageTemplate** - 페이지 템플릿 (다크모드, 폰트 스케일 지원)
+
+### 입력 컴포넌트
+- **Input** - 텍스트 입력 (text, password, number)
+- **Select** - 셀렉트 박스
+- **Textarea** - 여러 줄 텍스트 입력
+- **FileUpload** - 파일 업로드 (이미지 미리보기, 최대 3개)
+- **SearchField** - 검색 필드 (검색 아이콘, 클리어 버튼)
+
+### 선택 컴포넌트
+- **Checkbox** - 체크박스 (단일/그룹)
+- **Radio** - 라디오 버튼 (단일/그룹)
+
+### 리스트 & 카드
+- **Card** - 카드 컴포넌트 (상품 카드, 콘텐츠 카드)
+- **List / ListItem** - 리스트 컴포넌트 (텍스트 리스트, 아이콘 리스트)
+- **Notice** - 공지사항 리스트
+
+### 네비게이션
+- **Tabs** - 탭 인터페이스 (default, scroll, swiper 타입)
+- **Pagination** - 페이지네이션
+- **Accordion** - 아코디언 (exclusive, independent 타입)
+- **BottomDock** - 하단 돗바
+
+### 피드백
 - **Toast** - 토스트 알림
-- **Popup** - 팝업
-- **DatePicker** - 날짜 선택
-- **Toggle** - 토글 스위치
+- **Tooltip** - 툴팁
+- **Popup** - 팝업 (기본, 시트, 풀스크린)
+
+### 미디어
+- **Image** - 이미지 컴포넌트 (에러 처리, 비율 자동 판단)
+- **Carousel** - 캐러셀 (Swiper 기반)
+- **Lottie** - Lottie 애니메이션
+
+### 상태 & 로딩
 - **Loading** - 로딩 인디케이터
 - **Skeleton** - 스켈레톤 로딩
-- **Lottie** - Lottie 애니메이션
-- **Image** - 이미지 (에러 처리 포함)
-- **Tooltip** - 툴팁
+- **SkeletonPlaceholder** - 스켈레톤 플레이스홀더
+- **Badge** - 뱃지 (다양한 variant, size, outlined)
+- **EmptyState** - 빈 상태 UI
+- **ErrorState** - 에러 상태 UI (error, nodata, network, notfound)
+
+### 기타 UI
+- **Button** - 버튼 (Primary, Secondary, Ghost)
+- **Toggle** - 토글 스위치
+- **Dropdown** - 드롭다운
+- **DatePicker** - 날짜 선택
+- **TableDemo** - 테이블
+- **FormSample** - 폼 요소
 - **DragDropList** - 드래그앤드랍 리스트
-- **BottomDock** - 하단 돗바
 - **ListSync** - 리스트 동기화
 
 자세한 사용법은 `PublishingGuidePage`에서 확인할 수 있습니다.

@@ -1,0 +1,91 @@
+@use "../../styles/index.scss" as *;
+
+.radio {
+  display: inline-flex;
+  align-items: center;
+  gap: px(8);
+  cursor: pointer;
+  user-select: none;
+
+  &--disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &__input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+
+    &:focus-visible + .radio__circle {
+      outline: px(2) solid var(--color-accent);
+      outline-offset: px(2);
+    }
+
+    &:disabled + .radio__circle {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  }
+
+  &__circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: px(20);
+    height: px(20);
+    border: px(2) solid var(--color-border);
+    border-radius: 50%;
+    background: var(--color-bg);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  &__dot {
+    width: px(10);
+    height: px(10);
+    border-radius: 50%;
+    background: var(--color-accent);
+  }
+
+  &__input:checked + &__circle {
+    border-color: var(--color-accent);
+  }
+
+  &__input:disabled:checked + &__circle {
+    border-color: var(--color-muted);
+
+    .radio__dot {
+      background: var(--color-muted);
+    }
+  }
+
+  &__label {
+    @include px(font-size, 14);
+    color: var(--color-text);
+    line-height: 1.4;
+  }
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: px(12);
+
+  &__label {
+    @include px(font-size, 14);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: px(4);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: px(10);
+  }
+}
+

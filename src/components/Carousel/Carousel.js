@@ -3,6 +3,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import Image from "../Image/Image";
+import Loading from "../Loading/Loading";
 import "./Carousel.scss";
 
 const defaultSlides = [
@@ -29,8 +31,21 @@ const Carousel = ({ slides = defaultSlides, showOptionsPanel = false }) => {
         {slides.map((slide) => (
           <SwiperSlide key={slide.id}>
             <div className="carousel-card">
-              <h4>{slide.title}</h4>
-              <p>{slide.desc}</p>
+              {slide.image && (
+                <div className="carousel-card__image">
+                  <Image
+                    src={slide.image}
+                    alt={slide.title || slide.description || "슬라이드 이미지"}
+                    className="carousel-card__image-element"
+                  />
+                </div>
+              )}
+              {(slide.title || slide.desc || slide.description) && (
+                <div className="carousel-card__content">
+                  {slide.title && <h4>{slide.title}</h4>}
+                  {(slide.desc || slide.description) && <p>{slide.desc || slide.description}</p>}
+                </div>
+              )}
             </div>
           </SwiperSlide>
         ))}

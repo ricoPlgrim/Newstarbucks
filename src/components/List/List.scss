@@ -1,0 +1,100 @@
+@use "../../styles/index.scss" as *;
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+
+  &--bordered {
+    border: px(1) solid var(--color-border);
+    border-radius: px(10);
+    overflow: hidden;
+  }
+
+  &--divided {
+    .list-item {
+      border-bottom: px(1) solid var(--color-border);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  &--text {
+    .list-item {
+      padding: px(12) px(16);
+    }
+  }
+
+  &--icon {
+    .list-item {
+      padding: px(14) px(16);
+    }
+  }
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: px(12);
+  color: var(--color-text);
+  @include px(font-size, 14);
+  line-height: 1.5;
+  transition: background-color 0.2s ease;
+
+  &--clickable {
+    cursor: pointer;
+
+    &:hover:not(.list-item--disabled) {
+      background: rgba(12, 124, 89, 0.06);
+    }
+
+    &:focus-visible {
+      outline: px(2) solid var(--color-accent);
+      outline-offset: px(-2);
+    }
+
+    &:active:not(.list-item--disabled) {
+      background: rgba(12, 124, 89, 0.1);
+    }
+  }
+
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: px(24);
+    height: px(24);
+    @include px(font-size, 18);
+    line-height: 1;
+  }
+
+  &__prefix {
+    flex-shrink: 0;
+    color: var(--color-muted);
+    @include px(font-size, 12);
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__suffix {
+    flex-shrink: 0;
+    color: var(--color-muted);
+    @include px(font-size, 12);
+    margin-left: auto;
+  }
+}
+

@@ -23,6 +23,7 @@
   "scripts": {
     "start": "cross-env SASS_SILENCE_DEPRECATIONS=all react-app-rewired start",
     "build": "cross-env BUILD_PATH=docs SASS_SILENCE_DEPRECATIONS=all react-app-rewired build",
+    "build:analyze": "cross-env ANALYZE_BUILD=true BUILD_PATH=docs SASS_SILENCE_DEPRECATIONS=all react-app-rewired build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "storybook dev -p 6006",
@@ -56,6 +57,7 @@
     "prop-types": "^15.8.1",
     "react-app-rewired": "^2.2.1",
     "sass-embedded": "^1.93.3",
+    "speed-measure-webpack-plugin": "^1.5.0",
     "storybook": "^10.0.8",
     "webpack": "^5.103.0"
   },
