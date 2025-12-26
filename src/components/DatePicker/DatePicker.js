@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import ko from "date-fns/locale/ko";
 import "react-day-picker/dist/style.css";
+import Button from "../Button/Button";
 import "./DatePicker.scss";
 
 function formatDate(date) {
@@ -58,13 +59,20 @@ function DatePicker() {
               selected={selected}
               onSelect={(day) => {
                 setSelected(day);
-                setOpenSingle(false);
               }}
               weekStartsOn={0}
               locale={ko}
               showOutsideDays
               fixedWeeks
             />
+            <Button
+              variant="ghost"
+              size="small"
+              onClick={() => setOpenSingle(false)}
+              className="date-picker__close"
+            >
+              닫기
+            </Button>
           </div>
         )}
       </div>
@@ -83,15 +91,20 @@ function DatePicker() {
               onSelect={(dayRange) => {
                 const nextRange = dayRange || { from: null, to: null };
                 setRange(nextRange);
-                if (nextRange?.from && nextRange?.to) {
-                  setOpenRange(false);
-                }
               }}
               weekStartsOn={0}
               locale={ko}
               showOutsideDays
               fixedWeeks
             />
+            <Button
+              variant="ghost"
+              size="small"
+              onClick={() => setOpenRange(false)}
+              className="date-picker__close"
+            >
+              닫기
+            </Button>
           </div>
         )}
       </div>
@@ -110,9 +123,6 @@ function DatePicker() {
               onSelect={(dayRange) => {
                 const nextRange = dayRange || { from: null, to: null };
                 setMultiRange(nextRange);
-                if (nextRange?.from && nextRange?.to) {
-                  setOpenMulti(false);
-                }
               }}
               numberOfMonths={2}
               pagedNavigation
@@ -121,6 +131,14 @@ function DatePicker() {
               showOutsideDays
               fixedWeeks
             />
+            <Button
+              variant="ghost"
+              size="small"
+              onClick={() => setOpenMulti(false)}
+              className="date-picker__close"
+            >
+              닫기
+            </Button>
           </div>
         )}
       </div>

@@ -100,13 +100,14 @@ Newstarbucks/
 │   │   ├── ErrorState/               # 에러 상태 UI
 │   │   ├── FileUpload/               # 파일 업로드 컴포넌트
 │   │   ├── Footer/                   # 푸터 컴포넌트
-│   │   ├── FormSample/               # 폼 예제 컴포넌트
-│   │   ├── Header/                   # 헤더 컴포넌트
+│   │   ├── Form/                     # 폼 컴포넌트
+│   │   ├── Header/                   # 헤더 컴포넌트 (메인/서브 헤더)
 │   │   ├── Icon/                     # 아이콘 컴포넌트
 │   │   ├── Image/                    # 이미지 컴포넌트
 │   │   ├── Input/                    # 입력 컴포넌트
 │   │   ├── Layout/                   # 레이아웃 컴포넌트 (디자인 시스템)
 │   │   ├── List/                     # 리스트 컴포넌트
+│   │   ├── ListContainer/            # 리스트 컨테이너 컴포넌트
 │   │   ├── ListSync/                 # 리스트 동기화 컴포넌트
 │   │   ├── Loading/                  # 로딩 인디케이터
 │   │   ├── LoadingGrid/              # 로딩 그리드
@@ -119,7 +120,7 @@ Newstarbucks/
 │   │   ├── Select/                   # 셀렉트 박스 컴포넌트
 │   │   ├── Skeleton/                 # 스켈레톤 로딩 컴포넌트
 │   │   ├── Spacing/                  # 스페이싱 컴포넌트 (디자인 시스템)
-│   │   ├── TableDemo/                # 테이블 데모 컴포넌트
+│   │   ├── Table/                    # 테이블 컴포넌트
 │   │   ├── Tabs/                     # 탭 컴포넌트
 │   │   ├── Textarea/                 # 텍스트 영역 컴포넌트
 │   │   ├── Toast/                    # 토스트 알림 컴포넌트
@@ -288,12 +289,13 @@ function MyPage() {
 - **Icon** - 아이콘 컴포넌트 (이모지, SVG, 텍스트 지원, size/color 옵션)
 
 #### 레이아웃
-- **Header** - 모바일 헤더 (햄버거 메뉴, 3뎁스 메뉴 구조)
+- **Header** - 모바일 헤더 (메인 헤더: 햄버거 메뉴, 3뎁스 메뉴 구조 / 서브 헤더: 뒤로가기, 카테고리명, 유틸리티 버튼)
 - **Footer** - 푸터
 - **PageTemplate** - 페이지 템플릿 (다크모드, 폰트 스케일 지원)
+- **ListContainer** - 리스트 컨테이너 (section/article 태그 기반, 제목/설명, bordered/divided 옵션)
 
 #### 입력 컴포넌트
-- **Input** - 텍스트 입력 (text, password, number, validation states, help text, clear button)
+- **Input** - 텍스트 입력 (text, password, number, tel, email, validation states, help text, clear button, 자동 하이픈 포맷팅)
 - **Select** - 셀렉트 박스 (native select with custom styling)
 - **Textarea** - 여러 줄 텍스트 입력
 - **FileUpload** - 파일 업로드 (이미지 미리보기, 최대 3개, 삭제 기능)
@@ -306,7 +308,8 @@ function MyPage() {
 #### 리스트 & 카드
 - **Card** - 카드 컴포넌트 (상품 카드, 콘텐츠 카드, hover 효과)
 - **List / ListItem** - 리스트 컴포넌트 (텍스트 리스트, 아이콘 리스트)
-- **Notice** - 공지사항 리스트 (스켈레톤 로딩 지원)
+- **ListContainer** - 리스트 컨테이너 (section/article 태그, 제목/설명, bordered/divided 옵션)
+- **Notice** - 공지사항 리스트 (스켈레톤 로딩 지원, 링크 지원)
 
 #### 네비게이션
 - **Tabs** - 탭 인터페이스 (default, scroll, swiper 타입, 가운데 정렬)
@@ -317,11 +320,11 @@ function MyPage() {
 #### 피드백
 - **Toast** - 토스트 알림
 - **Tooltip** - 툴팁 (top, bottom, left, right placement)
-- **Popup** - 팝업 (기본, 시트, 풀스크린)
+- **Popup** - 팝업 (기본: Swiper 캐러셀 지원, lazy loading / 시트: 드래그로 닫기 / 풀스크린)
 
 #### 미디어
-- **Image** - 이미지 컴포넌트 (에러 처리, 비율 자동 판단, landscape/portrait/square)
-- **Carousel** - 캐러셀 (Swiper 기반, 다양한 효과: fade, cube, coverflow, flip, multiple slides)
+- **Image** - 이미지 컴포넌트 (에러 처리, 비율 자동 판단, landscape/portrait/square, fallback 이미지 지원)
+- **Carousel** - 캐러셀 (Swiper 기반, 다양한 효과: fade, cube, coverflow, flip, multiple slides, 단일 슬라이드 시 no-swiper 클래스, lazy loading)
 - **Lottie** - Lottie 애니메이션
 
 #### 상태 & 로딩
@@ -339,11 +342,11 @@ function MyPage() {
 
 #### 드롭다운 & 피커
 - **Dropdown** - 드롭다운
-- **DatePicker** - 날짜 선택
+- **DatePicker** - 날짜 선택 (단일/범위/다중 선택, 닫기 버튼, 자동 닫기 제거)
 
 #### 기타 UI
-- **TableDemo** - 테이블
-- **FormSample** - 폼 요소 (유효성 검사 포함)
+- **Table** - 테이블 (가로 스크롤·열 고정 / 세로 스크롤·헤더 고정 / 가로·세로 스크롤·헤더&열 고정)
+- **Form** - 폼 요소 (유효성 검사 포함, Button 컴포넌트 사용)
 - **DragDropList** - 드래그앤드랍 리스트
 - **ListSync** - 리스트 동기화
 

@@ -1,0 +1,191 @@
+@use "../../styles/index.scss" as *;
+
+.table__table--freeze {
+  --freeze-first: 110px;
+  --freeze-second: 250px;
+}
+
+.guide-preview--table {
+  display: flex;
+  flex-direction: column;
+  gap: px(24);
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.table {
+  background: #ffffff;
+  border: px(1) solid rgba(0, 0, 0, 0.05);
+  border-radius: px(12);
+  padding: px(20);
+  box-shadow: 0 px(8) px(20) rgba(0, 0, 0, 0.04);
+  width: 100%;
+  max-width: 100%;
+}
+
+.table__header {
+  display: flex;
+  flex-direction: column;
+  gap: px(6);
+  margin-bottom: px(12);
+}
+
+.table__desc {
+  margin: 0;
+  color: #5b5c60;
+  font-size: px(14);
+}
+
+.table__table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  border: px(1) solid rgba(0, 0, 0, 0.06);
+  border-radius: px(10);
+  background: #fafbfc;
+}
+
+.table__table-wrapper--scroll-horizontal {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.table__table-wrapper--scroll-vertical {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 400px;
+}
+
+.table__table-wrapper--scroll-both {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.table__table-wrapper--freeze {
+  position: relative;
+}
+
+.table__table {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  border-collapse: collapse;
+  font-size: px(14);
+}
+
+.table__table--wide {
+  width: max-content;
+  min-width: 1100px;
+}
+
+.table__table--wide th:nth-child(1),
+.table__table--wide td:nth-child(1) {
+  min-width: var(--freeze-first);
+  width: var(--freeze-first);
+  max-width: var(--freeze-first);
+}
+
+.table__table--wide th:nth-child(2),
+.table__table--wide td:nth-child(2) {
+  min-width: var(--freeze-second);
+  width: var(--freeze-second);
+  max-width: var(--freeze-second);
+}
+
+.table__table--wide th:not(:nth-child(1)):not(:nth-child(2)),
+.table__table--wide td:not(:nth-child(1)):not(:nth-child(2)) {
+  min-width: 140px;
+}
+
+.table__table th,
+.table__table td {
+  padding: px(12) px(14);
+  text-align: left;
+  border-bottom: px(1) solid rgba(0, 0, 0, 0.06);
+  background: #ffffff;
+  position: relative; // z-index 제어 가능
+}
+
+// 세로 스크롤 테이블의 thead 고정
+.table__table-wrapper--scroll-vertical .table__table thead,
+.table__table-wrapper--scroll-both .table__table thead {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.table__table thead th {
+  background: #f5f6f7;
+  font-weight: 600;
+  position: relative;
+}
+
+// 가로 스크롤 테이블의 thead는 고정하지 않음
+.table__table-wrapper--scroll-horizontal .table__table thead {
+  position: static;
+}
+
+.table__table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table__title {
+  font-weight: 600;
+  color: #1b1b1f;
+}
+
+.table__table--freeze .is-sticky {
+  position: sticky;
+  background: #ffffff;
+  z-index: 6; // 일반 셀보다 높게
+  border-right: px(1) solid rgba(0, 0, 0, 0.06);
+}
+
+.table__table--freeze .is-sticky--first {
+  left: 0;
+  min-width: var(--freeze-first);
+  width: var(--freeze-first);
+  box-shadow: 8px 0 14px rgba(0, 0, 0, 0.05);
+  z-index: 8;
+}
+
+.table__table--freeze .is-sticky--second {
+  left: var(--freeze-first);
+  min-width: var(--freeze-second);
+  width: var(--freeze-second);
+  box-shadow: 8px 0 14px rgba(0, 0, 0, 0.05);
+  z-index: 7;
+}
+
+// 가로 스크롤 테이블의 고정 열 z-index
+.table__table--freeze thead .is-sticky {
+  z-index: 21; // 고정된 헤더 셀이 더 위에
+}
+
+.table__table--freeze thead th.is-sticky--first,
+.table__table--freeze thead th.is-sticky--second {
+  box-shadow: 6px 0 14px rgba(0, 0, 0, 0.06);
+  z-index: 22; // 첫 번째, 두 번째 고정 열이 가장 위에
+}
+
+// 헤더 & 열 고정 테이블의 thead 고정 열 z-index (가장 높게)
+.table__table-wrapper--scroll-both .table__table--freeze thead th.is-sticky--first {
+  z-index: 25; // 헤더와 열이 모두 고정된 경우 가장 위에
+}
+
+@media (max-width: 768px) {
+  .table {
+    padding: px(16);
+  }
+
+  .table__table {
+    min-width: 100%;
+  }
+
+  .table__table--wide {
+    min-width: 900px;
+  }
+}
+

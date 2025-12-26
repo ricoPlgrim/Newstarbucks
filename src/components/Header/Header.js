@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import Typography from "../Typography/Typography";
 import "./Header.scss";
 
 // GNB 메뉴 데이터 (3뎁스 구조) - 컴포넌트 외부로 이동하여 모든 함수에서 사용 가능하도록
@@ -64,7 +65,15 @@ const gnbMenu = [
   }
 ];
 
-function Header({ currentPage, onPageChange }) {
+function Header({ 
+  currentPage, 
+  onPageChange, 
+  variant = "main", // "main" | "sub"
+  categoryName = "카테고리",
+  onBack,
+  onCartClick,
+  onUtilityClick
+}) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [expandedItems, setExpandedItems] = useState({});
   // 각 서브메뉴의 DOM 참조 (2뎁스, 3뎁스 애니메이션용)
@@ -416,12 +425,79 @@ function Header({ currentPage, onPageChange }) {
     return null;
   };
 
+  // 서브 헤더 렌더링
+  if (variant === "sub") {
+    return (
+      <header className="header header--sub">
+        <div className="header__inner header__inner--sub">
+          {/* 뒤로가기 버튼 */}
+          <button
+            className="header__back"
+            onClick={onBack}
+            aria-label="뒤로가기"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+
+          {/* 카테고리 이름 */}
+          <Typography variant="h2" size="small" className="header__category">
+            {categoryName}
+          </Typography>
+
+          {/* 오른쪽 유틸리티 버튼들 */}
+          <div className="header__utilities">
+            {/* 장바구니 버튼 */}
+            <button
+              className="header__utility-btn"
+              onClick={onCartClick}
+              aria-label="장바구니"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19C19.5304 16 20.0391 15.7893 20.4142 15.4142C20.7893 15.0391 21 14.5304 21 14V6H8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+
+            {/* 검색 버튼 */}
+            <button
+              className="header__utility-btn"
+              onClick={() => onUtilityClick && onUtilityClick("search")}
+              aria-label="검색"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M21 21L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+
+            {/* 더보기 버튼 */}
+            <button
+              className="header__utility-btn"
+              onClick={() => onUtilityClick && onUtilityClick("more")}
+              aria-label="더보기"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="12" cy="12" r="1" fill="currentColor"/>
+                <circle cx="19" cy="12" r="1" fill="currentColor"/>
+                <circle cx="5" cy="12" r="1" fill="currentColor"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </header>
+    );
+  }
+
+  // 메인 헤더 렌더링
   return (
     <header className="header">
       <div className="header__inner">
         {/* 로고 */}
         <div className="header__logo">
-          <h1>스타벅스</h1>
+          <Typography variant="h1" size="small">스타벅스</Typography>
         </div>
 
         {/* 햄버거 버튼 */}

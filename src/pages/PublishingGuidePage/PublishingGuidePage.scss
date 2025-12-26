@@ -2,6 +2,21 @@
 
 
 .header-demo { 
+  &__section {
+    margin-bottom: px(48);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__section-title {
+    margin: 0 0 px(16) 0;
+    color: var(--color-text);
+    font-size: px(20);
+    font-weight: 700;
+  }
+
   &__description {
     margin-bottom: px(20);
 
@@ -1610,7 +1625,7 @@
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-width: px(40);
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2128,6 +2143,7 @@
   flex-direction: column;
   width: 100%;
   gap: px(24);
+  flex-wrap:nowrap;
 }
 
 // Spacing 프리뷰
@@ -2224,6 +2240,28 @@
     color: var(--color-text);
     padding-bottom: px(12);
     border-bottom: 2px solid var(--color-accent);
+  }
+
+  &__note {
+    margin-top: px(12);
+    padding: px(12);
+    background-color: rgba(12, 124, 89, 0.05);
+    border-radius: px(8);
+    p {
+      margin: 0;
+      @include px(font-size, 13);
+      color: var(--color-text);
+      line-height: 1.6;
+
+      code {
+        padding: px(2) px(6);
+        background-color: rgba(12, 124, 89, 0.1);
+        border-radius: px(4);
+        font-family: "Fira Code", "Courier New", monospace;
+        @include px(font-size, 12);
+        color: var(--color-accent);
+      }
+    }
   }
 }
 
@@ -2444,6 +2482,28 @@
       color: var(--color-text);
       font-weight: 600;
       margin-right: px(4);
+    }
+  }
+}
+
+// ListContainer 컴포넌트 미리보기
+.guide-preview--list-container {
+  .list-container-demo {
+    display: flex;
+    flex-direction: column;
+    gap: px(32);
+
+    &__section {
+      display: flex;
+      flex-direction: column;
+      gap: px(16);
+    }
+
+    &__title {
+      margin: 0;
+      @include px(font-size, 18);
+      font-weight: 700;
+      color: var(--color-text);
     }
   }
 }

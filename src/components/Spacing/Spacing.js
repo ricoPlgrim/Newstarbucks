@@ -7,14 +7,17 @@ import "./Spacing.scss";
  * @param {string} className - 추가 클래스명
  */
 const Spacing = ({ value, name, className = "" }) => {
+  const remValue = (value / 16).toFixed(2);
+  const displayWidth = Math.min(value, 120); // 최대 120px로 제한하여 카드 내에서 보기 좋게
+
   return (
     <div className={`spacing-token ${className}`}>
-      <div className="spacing-token__visual" style={{ width: `${value}px`, height: `${value}px` }}>
+      <div className="spacing-token__visual" style={{ width: `${displayWidth}px`, height: `${displayWidth}px` }}>
         <span className="spacing-token__label">{value}px</span>
       </div>
       <div className="spacing-token__info">
         <div className="spacing-token__name">{name || `${value}px`}</div>
-        <div className="spacing-token__value">{value}px ({value / 16}rem)</div>
+        <div className="spacing-token__value">{value}px ({remValue}rem)</div>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import Typography from "../Typography/Typography";
 import "./ErrorState.scss";
 
 /**
@@ -19,7 +20,8 @@ const ErrorState = ({
   type = "error",
   className = "",
 }) => {
-  // 타입별 기본값
+  // 타입별 기본값 설정
+  // 각 에러 타입에 맞는 기본 제목, 메시지, 아이콘을 제공
   const defaultConfig = {
     error: {
       title: "오류가 발생했습니다",
@@ -43,16 +45,25 @@ const ErrorState = ({
     },
   };
 
+  // 현재 타입에 맞는 기본 설정 가져오기 (없으면 error 타입 사용)
   const config = defaultConfig[type] || defaultConfig.error;
+  // props로 전달된 값이 있으면 사용, 없으면 기본값 사용
   const displayTitle = title || config.title;
   const displayMessage = message || config.message;
+  // icon은 undefined일 수 있으므로 명시적으로 체크
   const displayIcon = icon !== undefined ? icon : config.icon;
 
   return (
     <div className={`error-state error-state--${type} ${className}`}>
       <div className="error-state__icon">{displayIcon}</div>
-      <h3 className="error-state__title">{displayTitle}</h3>
-      {displayMessage && <p className="error-state__message">{displayMessage}</p>}
+      <Typography variant="h3" size="small" className="error-state__title">
+        {displayTitle}
+      </Typography>
+      {displayMessage && (
+        <Typography variant="body" size="small" color="muted" className="error-state__message">
+          {displayMessage}
+        </Typography>
+      )}
       {action && <div className="error-state__action">{action}</div>}
     </div>
   );

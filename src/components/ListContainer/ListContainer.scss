@@ -1,0 +1,57 @@
+@use "../../styles/index.scss" as *;
+
+.list-container {
+  display: flex;
+  flex-direction: column;
+  gap: px-to-rem(16);
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: px-to-rem(8);
+  }
+
+  &__title {
+    margin: 0;
+    @include px(font-size, 20);
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  &__description {
+    margin: 0;
+    @include px(font-size, 14);
+    color: var(--color-muted);
+    line-height: 1.6;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: px-to-rem(12);
+  }
+
+  // 테두리 스타일
+  &--bordered {
+    padding: px-to-rem(20);
+    border: 1px solid var(--color-border);
+    border-radius: px-to-rem(12);
+    background-color: var(--color-bg);
+  }
+
+  // 구분선 스타일
+  &--divided {
+    .list-container__body {
+      > * {
+        padding-bottom: px-to-rem(12);
+        border-bottom: 1px solid var(--color-border);
+
+        &:last-child {
+          padding-bottom: 0;
+          border-bottom: none;
+        }
+      }
+    }
+  }
+}
+

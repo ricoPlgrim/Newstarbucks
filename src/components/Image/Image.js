@@ -16,11 +16,17 @@ const Image = ({
 }) => {
   const [imageStatus, setImageStatus] = useState("loading");
   const [aspectRatio, setAspectRatio] = useState(null);
+  const [fallbackError, setFallbackError] = useState(false);
 
-  // 기본 noimage 이미지 URL - 더 예쁜 디자인
-  const noImageUrl = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiByeD0iMTIiIGZpbGw9IiNGMEY0RjQiLz4KPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI0NSIgZmlsbD0iI0U5RUNGRiIvPgo8cGF0aCBkPSJtMTAwIDY1IDMwIDMwTDk1IDk1bC0yMCAyMGwtMzAtMzBaIiBmaWxsPSIjQzRDNURGIi8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iNDAiIHN0cm9rZT0iI0M0QzVEQiIHN0cm9rZS13aWR0aD0iNCIgZmlsbD0ibm9uZSIvPgo8cGF0aCBkPSJtODAgMTIwIDI0IDI0IiBzdHJva2U9IiNDNEM1REIiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBmaWxsPSJub25lIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iMTgwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5Q0E0QUYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSI2MDAiPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4="; // 더 예쁜 "No Image" 디자인
+  // 기본 noimage 이미지 URL (public 폴더의 no_image.png 사용)
+  // fallbackSrc prop이 있으면 우선 사용, 없으면 기본값 사용
+  // process.env.PUBLIC_URL을 사용하여 경로를 명시적으로 지정
+  const noImageUrl = fallbackSrc || `${process.env.PUBLIC_URL || ''}/no_image.png`;
 
   useEffect(() => {
+    // src가 변경되면 fallbackError 리셋
+    setFallbackError(false);
+    
     if (!src) {
       setImageStatus("error");
       return;
@@ -57,6 +63,11 @@ const Image = ({
     onError?.();
   };
 
+  const handleFallbackError = () => {
+    // 폴백 이미지도 로드 실패한 경우
+    setFallbackError(true);
+  };
+
   const handleImageLoad = () => {
     setImageStatus("loaded");
     onLoad?.();
@@ -71,51 +82,53 @@ const Image = ({
     className
   ].filter(Boolean).join(" ");
 
-  if (imageStatus === "error" && !showFallback) {
+  // 로딩 중일 때는 아무것도 렌더링하지 않음 (액박 방지)
+  if (imageStatus === "loading") {
     return null;
   }
 
-  if (imageStatus === "error" && showFallback) {
+  // 에러 상태 처리
+  if (imageStatus === "error") {
+    if (!showFallback) {
+      return null;
+    }
+
+    // 폴백 이미지 표시
+    // fallbackError가 true여도 이미지를 표시 (이미지가 로드되지 않으면 텍스트가 표시됨)
     return (
       <div
         className={`${classes} image--fallback`}
         style={{ width, height }}
-        role="img"
-        aria-label={alt || "이미지를 불러올 수 없습니다"}
-        {...props}
       >
         <div className="image__fallback-content">
-          <div className="image__fallback-text">noimage</div>
+          {fallbackError ? (
+            <div className="image__fallback-text">noimage</div>
+          ) : (
+            <img
+              src={noImageUrl}
+              alt={alt || "이미지를 불러올 수 없습니다"}
+              style={{ maxWidth: '100%', height: 'auto' }}
+              onError={handleFallbackError}
+              {...props}
+            />
+          )}
         </div>
       </div>
     );
   }
 
+  // 정상 로드된 이미지 표시 (onError 핸들러로 액박 방지)
   return (
-    <>
-      {imageStatus !== "error" && (
-        <img
-          src={src}
-          alt={alt}
-          className={classes}
-          width={width}
-          height={height}
-          onLoad={handleImageLoad}
-          onError={handleImageError}
-          {...props}
-        />
-      )}
-      {imageStatus === "error" && showFallback && (
-        <img
-          src={noImageUrl}
-          alt={alt || "이미지를 불러올 수 없습니다"}
-          className={`${classes} image--fallback`}
-          width={width}
-          height={height}
-          {...props}
-        />
-      )}
-    </>
+    <img
+      src={src}
+      alt={alt}
+      className={classes}
+      width={width}
+      height={height}
+      onLoad={handleImageLoad}
+      onError={handleImageError}
+      {...props}
+    />
   );
 };
 

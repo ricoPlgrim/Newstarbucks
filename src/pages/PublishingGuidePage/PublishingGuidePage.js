@@ -5,9 +5,9 @@ import PageTemplate from "../../components/PageTemplate/PageTemplate";
 import Image from "../../components/Image/Image";
 import Header from "../../components/Header/Header";
 import FileUpload from "../../components/FileUpload/FileUpload";
-import FormSample from "../../components/FormSample/FormSample";
+import Form from "../../components/Form/Form";
 import Tabs from "../../components/Tabs/Tabs";
-import TableDemo from "../../components/TableDemo/TableDemo";
+import Table from "../../components/Table/Table";
 import DatePicker from "../../components/DatePicker/DatePicker";
 import Tooltip from "../../components/Tooltip/Tooltip";
 import DragDropList from "../../components/DragDropList/DragDropList";
@@ -23,6 +23,7 @@ import "swiper/css/effect-coverflow";
 import "swiper/css/effect-flip";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import ImageZoomPopup from "../../components/Popup/ImageZoomPopup";
+import { BasicPopup, BottomSheetPopup, FullscreenPopup } from "../../components/Popup/Popup";
 import Toggle from "../../components/Toggle/Toggle";
 import Toast from "../../components/Toast/Toast";
 import BottomDock from "../../components/BottomDock/BottomDock";
@@ -63,6 +64,7 @@ import Container, { ContainerScale, GridSystem } from "../../components/Layout/L
 import Icon from "../../components/Icon/Icon";
 import Button from "../../components/Button/Button";
 import BorderAnimation from "../../components/BorderAnimation/BorderAnimation";
+import ListContainer from "../../components/ListContainer/ListContainer";
 
 // 코드 블록 컴포넌트 (구문 강조 적용)
 const CodeBlock = ({ code }) => {
@@ -315,24 +317,24 @@ const IconPreview = () => {
       {/* 아이콘 라이브러리 */}
       <div className="icon-preview__section">
         <h4 className="icon-preview__title">아이콘 라이브러리</h4>
-        <div className="guide-preview guide-preview--icons">
-          {icons.map((icon) => (
-            <button
-              key={icon.className}
-              type="button"
-              className={`icon-chip ${copiedIcon === icon.className ? "is-copied" : ""}`}
-              aria-label={`${icon.label} 아이콘 복사`}
-              onClick={() => copyToClipboard(icon.className, icon.label)}
-            >
-              <span className="icon-chip__symbol">{icon.symbol}</span>
-              <span className="icon-chip__label">{icon.label}</span>
-              {copiedIcon === icon.className && (
-                <span className="icon-chip__copied" aria-live="polite">
-                  복사됨
-                </span>
-              )}
-            </button>
-          ))}
+    <div className="guide-preview guide-preview--icons">
+      {icons.map((icon) => (
+        <button
+          key={icon.className}
+          type="button"
+          className={`icon-chip ${copiedIcon === icon.className ? "is-copied" : ""}`}
+          aria-label={`${icon.label} 아이콘 복사`}
+          onClick={() => copyToClipboard(icon.className, icon.label)}
+        >
+          <span className="icon-chip__symbol">{icon.symbol}</span>
+          <span className="icon-chip__label">{icon.label}</span>
+          {copiedIcon === icon.className && (
+            <span className="icon-chip__copied" aria-live="polite">
+              복사됨
+            </span>
+          )}
+        </button>
+      ))}
         </div>
       </div>
     </div>
@@ -371,35 +373,35 @@ const ButtonPreview = () => (
 
     <div className="button-preview__section">
       <h4 className="button-preview__title">Size별 Variant 비교</h4>
-      <ul className="button-list">
-        <li className="button-list__item">
+    <ul className="button-list">
+      <li className="button-list__item">
           <div className="button-list__label">Small (S)</div>
-          <div className="button-list__actions">
+        <div className="button-list__actions">
             <Button variant="primary" size="small">Primary</Button>
             <Button variant="secondary" size="small">Secondary</Button>
             <Button variant="ghost" size="small">Ghost</Button>
             <Button variant="primary" size="small" disabled>Disabled</Button>
-          </div>
-        </li>
-        <li className="button-list__item">
+        </div>
+      </li>
+      <li className="button-list__item">
           <div className="button-list__label">Medium (M)</div>
-          <div className="button-list__actions">
+        <div className="button-list__actions">
             <Button variant="primary" size="medium">Primary</Button>
             <Button variant="secondary" size="medium">Secondary</Button>
             <Button variant="ghost" size="medium">Ghost</Button>
             <Button variant="primary" size="medium" disabled>Disabled</Button>
-          </div>
-        </li>
-        <li className="button-list__item">
+        </div>
+      </li>
+      <li className="button-list__item">
           <div className="button-list__label">Large (L)</div>
-          <div className="button-list__actions">
+        <div className="button-list__actions">
             <Button variant="primary" size="large">Primary</Button>
             <Button variant="secondary" size="large">Secondary</Button>
             <Button variant="ghost" size="large">Ghost</Button>
             <Button variant="primary" size="large" disabled>Disabled</Button>
-          </div>
-        </li>
-      </ul>
+        </div>
+      </li>
+    </ul>
     </div>
 
     <div className="button-preview__section">
@@ -428,9 +430,22 @@ const TogglePreview = () => {
     push: false,
     marketing: false,
   });
+  // Toast 알림 상태 (중앙 관리)
+  const [toast, setToast] = useState({ message: "", type: "info", key: 0 });
 
-  const handleChange = (key, next) => {
+  // 토글 변경 핸들러
+  const handleChange = (key, next, label) => {
     setStates((prev) => ({ ...prev, [key]: next }));
+    
+    // Toast 알림 표시
+    const toastMessage = next ? `${label}이(가) 켜졌습니다.` : `${label}이(가) 꺼졌습니다.`;
+    const toastType = next ? "success" : "info";
+    setToast({ message: toastMessage, type: toastType, key: Date.now() });
+  };
+
+  // Toast 닫기 핸들러
+  const handleToastClose = () => {
+    setToast((prev) => ({ message: "", type: "info", key: prev.key }));
   };
 
   return (
@@ -439,23 +454,32 @@ const TogglePreview = () => {
         label="Wi-Fi 자동 연결"
         description="보안이 약한 네트워크는 자동 연결하지 않습니다."
         defaultOn={states.wifi}
-        onChange={(next) => handleChange("wifi", next)}
+        onChange={(next) => handleChange("wifi", next, "Wi-Fi 자동 연결")}
       />
       <Toggle
         label="푸시 알림"
         description="중요 공지와 업데이트 소식을 받아봅니다."
         defaultOn={states.push}
-        onChange={(next) => handleChange("push", next)}
+        onChange={(next) => handleChange("push", next, "푸시 알림")}
       />
       <Toggle
         label="마케팅 수신 동의"
         description="이벤트와 혜택 정보를 이메일로 받아봅니다."
         defaultOn={states.marketing}
-        onChange={(next) => handleChange("marketing", next)}
+        onChange={(next) => handleChange("marketing", next, "마케팅 수신 동의")}
       />
       <div className="toggle-status">
         <span>현재 상태: </span>
         <code>Wi-Fi {states.wifi ? "ON" : "OFF"} · Push {states.push ? "ON" : "OFF"} · Marketing {states.marketing ? "ON" : "OFF"}</code>
+      </div>
+      {/* Toast 알림 (중앙 관리) */}
+      <div className="toast-stack">
+        <Toast 
+          key={toast.key} 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={handleToastClose} 
+        />
       </div>
     </div>
   );
@@ -687,6 +711,27 @@ const TabsPreview = () => {
           </h4>
           <Tabs items={manyItems} type="swiper" />
         </div>
+
+        <div>
+          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>
+            탭 UI만 (컨텐츠 없음)
+          </h4>
+          <Tabs items={items} type="default" showContent={false} />
+        </div>
+
+        <div>
+          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>
+            탭 UI만 - 스크롤 타입
+          </h4>
+          <Tabs items={manyItems} type="scroll" scrollContainerId="tabs-ui-only-scroll" showContent={false} />
+        </div>
+
+        <div>
+          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>
+            탭 UI만 - Swiper 타입
+          </h4>
+          <Tabs items={manyItems} type="swiper" showContent={false} />
+        </div>
       </div>
     </div>
   );
@@ -724,12 +769,24 @@ const CarouselPreview = () => {
   }
   if (error) return <div className="guide-preview guide-preview--carousel">{error}</div>;
 
+  // 슬라이드가 1개인 케이스 (no-swiper 클래스 적용)
+  const singleSlide = slides.length > 0 ? [slides[0]] : [];
+
   return (
     <div className="guide-preview guide-preview--carousel-combined">
-      {/* 기본 캐러셀 */}
+      {/* 기본 캐러셀 (여러 개) */}
       <div className="carousel-combined__section">
-        <h4 className="carousel-combined__title">기본 캐러셀</h4>
+        <h4 className="carousel-combined__title">기본 캐러셀 (여러 개)</h4>
         <Carousel slides={slides} showOptionsPanel />
+      </div>
+
+      {/* 슬라이드 1개 케이스 (no-swiper) */}
+      <div className="carousel-combined__section">
+        <h4 className="carousel-combined__title">슬라이드 1개 (no-swiper)</h4>
+        <Carousel slides={singleSlide} showOptionsPanel={false} />
+        <div className="carousel-combined__note">
+          <p>슬라이드가 1개 이하일 때는 자동으로 <code>no-swiper</code> 클래스가 적용되고 스와이퍼가 실행되지 않습니다.</p>
+        </div>
       </div>
 
       {/* 효과 미리보기 */}
@@ -931,7 +988,7 @@ const CarouselPreview = () => {
 };
 
 
-const TableDemoPreview = () => {
+const TablePreview = () => {
   const [wideHeaders, setWideHeaders] = useState([]);
   const [wideRows, setWideRows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -966,7 +1023,22 @@ const TableDemoPreview = () => {
   }
   if (error) return <div className="guide-preview guide-preview--table">{error}</div>;
 
-  return <TableDemo wideHeaders={wideHeaders} wideRows={wideRows} />;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "32px", width: "100%" }}>
+      <div>
+        <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>가로 스크롤 · 열 고정 테이블</h4>
+        <Table scrollType="horizontal" wideHeaders={wideHeaders} wideRows={wideRows} />
+      </div>
+      <div>
+        <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>세로 스크롤 · 헤더 고정 테이블</h4>
+        <Table scrollType="vertical" />
+      </div>
+      <div>
+        <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>가로·세로 스크롤 · 헤더 & 열 고정 테이블</h4>
+        <Table scrollType="both" wideHeaders={wideHeaders} wideRows={wideRows} />
+      </div>
+    </div>
+  );
 };
 
 const PopupPreview = () => {
@@ -1012,35 +1084,29 @@ const PopupPreview = () => {
         </button>
       </div>
 
-      {/* Basic Center Popup */}
-      {isBasicOpen && (
-        <div className="popup-overlay" onClick={() => setIsBasicOpen(false)}>
-          <div className="popup popup--basic" onClick={(e) => e.stopPropagation()}>
-            <div className="popup__image">
-              <span className="popup__image-icon">🔒</span>
-            </div>
-            <div className="popup__body popup__body--center">
-              <h4>Setting my friends data</h4>
-              <p>You can chat freely after a privacy my chatroom by chatting data</p>
-            </div>
-            <div className="popup__dots" aria-hidden="true">
-              <span className="is-active"></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-            <div className="popup__actions popup__actions--stack">
-              <button className="popup__btn popup__btn--ghost" onClick={() => setIsBasicOpen(false)}>
-                Cancel
-              </button>
-              <button className="popup__btn popup__btn--primary" onClick={() => setIsBasicOpen(false)}>
-                OK
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Basic Center Popup with Swiper (2 images) */}
+      <BasicPopup
+        open={isBasicOpen}
+        onClose={() => setIsBasicOpen(false)}
+        images={[
+          "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=800&h=600&fit=crop",
+          "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&h=600&fit=crop"
+        ]}
+        title="Setting my friends data"
+        description="You can chat freely after a privacy my chatroom by chatting data"
+        actions={[
+          {
+            label: "Cancel",
+            variant: "ghost",
+            onClick: () => setIsBasicOpen(false),
+          },
+          {
+            label: "OK",
+            variant: "primary",
+            onClick: () => setIsBasicOpen(false),
+          },
+        ]}
+      />
 
       {/* Bottom Sheet */}
       {isSheetOpen && (
@@ -1261,23 +1327,67 @@ const HeaderPreview = () => {
     setCurrentPage(page);
   };
 
+  const handleBack = () => {
+    console.log("뒤로가기 클릭");
+  };
+
+  const handleCartClick = () => {
+    console.log("장바구니 클릭");
+  };
+
+  const handleUtilityClick = (type) => {
+    console.log(`${type} 버튼 클릭`);
+  };
+
   return (
     <div className="guide-preview guide-preview--header">
       <div className="header-demo">
-        <div className="header-demo__description">
-          <p>모바일 햄버거 버튼을 눌러 사이드 메뉴를 열고, 2·3뎁스 펼침을 확인하세요.</p>
-          <p>실제 Header 컴포넌트를 그대로 사용해 동작을 시연합니다.</p>
+        {/* 메인 헤더 */}
+        <div className="header-demo__section">
+          <h4 className="header-demo__section-title">메인 헤더</h4>
+          <div className="header-demo__description">
+            <p>모바일 햄버거 버튼을 눌러 사이드 메뉴를 열고, 2·3뎁스 펼침을 확인하세요.</p>
+            <p>실제 Header 컴포넌트를 그대로 사용해 동작을 시연합니다.</p>
+          </div>
+
+          {/* 실제 Header 컴포넌트를 포함한 데모 프레임 */}
+          <div className="header-demo__mobile-frame">
+            <div className="header-demo__mobile-screen">
+              <Header currentPage={currentPage} onPageChange={handlePageChange} variant="main" />
+              <div className="header-demo__mobile-content">
+                <h4>모바일 헤더 데모</h4>
+                <p>현재 페이지: <strong>{currentPage === "guide" ? "퍼블리싱 가이드" : "URL 관리"}</strong></p>
+                <p>우측 햄버거 버튼을 눌러 2·3뎁스 메뉴를 펼쳐보세요.</p>
+                <p>사이드 메뉴는 슬라이드 인/아웃으로 동작합니다.</p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* 실제 Header 컴포넌트를 포함한 데모 프레임 */}
-        <div className="header-demo__mobile-frame">
-          <div className="header-demo__mobile-screen">
-            <Header currentPage={currentPage} onPageChange={handlePageChange} />
-            <div className="header-demo__mobile-content">
-              <h4>모바일 헤더 데모</h4>
-              <p>현재 페이지: <strong>{currentPage === "guide" ? "퍼블리싱 가이드" : "URL 관리"}</strong></p>
-              <p>우측 햄버거 버튼을 눌러 2·3뎁스 메뉴를 펼쳐보세요.</p>
-              <p>사이드 메뉴는 슬라이드 인/아웃으로 동작합니다.</p>
+        {/* 서브 헤더 */}
+        <div className="header-demo__section">
+          <h4 className="header-demo__section-title">서브 헤더</h4>
+          <div className="header-demo__description">
+            <p>좌측 뒤로가기 버튼, 가운데 카테고리 이름, 우측 유틸리티 버튼들로 구성된 서브 헤더입니다.</p>
+            <p>각 버튼을 클릭하여 동작을 확인할 수 있습니다.</p>
+          </div>
+
+          {/* 서브 헤더 데모 */}
+          <div className="header-demo__mobile-frame">
+            <div className="header-demo__mobile-screen">
+              <Header 
+                variant="sub" 
+                categoryName="음료"
+                onBack={handleBack}
+                onCartClick={handleCartClick}
+                onUtilityClick={handleUtilityClick}
+              />
+              <div className="header-demo__mobile-content">
+                <h4>서브 헤더 데모</h4>
+                <p>좌측: 뒤로가기 버튼</p>
+                <p>가운데: 카테고리 이름 (음료)</p>
+                <p>우측: 장바구니, 검색, 더보기 버튼</p>
+              </div>
             </div>
           </div>
         </div>
@@ -1579,6 +1689,8 @@ const InputPreview = () => {
   const [textValue, setTextValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
   const [numberValue, setNumberValue] = useState("");
+  const [phoneValue, setPhoneValue] = useState("");
+  const [emailValue, setEmailValue] = useState("");
   const [errorValue, setErrorValue] = useState("");
   const [successValue, setSuccessValue] = useState("");
 
@@ -1594,6 +1706,32 @@ const InputPreview = () => {
             onChange={(e, value) => setTextValue(value)}
             showClearButton
             help="본인 확인이 가능한 이름을 입력하세요"
+          />
+        </div>
+
+        <div>
+          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>Tel (휴대폰 번호)</h4>
+          <Input
+            type="tel"
+            label="휴대폰 번호"
+            placeholder="010-1234-5678"
+            value={phoneValue}
+            onChange={(e, value) => setPhoneValue(value)}
+            showClearButton
+            help="숫자만 입력해도 자동으로 하이픈이 추가됩니다"
+          />
+        </div>
+
+        <div>
+          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>Email</h4>
+          <Input
+            type="email"
+            label="이메일"
+            placeholder="name@example.com"
+            value={emailValue}
+            onChange={(e, value) => setEmailValue(value)}
+            showClearButton
+            help="이메일 주소를 입력하세요"
           />
         </div>
 
@@ -1985,13 +2123,13 @@ const AccordionPreview = () => {
 
   return (
     <div className="guide-preview guide-preview--accordion">
-      <div style={{ marginBottom: "24px" }}>
+      <div style={{ marginBottom: "24px", display: "flex", flexDirection: "column", gap: "12px", width: "100%" }}>
         <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>
           Exclusive 타입 (하나만 열림)
         </h4>
         <Accordion items={exclusiveItems} type="exclusive" />
       </div>
-      <div>
+      <div style={{ marginBottom: "24px", display: "flex", flexDirection: "column", gap: "12px", width: "100%" }}>
         <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>
           Independent 타입 (독립적으로 열림)
         </h4>
@@ -2492,6 +2630,91 @@ const BorderAnimationPreview = () => {
   );
 };
 
+const ListContainerPreview = () => {
+  return (
+    <div className="guide-preview guide-preview--list-container">
+      <div className="list-container-demo">
+        {/* Section 태그 예시 */}
+        <div className="list-container-demo__section">
+          <h4 className="list-container-demo__title">Section 태그</h4>
+          <ListContainer
+            tag="section"
+            title="음료 메뉴"
+            description="다양한 음료를 선택하실 수 있습니다."
+            bordered
+          >
+            <Card variant="product" title="아메리카노" description="진한 에스프레소에 뜨거운 물을 부어 만든 커피" price="4,500원" />
+            <Card variant="product" title="카페라떼" description="에스프레소와 스팀 밀크의 조화" price="5,000원" />
+            <Card variant="product" title="카푸치노" description="에스프레소와 우유 거품의 만남" price="5,000원" />
+          </ListContainer>
+        </div>
+
+        {/* Article 태그 예시 */}
+        <div className="list-container-demo__section">
+          <h4 className="list-container-demo__title">Article 태그</h4>
+          <ListContainer
+            tag="article"
+            title="공지사항"
+            description="최신 공지사항을 확인하세요."
+            bordered
+            divided
+          >
+            <div>
+              <Typography variant="h6" size="small">시스템 점검 안내</Typography>
+              <Typography variant="body" size="small" color="muted">
+                2024년 1월 15일 시스템 점검이 예정되어 있습니다.
+              </Typography>
+            </div>
+            <div>
+              <Typography variant="h6" size="small">새로운 메뉴 출시</Typography>
+              <Typography variant="body" size="small" color="muted">
+                봄 시즌 한정 메뉴가 출시되었습니다.
+              </Typography>
+            </div>
+            <div>
+              <Typography variant="h6" size="small">이벤트 안내</Typography>
+              <Typography variant="body" size="small" color="muted">
+                신규 회원 가입 시 무료 음료 쿠폰을 드립니다.
+              </Typography>
+            </div>
+          </ListContainer>
+        </div>
+
+        {/* 구분선 스타일 예시 */}
+        <div className="list-container-demo__section">
+          <h4 className="list-container-demo__title">구분선 스타일 (divided)</h4>
+          <ListContainer tag="section" divided>
+            <div>
+              <Typography variant="body" size="medium">첫 번째 아이템</Typography>
+            </div>
+            <div>
+              <Typography variant="body" size="medium">두 번째 아이템</Typography>
+            </div>
+            <div>
+              <Typography variant="body" size="medium">세 번째 아이템</Typography>
+            </div>
+          </ListContainer>
+        </div>
+
+        {/* 테두리 스타일 예시 */}
+        <div className="list-container-demo__section">
+          <h4 className="list-container-demo__title">테두리 스타일 (bordered)</h4>
+          <ListContainer tag="section" bordered>
+            <div>
+              <Typography variant="body" size="medium">테두리가 있는 컨테이너입니다.</Typography>
+            </div>
+            <div>
+              <Typography variant="body" size="small" color="muted">
+                bordered prop을 사용하면 테두리와 배경색이 적용됩니다.
+              </Typography>
+            </div>
+          </ListContainer>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // 가이드 섹션 정의
 const guideSections = [
   {
@@ -2499,46 +2722,121 @@ const guideSections = [
     label: "헤더",
     title: "모바일 헤더 레이아웃",
     description:
-      "모바일 환경을 위한 반응형 헤더 디자인입니다. 햄버거 버튼으로 사이드 메뉴를 열 수 있으며, 3뎁스 메뉴 구조를 지원합니다.",
-    code: `// 모바일 헤더 컴포넌트 구조
-function Header({ currentPage, onPageChange }) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [expandedItems, setExpandedItems] = useState({});
+      "모바일 환경을 위한 반응형 헤더 디자인입니다. 메인 헤더는 햄버거 버튼으로 사이드 메뉴를 열 수 있으며, 3뎁스 메뉴 구조를 지원합니다. 서브 헤더는 뒤로가기 버튼, 카테고리 이름, 유틸리티 버튼들로 구성됩니다.",
+    code: `import Header from "./Header";
+import { useState } from "react";
 
-  // 햄버거 버튼 토글
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+// ===== Props 설명 =====
+// variant: "main" | "sub" (기본값: "main")
+//   - "main": 메인 헤더 (로고, 햄버거 버튼, 사이드 메뉴)
+//   - "sub": 서브 헤더 (뒤로가기, 카테고리 이름, 유틸리티 버튼)
+// currentPage: 현재 페이지 식별자 (variant="main"일 때 사용)
+// onPageChange: 페이지 변경 핸들러 (variant="main"일 때 사용, page를 인자로 받음)
+// categoryName: 카테고리 이름 (variant="sub"일 때 사용, 기본값: "카테고리")
+// onBack: 뒤로가기 버튼 클릭 핸들러 (variant="sub"일 때 사용)
+// onCartClick: 장바구니 버튼 클릭 핸들러 (variant="sub"일 때 사용)
+// onUtilityClick: 유틸리티 버튼 클릭 핸들러 (variant="sub"일 때 사용, type: "search" | "more")
 
-  // 2뎁스, 3뎁스 메뉴 토글
-  const toggleExpanded = (key) => {
-    setExpandedItems(prev => ({
-      ...prev,
-      [key]: !prev[key]
-    }));
-  };
+// ===== 메인 헤더 기본 사용 =====
+// 메인 헤더는 로고와 햄버거 버튼을 포함하며, 사이드 메뉴를 열 수 있습니다.
+const [currentPage, setCurrentPage] = useState("guide");
 
-  // 메뉴 클릭 시 닫기
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-    setExpandedItems({});
-  };
+const handlePageChange = (page) => {
+  setCurrentPage(page);
+  // 페이지 이동 로직
+  navigateToPage(page);
+};
 
-  return (
-    <header className="header">
-      {/* 햄버거 버튼 */}
-      <button className="header__hamburger" onClick={toggleMenu}>
-        <span></span><span></span><span></span>
-      </button>
+<Header 
+  currentPage={currentPage} 
+  onPageChange={handlePageChange} 
+  variant="main"
+/>
 
-      {/* 사이드 메뉴 */}
-      <aside className={\`header__aside \${isMenuOpen ? 'is-open' : ''}\`}>
-        {/* 3뎁스 메뉴 구조 */}
-        <nav className="header__nav">
-          {/* 메뉴 아이템들 */}
-        </nav>
-      </aside>
-    </header>
-  );
-}`,
+// ===== 서브 헤더 기본 사용 =====
+// 서브 헤더는 뒤로가기 버튼, 카테고리 이름, 유틸리티 버튼들로 구성됩니다.
+<Header 
+  variant="sub"
+  categoryName="음료"
+  onBack={() => {
+    console.log("뒤로가기 클릭");
+    // 뒤로가기 로직 (예: history.back() 또는 라우터 이동)
+    navigateBack();
+  }}
+  onCartClick={() => {
+    console.log("장바구니 클릭");
+    // 장바구니 페이지로 이동
+    navigateToCart();
+  }}
+  onUtilityClick={(type) => {
+    console.log(\`\${type} 클릭\`);
+    // type: "search" | "more"
+    if (type === "search") {
+      openSearchModal();
+    } else if (type === "more") {
+      openMoreMenu();
+    }
+  }}
+/>
+
+// ===== 메인 헤더 사이드 메뉴 =====
+// 메인 헤더의 햄버거 버튼을 클릭하면 사이드 메뉴가 열립니다.
+// 사이드 메뉴는 3뎁스 구조를 지원하며, 각 뎁스는 애니메이션과 함께 표시됩니다.
+// 
+// 메뉴 구조:
+// - 1뎁스: 메인 메뉴 (예: "메뉴 1", "메뉴 2", "메뉴 3")
+// - 2뎁스: 서브메뉴 (예: "서브메뉴 1-1", "서브메뉴 1-2")
+// - 3뎁스: 최종 링크 (예: "3뎁스 1-1-1", "3뎁스 1-1-2")
+//
+// 메뉴 데이터는 컴포넌트 내부의 gnbMenu 배열로 관리됩니다.
+// 각 메뉴 아이템은 { id, label, children, href } 구조를 가집니다.
+
+// ===== 사이드 메뉴 상태 관리 =====
+// 컴포넌트 내부에서 다음 상태를 관리합니다:
+// - isMenuOpen: 사이드 메뉴 열림/닫힘 상태
+// - expandedItems: 각 뎁스의 확장 상태 (객체 형태로 관리)
+//
+// toggleMenu(): 햄버거 버튼 클릭 시 사이드 메뉴 토글
+// toggleExpanded(key, isMenu1Depth): 서브메뉴 클릭 시 해당 메뉴 확장/축소
+
+// ===== 서브 헤더 유틸리티 버튼 =====
+// 서브 헤더의 우측에는 두 개의 유틸리티 버튼이 있습니다:
+// 1. 검색 버튼 (돋보기 아이콘)
+// 2. 더보기 버튼 (세 개의 점 아이콘)
+//
+// 각 버튼 클릭 시 onUtilityClick이 호출되며, type 인자로 "search" 또는 "more"가 전달됩니다.
+
+// ===== 헤더 스타일 =====
+// 헤더는 position: sticky로 설정되어 스크롤 시 상단에 고정됩니다.
+// z-index: 1000으로 설정되어 다른 요소 위에 표시됩니다.
+// 배경색은 var(--color-bg), 하단에는 border와 box-shadow가 적용됩니다.
+
+// ===== 접근성 =====
+// - 햄버거 버튼에 aria-label="메뉴 열기" 및 aria-expanded 속성 제공
+// - 서브 헤더의 뒤로가기 버튼에 적절한 aria-label 제공
+// - 유틸리티 버튼에 aria-label 제공 (검색, 더보기)
+// - 사이드 메뉴는 role="navigation"으로 표시
+
+// ===== 사이드 메뉴 애니메이션 =====
+// 사이드 메뉴는 슬라이드 애니메이션으로 열리고 닫힙니다.
+// 서브메뉴는 높이 애니메이션으로 확장/축소됩니다.
+// 애니메이션은 CSS transition을 사용하여 부드럽게 처리됩니다.
+
+// ===== 외부 클릭 감지 =====
+// 사이드 메뉴가 열려있을 때 외부를 클릭하면 자동으로 닫힙니다.
+// useEffect를 사용하여 document에 클릭 이벤트 리스너를 등록합니다.
+
+// ===== 주의사항 =====
+// 1. variant="main"일 때는 currentPage와 onPageChange를 제공해야 합니다.
+// 2. variant="sub"일 때는 categoryName, onBack, onCartClick, onUtilityClick을 제공해야 합니다.
+// 3. 사이드 메뉴의 메뉴 데이터는 컴포넌트 내부의 gnbMenu 배열을 수정하여 변경할 수 있습니다.
+// 4. 헤더는 sticky 포지션이므로 상단에 고정됩니다.
+// 5. 서브 헤더의 카테고리 이름이 길 경우 텍스트 오버플로우 처리가 됩니다 (ellipsis).
+// 6. 사이드 메뉴는 모바일 환경을 위해 최적화되어 있습니다.
+// 7. 3뎁스 메뉴 구조는 최대 3단계까지 지원합니다.
+// 8. 메뉴 아이템에 href가 있으면 링크로 동작하며, 없으면 확장/축소만 동작합니다.
+// 9. 로고는 Typography 컴포넌트를 사용하여 렌더링됩니다 (variant="h1", size="small").
+// 10. 서브 헤더의 뒤로가기 버튼은 원형 버튼으로 디자인되어 있습니다.`,
     PreviewComponent: HeaderPreview,
   },
   {
@@ -2547,21 +2845,91 @@ function Header({ currentPage, onPageChange }) {
     title: "푸터 레이아웃",
     description:
       "사이트의 공통 하단 영역으로, 회사 정보·고객센터·SNS 링크 등을 담습니다. 명확한 링크와 대비를 유지하고, 모바일에서도 읽기 쉬운 여백을 확보합니다.",
-    code: `<footer class="site-footer">
-  <div class="site-footer__top">
-    <div class="logo">Brand</div>
-    <nav class="footer-nav">
-      <a href="#company">회사소개</a>
-      <a href="#policy">개인정보처리방침</a>
-      <a href="#faq">FAQ</a>
-      <a href="#contact">문의하기</a>
-    </nav>
-  </div>
-  <div class="site-footer__bottom">
-    <p>서울시 어딘가 123, 브랜드코리아</p>
-    <p>고객센터 1234-5678 | support@example.com</p>
-  </div>
-</footer>`,
+    code: `import Footer from "./Footer";
+
+// ===== Props 설명 =====
+// nav: 네비게이션 메뉴 배열 [{ label, href }] (기본값: defaultNav)
+// info: 회사 정보 객체 { address, contact } (기본값: defaultInfo)
+// sns: 소셜 미디어 링크 배열 (기본값: defaultSns)
+// logo: 로고 텍스트 (기본값: "스타벅스")
+
+// ===== 기본 사용 =====
+// 기본 데이터를 사용하여 푸터 렌더링
+<Footer />
+
+// ===== 커스텀 네비게이션 메뉴 =====
+const customNav = [
+  { label: "회사소개", href: "/company" },
+  { label: "개인정보처리방침", href: "/privacy" },
+  { label: "이용약관", href: "/terms" },
+  { label: "FAQ", href: "/faq" },
+  { label: "문의하기", href: "/contact" },
+];
+
+<Footer nav={customNav} />
+
+// ===== 커스텀 회사 정보 =====
+const customInfo = {
+  address: "서울특별시 강남구 테헤란로 123, 스타벅스코리아",
+  contact: "고객센터 1522-3232 | support@starbucks.co.kr",
+};
+
+<Footer info={customInfo} />
+
+// ===== 커스텀 소셜 미디어 링크 =====
+const customSns = ["Instagram", "Facebook", "Youtube", "Twitter", "LinkedIn"];
+
+<Footer sns={customSns} />
+
+// ===== 모든 Props 커스터마이징 =====
+const footerNav = [
+  { label: "회사소개", href: "/about" },
+  { label: "채용정보", href: "/careers" },
+  { label: "개인정보처리방침", href: "/privacy" },
+  { label: "이용약관", href: "/terms" },
+  { label: "FAQ", href: "/faq" },
+];
+
+const footerInfo = {
+  address: "서울특별시 강남구 테헤란로 123, 스타벅스코리아",
+  contact: "고객센터 1522-3232 | 이메일: support@starbucks.co.kr",
+};
+
+const footerSns = ["Instagram", "Facebook", "Youtube"];
+
+<Footer
+  nav={footerNav}
+  info={footerInfo}
+  sns={footerSns}
+  logo="STARBUCKS"
+/>
+
+// ===== 기본 데이터 구조 =====
+// defaultNav: 네비게이션 메뉴 배열
+const defaultNav = [
+  { label: "회사소개", href: "#" },
+  { label: "개인정보처리방침", href: "#" },
+  { label: "FAQ", href: "#" },
+  { label: "문의하기", href: "#" },
+];
+
+// defaultInfo: 회사 정보 객체
+const defaultInfo = {
+  address: "서울시 어딘가 123, 스타벅스코리아",
+  contact: "고객센터 1234-5678 | support@starbucks.co.kr",
+};
+
+// defaultSns: 소셜 미디어 링크 배열
+const defaultSns = ["Instagram", "Facebook", "Youtube"];
+
+// ===== 주의사항 =====
+// 1. nav 배열의 각 객체는 label과 href 속성을 가져야 함
+// 2. info 객체는 address와 contact 속성을 가져야 함
+// 3. sns 배열은 문자열 배열로, 각 항목은 소셜 미디어 플랫폼 이름
+// 4. logo는 텍스트로 표시되며, 필요시 이미지로 교체 가능
+// 5. Typography 컴포넌트를 사용하여 텍스트 스타일 일관성 유지
+// 6. 접근성을 위해 aria-label 속성이 nav와 sns 영역에 설정됨
+// 7. 모바일 반응형 디자인을 고려하여 여백과 폰트 크기 조정`,
     PreviewComponent: FooterPreview,
   },
   {
@@ -2577,36 +2945,175 @@ function Header({ currentPage, onPageChange }) {
 // 별도의 상태 관리가 필요 없습니다.
 <FileUpload />
 
-// ===== 컴포넌트 내부 동작 =====
-// 1. 파일 선택 시 자동으로 이미지 파일만 필터링
-// 2. 최대 3개까지 업로드 가능 (초과 시 경고)
-// 3. 각 파일 최대 300MB 제한 (초과 시 경고)
-// 4. 이미지 미리보기 URL 자동 생성 (Blob URL)
-// 5. 이미지 로드 완료 전까지 Loading 컴포넌트 표시
-// 6. 각 이미지에 삭제 버튼 제공
-// 7. 전체 삭제 버튼 제공
-
 // ===== 파일 제한 사항 =====
-// - 허용 타입: image/* (이미지 파일만)
-// - 최대 개수: 3개
-// - 최대 크기: 300MB (파일당)
-// - PDF는 현재 지원하지 않음
+// - 허용 타입: image/* (이미지 파일만, 예: jpg, png, gif, webp 등)
+// - 최대 개수: 3개 (MAX_FILES = 3)
+// - 최대 크기: 300MB (파일당, MAX_SIZE = 300 * 1024 * 1024)
+// - PDF, 문서 파일 등은 현재 지원하지 않음
 
-// ===== 내부 상태 관리 =====
-// 컴포넌트 내부에서 다음 상태를 관리합니다:
-// - files: 업로드된 파일 배열 [{ id, file, name, size, type, preview }]
-// - loadingFiles: 로딩 중인 파일 ID Set
+// ===== 파일 선택 처리 =====
+// handleFileChange 함수의 동작 순서:
+// 1. 선택된 파일들을 배열로 변환 (Array.from(event.target.files))
+// 2. 이미지 파일만 필터링 (file.type.startsWith("image/"))
+// 3. 이미지 파일이 없으면 경고 후 종료
+// 4. 최대 개수 체크 (현재 파일 수 + 새 파일 수 <= 3)
+// 5. 파일 크기 체크 (각 파일 <= 300MB)
+// 6. Blob URL 생성 (URL.createObjectURL(file))
+// 7. 파일 정보 객체 생성: { id, file, name, size, type, preview }
+// 8. 로딩 상태 추가 (loadingFiles Set에 파일 ID 추가)
+// 9. 파일 목록에 추가 (setFiles)
+// 10. input 초기화 (event.target.value = "")
+
+// ===== 파일 데이터 구조 =====
+// 각 파일 객체는 다음 속성을 가집니다:
+const fileObject = {
+  id: Date.now() + Math.random(), // 고유 ID (타임스탬프 + 랜덤)
+  file: File, // 원본 File 객체
+  name: "example.jpg", // 파일명
+  size: 1024000, // 파일 크기 (bytes)
+  type: "image/jpeg", // MIME 타입
+  preview: "blob:http://localhost:3000/abc-123", // Blob URL (미리보기용)
+};
+
+// ===== 미리보기 URL 생성 =====
+// Blob URL을 사용하여 이미지 미리보기
+// const preview = URL.createObjectURL(file);
+// - 브라우저 메모리에 임시 URL 생성
+// - 이미지 로드 완료 후에도 유지됨
+// - 파일 삭제 시 URL.revokeObjectURL()로 해제 필요
+
+// ===== 로딩 상태 관리 =====
+// loadingFiles: Set<fileId> - 로딩 중인 파일 ID 집합
+// - 파일 선택 시: 새 파일들의 ID를 Set에 추가
+// - 이미지 로드 완료 시: handleImageLoad에서 ID 제거
+// - 이미지 로드 실패 시: handleImageError에서 ID 제거
+// - 파일 삭제 시: handleRemove에서 ID 제거
+
+// 로딩 중 표시:
+{isLoading && (
+  <div className="file-upload-demo__preview-loading">
+    <Loading size={32} thickness={3} label="" />
+  </div>
+)}
+
+// ===== 개별 파일 삭제 =====
+// handleRemove 함수:
+// 1. 삭제할 파일 찾기 (files.find(f => f.id === id))
+// 2. Blob URL 메모리 해제 (URL.revokeObjectURL(file.preview))
+// 3. 파일 목록에서 제거 (files.filter(f => f.id !== id))
+// 4. 로딩 상태에서도 제거 (loadingFiles.delete(id))
+
+// 사용 예시:
+<button onClick={() => handleRemove(file.id)}>
+  삭제
+</button>
+
+// ===== 전체 파일 삭제 =====
+// handleClearAll 함수:
+// 1. 모든 파일의 Blob URL 해제 (files.forEach + URL.revokeObjectURL)
+// 2. 파일 목록 초기화 (setFiles([]))
+// 3. 로딩 상태 초기화 (setLoadingFiles(new Set()))
+// 4. input 초기화 (inputRef.current.value = "")
+
+// ===== 이미지 로드 이벤트 =====
+// handleImageLoad: 이미지 로드 완료 시 호출
+// - loadingFiles Set에서 해당 파일 ID 제거
+// - 로딩 표시 제거
+
+// handleImageError: 이미지 로드 실패 시 호출
+// - loadingFiles Set에서 해당 파일 ID 제거
+// - 로딩 표시 제거 (에러 발생 시에도)
+
+// Image 컴포넌트 사용:
+<Image
+  src={file.preview}
+  alt={file.name}
+  onLoad={() => handleImageLoad(file.id)}
+  onError={() => handleImageError(file.id)}
+/>
+
+// ===== 파일 크기 포맷팅 =====
+// formatSize 함수: bytes를 읽기 쉬운 형식으로 변환
+// - GB: 1024^3 이상
+// - MB: 1024^2 이상
+// - KB: 1024 이상
+// - B: 그 외
+
+// 예시:
+formatSize(1024) // "1.0 KB"
+formatSize(1024 * 1024) // "1.0 MB"
+formatSize(1024 * 1024 * 1024) // "1.0 GB"
+
+// ===== 파일 검증 로직 =====
+// 1. 이미지 파일 검증:
+const isImage = (file) => file.type.startsWith("image/");
+const imageFiles = selectedFiles.filter(isImage);
+
+// 2. 최대 개수 검증:
+const remainingSlots = MAX_FILES - files.length;
+if (imageFiles.length > remainingSlots) {
+  alert(\`최대 \${MAX_FILES}개까지 업로드할 수 있습니다.\`);
+}
+
+// 3. 파일 크기 검증:
+const oversizedFiles = imageFiles.filter((file) => file.size > MAX_SIZE);
+if (oversizedFiles.length > 0) {
+  alert("최대 300MB까지 첨부할 수 있습니다.");
+}
+
+// ===== UI 구조 =====
+// file-upload-demo: 최상위 컨테이너
+//   file-upload-demo__field: 파일 선택 영역 (canAddMore일 때만 표시)
+//     file-upload-demo__label: 라벨 ("이미지 첨부 (현재/최대)")
+//     input[type="file"]: 파일 선택 input
+//     file-upload-demo__hint: 안내 텍스트
+//   file-upload-demo__preview: 미리보기 영역 (files.length > 0일 때만 표시)
+//     file-upload-demo__preview-header: 헤더 영역
+//       file-upload-demo__preview-title: 제목 ("업로드된 이미지 (현재/최대)")
+//       file-upload-demo__clear-all: 전체 삭제 버튼
+//     file-upload-demo__preview-grid: 그리드 레이아웃
+//       file-upload-demo__preview-item: 각 파일 아이템
+//         file-upload-demo__preview-image-wrapper: 이미지 래퍼
+//           file-upload-demo__preview-loading: 로딩 표시
+//           Image: 이미지 컴포넌트
+//           file-upload-demo__preview-remove: 삭제 버튼
+//         file-upload-demo__preview-info: 파일 정보
+//           file-upload-demo__preview-name: 파일명
+//           file-upload-demo__preview-size: 파일 크기
+//   file-upload-demo__empty: 빈 상태 (files.length === 0일 때만 표시)
+//     file-upload-demo__placeholder: 플레이스홀더 텍스트
+
+// ===== 조건부 렌더링 =====
+// canAddMore: files.length < MAX_FILES
+// - true: 파일 선택 영역 표시
+// - false: 파일 선택 영역 숨김 (최대 개수 도달)
+
+// files.length > 0: 미리보기 영역 표시
+// files.length === 0: 빈 상태 표시
+
+// ===== 접근성 =====
+// - input에 id와 label의 htmlFor로 연결
+// - 삭제 버튼에 aria-label 제공
+// - 전체 삭제 버튼에 aria-label="모든 이미지 삭제"
+// - 파일명에 title 속성으로 전체 파일명 표시 (긴 파일명 대비)
 
 // ===== 메모리 관리 =====
-// 파일 삭제 시 자동으로 Blob URL을 해제하여 메모리 누수 방지
-// (URL.revokeObjectURL() 자동 호출)
+// Blob URL은 브라우저 메모리를 사용하므로 명시적으로 해제해야 함
+// - 파일 삭제 시: URL.revokeObjectURL(file.preview)
+// - 전체 삭제 시: 모든 파일의 preview URL 해제
+// - 컴포넌트 언마운트 시: useEffect cleanup에서 처리 권장
 
 // ===== 주의사항 =====
-// 1. 현재는 이미지 파일만 지원 (PDF 제외)
-// 2. 최대 3개까지만 업로드 가능
-// 3. 파일 삭제 시 Blob URL이 자동으로 해제됨
-// 4. Image 컴포넌트를 사용하여 자동으로 비율 판단 (landscape/portrait/square)
-// 5. 이미지 로드 실패 시에도 로딩 표시가 제거됨`,
+// 1. 현재는 이미지 파일만 지원 (image/* 타입만 허용)
+// 2. 최대 3개까지만 업로드 가능 (MAX_FILES = 3)
+// 3. 각 파일 최대 300MB 제한 (MAX_SIZE = 300 * 1024 * 1024)
+// 4. 파일 삭제 시 Blob URL이 자동으로 해제됨 (메모리 누수 방지)
+// 5. Image 컴포넌트를 사용하여 자동으로 비율 판단 (landscape/portrait/square)
+// 6. 이미지 로드 실패 시에도 로딩 표시가 제거됨
+// 7. 같은 파일을 다시 선택하려면 input을 초기화해야 함 (event.target.value = "")
+// 8. 파일 선택 후 input이 자동으로 초기화되어 같은 파일 재선택 가능
+// 9. 로딩 상태는 Set 자료구조를 사용하여 O(1) 조회 성능
+// 10. 파일 ID는 Date.now() + Math.random()으로 고유성 보장`,
     PreviewComponent: FileUpload,
   },
   {
@@ -2615,33 +3122,147 @@ function Header({ currentPage, onPageChange }) {
     title: "더보기 레이아웃",
     description:
       "더보기 버튼으로 대량의 리스트 데이터를 점진적으로 로드합니다. 초기 제한된 개수부터 시작해 사용자의 필요에 따라 추가 데이터를 불러옵니다.",
-    code: `// 더보기 기능 구현
-const [visibleItems, setVisibleItems] = useState(5);
-const totalItems = 20;
+    code: `import { useState } from "react";
 
-// 더보기 핸들러
+// ===== 더보기 기능 구현 =====
+// 대량의 데이터를 점진적으로 로드하는 패턴입니다.
+// 초기에는 일부 아이템만 표시하고, "더보기" 버튼을 클릭하면 추가 아이템을 로드합니다.
+
+// ===== 기본 상태 관리 =====
+const [visibleItems, setVisibleItems] = useState(5); // 초기 표시 개수
+const totalItems = 20; // 전체 아이템 개수
+const itemsPerPage = 5; // 한 번에 로드할 아이템 개수
+
+// ===== 더보기 핸들러 =====
+// 더보기 버튼 클릭 시 visibleItems를 증가시킵니다.
+// Math.min을 사용하여 totalItems를 초과하지 않도록 제한합니다.
 const handleLoadMore = () => {
-  setVisibleItems(prev => Math.min(prev + 5, totalItems));
+  setVisibleItems(prev => Math.min(prev + itemsPerPage, totalItems));
 };
 
-// 현재 표시할 아이템들
+// ===== 현재 표시할 아이템들 =====
+// items 배열에서 visibleItems 개수만큼만 slice하여 표시합니다.
 const displayedItems = items.slice(0, visibleItems);
 
+// ===== UI 렌더링 =====
 return (
   <div className="layout-list">
+    {/* 표시할 아이템들 렌더링 */}
     {displayedItems.map(item => (
       <div key={item.id} className="layout-item">
         {/* 아이템 내용 */}
+        <h3>{item.title}</h3>
+        <p>{item.description}</p>
       </div>
     ))}
 
+    {/* 더보기 버튼 (남은 아이템이 있을 때만 표시) */}
     {visibleItems < totalItems && (
-      <button onClick={handleLoadMore}>
-        더보기 ({Math.min(visibleItems + 5, totalItems) - visibleItems}개)
+      <button 
+        onClick={handleLoadMore}
+        className="load-more-btn"
+        aria-label={\`\${totalItems - visibleItems}개 더보기\`}
+      >
+        더보기 ({totalItems - visibleItems}개)
       </button>
     )}
+
+    {/* 모든 아이템이 표시되었을 때 */}
+    {visibleItems >= totalItems && (
+      <p className="load-more-end">모든 항목을 불러왔습니다.</p>
+    )}
   </div>
-);`,
+);
+
+// ===== 비동기 데이터 로드 =====
+// API에서 데이터를 점진적으로 로드하는 경우:
+const [items, setItems] = useState([]);
+const [isLoading, setIsLoading] = useState(false);
+const [hasMore, setHasMore] = useState(true);
+const [page, setPage] = useState(1);
+
+const handleLoadMore = async () => {
+  if (isLoading || !hasMore) return;
+  
+  setIsLoading(true);
+  try {
+    const response = await fetch(\`/api/items?page=\${page + 1}&limit=10\`);
+    const data = await response.json();
+    
+    if (data.items.length === 0) {
+      setHasMore(false);
+    } else {
+      setItems(prev => [...prev, ...data.items]);
+      setPage(prev => prev + 1);
+    }
+  } catch (error) {
+    console.error("데이터 로드 실패:", error);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+// ===== 로딩 상태 표시 =====
+{isLoading && (
+  <div className="load-more-loading">
+    <Loading size={24} />
+    <span>불러오는 중...</span>
+  </div>
+)}
+
+// ===== 무한 스크롤 패턴 =====
+// Intersection Observer를 사용하여 자동으로 더보기:
+const loadMoreRef = useRef(null);
+
+useEffect(() => {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting && hasMore && !isLoading) {
+        handleLoadMore();
+      }
+    },
+    { threshold: 0.1 }
+  );
+
+  if (loadMoreRef.current) {
+    observer.observe(loadMoreRef.current);
+  }
+
+  return () => {
+    if (loadMoreRef.current) {
+      observer.unobserve(loadMoreRef.current);
+    }
+  };
+}, [hasMore, isLoading]);
+
+// 트리거 요소
+<div ref={loadMoreRef} style={{ height: "20px" }} />
+
+// ===== 성능 최적화 =====
+// React.memo를 사용하여 불필요한 리렌더링 방지:
+const Item = React.memo(({ item }) => (
+  <div className="layout-item">
+    <h3>{item.title}</h3>
+    <p>{item.description}</p>
+  </div>
+));
+
+// ===== 접근성 =====
+// - 더보기 버튼에 aria-label 제공
+// - 로딩 상태를 스크린 리더에 알림 (aria-live)
+// - 키보드 접근성 지원 (Enter 키로 클릭 가능)
+
+// ===== 주의사항 =====
+// 1. visibleItems는 totalItems를 초과하지 않도록 제한해야 합니다.
+// 2. 비동기 로드 시 로딩 상태와 에러 처리를 구현해야 합니다.
+// 3. 무한 스크롤 사용 시 메모리 누수를 방지하기 위해 오래된 아이템을 제거하는 전략을 고려해야 합니다.
+// 4. 더보기 버튼은 남은 아이템이 있을 때만 표시해야 합니다.
+// 5. 로딩 중에는 버튼을 비활성화하거나 로딩 인디케이터를 표시해야 합니다.
+// 6. 페이지 새로고침 시 초기 상태로 리셋되어야 합니다.
+// 7. 아이템이 많을 경우 가상화(virtualization)를 고려해야 합니다.
+// 8. 모바일 환경에서는 무한 스크롤이 더 자연스러울 수 있습니다.
+// 9. SEO를 고려해야 하는 경우 서버 사이드 렌더링을 사용해야 합니다.
+// 10. 데이터가 변경될 때 visibleItems를 적절히 조정해야 합니다.`,
     PreviewComponent: LoadMorePreview,
   },
   {
@@ -2737,12 +3358,177 @@ return (
     title: "토글 스위치",
     description:
       "접근성을 고려한 role=\"switch\" 기반 토글입니다. 라벨과 설명을 함께 제공하고, 상태 변화는 onChange 이벤트로 전달합니다.",
-    code: `<Toggle
+    code: `import Toggle from "./Toggle";
+import { useState } from "react";
+
+// ===== Props 설명 =====
+// label: 토글 레이블 텍스트 (기본값: "토글")
+// description: 토글 설명 텍스트 (선택)
+// defaultOn: 기본 켜짐 상태 (기본값: false)
+// disabled: 비활성화 여부 (기본값: false)
+// onChange: 토글 변경 핸들러 (checked 상태를 인자로 받음, 선택)
+
+// ===== 기본 사용 =====
+<Toggle
   label="푸시 알림"
   description="중요 공지와 업데이트 소식을 받아봅니다."
   defaultOn={false}
-  onChange={(next) => console.log(next)}
-/>`,
+  onChange={(next) => console.log("토글 상태:", next)}
+/>
+
+// ===== 기본 켜짐 상태 =====
+// defaultOn={true}: 초기 상태가 켜짐
+<Toggle
+  label="Wi-Fi 자동 연결"
+  description="보안이 약한 네트워크는 자동 연결하지 않습니다."
+  defaultOn={true}
+  onChange={(next) => console.log("Wi-Fi:", next)}
+/>
+
+// ===== 설명 없이 사용 =====
+// description prop을 생략하면 레이블만 표시
+<Toggle
+  label="다크 모드"
+  defaultOn={false}
+  onChange={(next) => console.log("다크 모드:", next)}
+/>
+
+// ===== 비활성화 상태 =====
+// disabled={true}: 토글 비활성화 (클릭 불가)
+<Toggle
+  label="베타 기능"
+  description="현재 사용할 수 없습니다."
+  defaultOn={false}
+  disabled={true}
+/>
+
+// ===== 상태 관리 예제 =====
+// 여러 토글을 관리하는 경우
+const SettingsPage = () => {
+  const [settings, setSettings] = useState({
+    wifi: true,
+    push: false,
+    marketing: false,
+  });
+
+  const handleToggle = (key, next) => {
+    setSettings((prev) => ({ ...prev, [key]: next }));
+    console.log(\`\${key} 설정이 \${next ? "켜졌습니다" : "꺼졌습니다"}\`);
+  };
+
+  return (
+    <div>
+      <Toggle
+        label="Wi-Fi 자동 연결"
+        description="보안이 약한 네트워크는 자동 연결하지 않습니다."
+        defaultOn={settings.wifi}
+        onChange={(next) => handleToggle("wifi", next)}
+      />
+      <Toggle
+        label="푸시 알림"
+        description="중요 공지와 업데이트 소식을 받아봅니다."
+        defaultOn={settings.push}
+        onChange={(next) => handleToggle("push", next)}
+      />
+      <Toggle
+        label="마케팅 수신 동의"
+        description="이벤트와 혜택 정보를 이메일로 받아봅니다."
+        defaultOn={settings.marketing}
+        onChange={(next) => handleToggle("marketing", next)}
+      />
+    </div>
+  );
+};
+
+// ===== Controlled 컴포넌트로 사용 =====
+// defaultOn 대신 외부에서 상태 관리
+const ControlledToggle = () => {
+  const [isOn, setIsOn] = useState(false);
+
+  return (
+    <Toggle
+      label="알림 설정"
+      description="모든 알림을 받습니다."
+      defaultOn={isOn}
+      onChange={(next) => {
+        setIsOn(next);
+        // 추가 로직 처리
+        if (next) {
+          console.log("알림이 켜졌습니다");
+        } else {
+          console.log("알림이 꺼졌습니다");
+        }
+      }}
+    />
+  );
+};
+
+// ===== 토글 상태에 따른 추가 처리 =====
+<Toggle
+  label="자동 저장"
+  description="변경사항을 자동으로 저장합니다."
+  defaultOn={false}
+  onChange={(next) => {
+    if (next) {
+      // 자동 저장 활성화
+      startAutoSave();
+    } else {
+      // 자동 저장 비활성화
+      stopAutoSave();
+    }
+  }}
+/>
+
+// ===== 접근성 =====
+// 컴포넌트 내부에서 자동으로 처리:
+// - role="switch": 스위치 역할 명시
+// - aria-checked: 현재 상태 (true/false)
+// - aria-hidden="true": 시각적 트랙/썸 (스크린 리더에서 숨김)
+// - label 태그로 레이블과 입력 연결
+
+// ===== 내부 구조 =====
+// <label className="toggle is-on"> (checked일 때 is-on 클래스 추가)
+//   <input type="checkbox" role="switch" aria-checked={checked} />
+//   <span className="toggle__track" aria-hidden="true">
+//     <span className="toggle__thumb" />
+//   </span>
+//   <div className="toggle__text">
+//     <span className="toggle__label">{label}</span>
+//     {description && <span className="toggle__desc">{description}</span>}
+//   </div>
+// </label>
+
+// ===== 상태 관리 로직 =====
+// 컴포넌트 내부에서 useState로 상태 관리
+// const [checked, setChecked] = useState(defaultOn);
+
+// handleToggle 함수:
+// 1. disabled 체크 (비활성화면 return)
+// 2. 상태 토글 (next = !checked)
+// 3. setChecked(next)로 상태 업데이트
+// 4. onChange?.(next)로 콜백 호출
+
+// ===== CSS 클래스 =====
+// .toggle: 기본 토글 컨테이너
+// .toggle.is-on: 켜진 상태 (checked === true)
+// .toggle.is-disabled: 비활성화 상태
+// .toggle__track: 토글 트랙 (시각적 스위치)
+// .toggle__thumb: 토글 썸 (움직이는 원)
+// .toggle__text: 텍스트 영역
+// .toggle__label: 레이블 텍스트
+// .toggle__desc: 설명 텍스트
+
+// ===== 주의사항 =====
+// 1. defaultOn은 초기 렌더링 시에만 사용됨 (Uncontrolled 컴포넌트)
+// 2. Controlled 컴포넌트로 사용하려면 외부에서 상태 관리 필요
+// 3. onChange는 항상 boolean 값 (true/false)을 인자로 받음
+// 4. disabled 상태에서는 onChange가 호출되지 않음
+// 5. label prop이 없으면 기본값 "토글" 사용
+// 6. description은 선택 사항이며, 없으면 표시되지 않음
+// 7. 접근성을 위해 role="switch"와 aria-checked 사용
+// 8. 시각적 요소(track, thumb)는 aria-hidden="true"로 스크린 리더에서 숨김
+// 9. label 태그로 레이블과 입력이 연결되어 있어 클릭 가능 영역이 넓음
+// 10. 토글 상태는 내부 useState로 관리되므로 외부에서 직접 제어 불가 (defaultOn만 가능)`,
     PreviewComponent: TogglePreview,
   },
   {
@@ -3240,66 +4026,350 @@ import Badge from "./Badge";
       "텍스트 리스트와 아이콘 리스트를 지원하는 리스트 컴포넌트입니다. 클릭 가능한 항목, 비활성화, prefix/suffix, 구분선 등을 지원합니다.",
     code: `import List, { ListItem } from "./List";
 
-// 텍스트 리스트
-const items = [
+// ===== List 컴포넌트 Props 설명 =====
+// items: 리스트 아이템 배열 [{ id, content, icon, prefix, suffix, onClick, disabled }] (기본값: [])
+// variant: 'text' | 'icon' (기본값: 'text')
+// bordered: 테두리 표시 여부 (기본값: true)
+// divided: 구분선 표시 여부 (기본값: false)
+// className: 추가 클래스명 (선택)
+// children: 직접 ListItem을 children으로 전달하는 경우 (items 대신 사용)
+
+// ===== ListItem 컴포넌트 Props 설명 =====
+// children: 리스트 아이템 내용 (필수)
+// icon: 아이콘 (이모지 또는 텍스트, 선택)
+// prefix: 앞쪽 추가 콘텐츠 (선택)
+// suffix: 뒤쪽 추가 콘텐츠 (선택)
+// onClick: 클릭 핸들러 (선택, 제공 시 클릭 가능한 항목이 됨)
+// disabled: 비활성화 여부 (기본값: false)
+// className: 추가 클래스명 (선택)
+
+// ===== 기본 텍스트 리스트 =====
+const textItems = [
   { id: 1, content: "첫 번째 항목" },
   { id: 2, content: "두 번째 항목" },
+  { id: 3, content: "세 번째 항목" },
 ];
-<List items={items} variant="text" bordered />
 
-// 아이콘 리스트
+<List items={textItems} variant="text" bordered />
+
+// ===== 아이콘 리스트 =====
 const iconItems = [
   { id: 1, content: "홈", icon: "🏠" },
   { id: 2, content: "검색", icon: "🔍" },
+  { id: 3, content: "설정", icon: "⚙️" },
+  { id: 4, content: "프로필", icon: "👤" },
 ];
+
 <List items={iconItems} variant="icon" bordered />
 
-// 구분선 있는 리스트
-<List items={items} variant="text" bordered divided />
+// ===== 구분선 있는 리스트 (divided) =====
+<List items={textItems} variant="text" bordered divided />
 
-// 클릭 가능한 리스트
+// ===== 클릭 가능한 리스트 =====
 const clickableItems = [
-  { id: 1, content: "항목 1", onClick: () => console.log("클릭") },
+  { 
+    id: 1, 
+    content: "항목 1", 
+    onClick: () => console.log("항목 1 클릭") 
+  },
+  { 
+    id: 2, 
+    content: "항목 2", 
+    onClick: () => console.log("항목 2 클릭") 
+  },
+  { 
+    id: 3, 
+    content: "비활성화 항목", 
+    onClick: () => {},
+    disabled: true 
+  },
 ];
+
 <List items={clickableItems} variant="text" bordered />
 
-// 직접 ListItem 사용
+// ===== Prefix와 Suffix 사용 =====
+const complexItems = [
+  { 
+    id: 1, 
+    content: "알림", 
+    icon: "🔔", 
+    suffix: "3" 
+  },
+  { 
+    id: 2, 
+    content: "메시지", 
+    icon: "💬", 
+    suffix: "12" 
+  },
+  { 
+    id: 3, 
+    content: "이메일", 
+    icon: "📧", 
+    suffix: "읽지 않음" 
+  },
+];
+
+<List items={complexItems} variant="icon" bordered />
+
+// ===== 직접 ListItem 사용 (children 방식) =====
+// items 배열 대신 children으로 ListItem을 직접 전달
 <List variant="text" bordered>
-  <ListItem icon="⭐" prefix="1.">첫 번째 항목</ListItem>
-  <ListItem icon="⭐" suffix="완료">두 번째 항목</ListItem>
-</List>`,
+  <ListItem icon="⭐" prefix="1.">
+    첫 번째 항목
+  </ListItem>
+  <ListItem icon="⭐" prefix="2." suffix="완료">
+    두 번째 항목
+  </ListItem>
+  <ListItem 
+    icon="⭐" 
+    prefix="3." 
+    onClick={() => console.log("클릭")}
+  >
+    세 번째 항목 (클릭 가능)
+  </ListItem>
+  <ListItem 
+    icon="⭐" 
+    prefix="4." 
+    onClick={() => {}}
+    disabled
+  >
+    네 번째 항목 (비활성화)
+  </ListItem>
+</List>
+
+// ===== 테두리 없는 리스트 =====
+<List items={textItems} variant="text" bordered={false} />
+
+// ===== 아이템 데이터 구조 =====
+// items 배열의 각 객체는 다음 속성을 가질 수 있습니다:
+const itemExample = {
+  id: 1,                    // 고유 식별자 (필수, key로도 사용 가능)
+  content: "항목 내용",     // 표시할 내용 (content, children, label 중 하나 사용 가능)
+  icon: "🏠",              // 아이콘 (이모지, 텍스트 등)
+  prefix: "1.",            // 앞쪽 추가 콘텐츠
+  suffix: "완료",          // 뒤쪽 추가 콘텐츠
+  onClick: () => {},        // 클릭 핸들러 (제공 시 클릭 가능한 항목)
+  disabled: false,          // 비활성화 여부
+};
+
+// ===== 주의사항 =====
+// 1. items 배열 사용 시 각 객체는 id 또는 key 속성을 가져야 함
+// 2. content, children, label 중 하나를 사용하여 아이템 내용 지정
+// 3. variant가 'icon'일 때는 icon 속성이 권장됨
+// 4. onClick이 제공되면 자동으로 클릭 가능한 항목이 되며, 키보드 접근성 지원 (Enter, Space)
+// 5. disabled가 true이면 클릭 및 키보드 이벤트가 비활성화됨
+// 6. divided는 bordered가 true일 때만 효과적으로 작동
+// 7. children과 items는 동시에 사용할 수 없음 (children 우선)
+// 8. 접근성을 위해 클릭 가능한 항목은 role="button"과 aria-disabled 속성 자동 설정`,
     PreviewComponent: ListPreview,
+  },
+  {
+    id: "list-container",
+    label: "리스트 컨테이너",
+    title: "ListContainer 컴포넌트",
+    description:
+      "section/article 태그를 사용하는 리스트 컨테이너 컴포넌트입니다. 제목, 설명, 테두리, 구분선 등의 옵션을 제공합니다.",
+    code: `import ListContainer from "./ListContainer";
+import Card from "./Card";
+import Typography from "./Typography";
+
+// ===== Section 태그 사용 =====
+<ListContainer
+  tag="section"
+  title="음료 메뉴"
+  description="다양한 음료를 선택하실 수 있습니다."
+  bordered
+>
+  <Card variant="product" title="아메리카노" price="4,500원" />
+  <Card variant="product" title="카페라떼" price="5,000원" />
+</ListContainer>
+
+// ===== Article 태그 사용 =====
+<ListContainer
+  tag="article"
+  title="공지사항"
+  description="최신 공지사항을 확인하세요."
+  bordered
+  divided
+>
+  <div>
+    <Typography variant="h6" size="small">시스템 점검 안내</Typography>
+    <Typography variant="body" size="small" color="muted">
+      2024년 1월 15일 시스템 점검이 예정되어 있습니다.
+    </Typography>
+  </div>
+  <div>
+    <Typography variant="h6" size="small">새로운 메뉴 출시</Typography>
+    <Typography variant="body" size="small" color="muted">
+      봄 시즌 한정 메뉴가 출시되었습니다.
+    </Typography>
+  </div>
+</ListContainer>
+
+// ===== 구분선 스타일 (divided) =====
+<ListContainer tag="section" divided>
+  <div>첫 번째 아이템</div>
+  <div>두 번째 아이템</div>
+  <div>세 번째 아이템</div>
+</ListContainer>
+
+// ===== 테두리 스타일 (bordered) =====
+<ListContainer tag="section" bordered>
+  <div>테두리가 있는 컨테이너입니다.</div>
+  <div>배경색과 테두리가 적용됩니다.</div>
+</ListContainer>
+
+// ===== Props 설명 =====
+// tag: 'section' | 'article' (기본값: 'section')
+// title: 섹션 제목 (선택)
+// description: 섹션 설명 (선택)
+// bordered: 테두리 표시 여부 (기본값: false)
+// divided: 구분선 표시 여부 (기본값: false)
+// className: 추가 클래스명 (선택)
+// children: 리스트 아이템들`,
+    PreviewComponent: ListContainerPreview,
   },
   {
     id: "form",
     label: "폼",
-    title: "폼 요소",
+    title: "폼 컴포넌트",
     description:
       "레이블·플레이스홀더·보조텍스트와 함께 간단한 유효성 검사를 포함한 폼입니다. 이름, 휴대폰, 주소, 이메일, 비밀번호를 검증합니다.",
-    code: `<form onSubmit={handleSubmit}>
-  <label class="field">
-    <span class="field__label">이름</span>
-    <input name="name" type="text" placeholder="홍길동" />
-  </label>
-  <label class="field">
-    <span class="field__label">휴대폰 번호</span>
-    <input name="phone" type="tel" placeholder="010-1234-5678" />
-  </label>
-  <label class="field">
-    <span class="field__label">주소</span>
-    <input name="address" type="text" placeholder="도로명 주소" />
-  </label>
-  <label class="field">
-    <span class="field__label">이메일</span>
-    <input name="email" type="email" placeholder="name@example.com" />
-  </label>
-  <label class="field">
-    <span class="field__label">비밀번호</span>
-    <input name="password" type="password" placeholder="8자 이상 입력" />
-  </label>
-  <button type="submit" class="btn btn--primary btn--md">유효성 검사</button>
-</form>`,
-    PreviewComponent: FormSample,
+    code: `import { useState } from "react";
+import Input from "./Input";
+import Button from "./Button";
+
+// ===== HTML 구조 =====
+<form onSubmit={handleSubmit} className="form">
+  <Input
+    label="이름"
+    type="text"
+    placeholder="홍길동"
+    value={form.name}
+    onChange={handleChange("name")}
+    error={errors.name}
+    help={!errors.name ? "본인 확인이 가능한 이름을 입력하세요." : undefined}
+    showClearButton
+  />
+  <Input
+    label="휴대폰 번호"
+    type="tel"
+    placeholder="010-1234-5678"
+    value={form.phone}
+    onChange={handleChange("phone")}
+    error={errors.phone}
+    help={!errors.phone ? "숫자만 입력해도 자동으로 처리됩니다." : undefined}
+    showClearButton
+  />
+  <Input
+    label="주소"
+    type="text"
+    placeholder="도로명 주소를 입력하세요"
+    value={form.address}
+    onChange={handleChange("address")}
+    error={errors.address}
+    help={!errors.address ? "배송 또는 연락 가능한 주소를 입력하세요." : undefined}
+    showClearButton
+  />
+  <Input
+    label="이메일"
+    type="email"
+    placeholder="name@example.com"
+    value={form.email}
+    onChange={handleChange("email")}
+    error={errors.email}
+    help={!errors.email ? "가입 시 사용한 이메일을 입력하세요." : undefined}
+    showClearButton
+  />
+  <Input
+    label="비밀번호"
+    type="password"
+    placeholder="8자 이상 입력"
+    value={form.password}
+    onChange={handleChange("password")}
+    error={errors.password}
+    help={!errors.password ? "문자, 숫자 조합으로 8자 이상 입력하세요." : undefined}
+  />
+  <Button type="submit" variant="primary" size="medium">
+    유효성 검사
+  </Button>
+  {message && <p className="form__success">{message}</p>}
+</form>
+
+// ===== JavaScript 로직 =====
+function Form() {
+  const [form, setForm] = useState({ 
+    name: "", 
+    phone: "", 
+    address: "", 
+    email: "", 
+    password: "" 
+  });
+  const [errors, setErrors] = useState({});
+  const [message, setMessage] = useState("");
+
+  // 입력 필드 변경 핸들러
+  const handleChange = (fieldName) => (e, value) => {
+    setForm((prev) => ({ ...prev, [fieldName]: value }));
+    setMessage("");
+    // 에러가 있으면 입력 시 에러 메시지 제거
+    if (errors[fieldName]) {
+      setErrors((prev) => ({ ...prev, [fieldName]: "" }));
+    }
+  };
+
+  // 유효성 검사 함수
+  const validate = () => {
+    const nextErrors = {};
+    if (!form.name.trim()) {
+      nextErrors.name = "이름을 입력해주세요.";
+    }
+    if (!/^01[0-9]-?\d{3,4}-?\d{4}$/.test(form.phone)) {
+      nextErrors.phone = "휴대폰 번호를 010-1234-5678 형식으로 입력해주세요.";
+    }
+    if (!form.address.trim()) {
+      nextErrors.address = "주소를 입력해주세요.";
+    }
+    if (!/\S+@\S+\.\S+/.test(form.email)) {
+      nextErrors.email = "유효한 이메일을 입력해주세요.";
+    }
+    if (form.password.length < 8) {
+      nextErrors.password = "비밀번호는 8자 이상이어야 합니다.";
+    }
+    return nextErrors;
+  };
+
+  // 폼 제출 핸들러
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const nextErrors = validate();
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length === 0) {
+      setMessage("유효성 검사가 완료되었습니다!");
+    }
+  };
+
+  return (
+    // ... 위의 JSX 코드
+  );
+}
+
+// ===== 스타일 =====
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 520px;
+}
+
+.form__success {
+  margin: 8px 0 0 0;
+  color: var(--color-accent);
+  font-weight: 700;
+  font-size: 13px;
+}`,
+    PreviewComponent: Form,
   },
   {
     id: "button",
@@ -3441,13 +4511,167 @@ import Icon from "./Icon";
     title: "토스트 알림",
     description:
       "성공/경고/에러 등 상태에 따라 색상이 바뀌는 토스트 알림입니다. 지정된 시간 후 자동으로 사라지며 닫기 버튼을 제공합니다.",
-    code: `const [toast, setToast] = useState({ message: "", type: "info" });
+    code: `import Toast from "./Toast";
+import { useState } from "react";
+
+// ===== Props 설명 =====
+// message: 토스트에 표시할 메시지 (필수, 빈 문자열이면 렌더링 안 함)
+// type: 토스트 타입 'info' | 'success' | 'warning' | 'error' (기본값: 'info')
+// duration: 자동 닫힘 시간 (밀리초, 기본값: 3000)
+// onClose: 토스트 닫기 핸들러 (필수, duration 후 자동 호출 또는 사용자 클릭 시 호출)
+
+// ===== 기본 사용 =====
+// 토스트는 상태 관리와 함께 사용됩니다.
+const [toast, setToast] = useState({ message: "", type: "info" });
 
 const showToast = (type, message) => {
   setToast({ message, type });
 };
 
-<Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: "", type: "info" })} />`,
+<Toast 
+  message={toast.message} 
+  type={toast.type} 
+  onClose={() => setToast({ message: "", type: "info" })} 
+/>
+
+// ===== Type 옵션 =====
+// info: 정보성 메시지 (기본값, 파란색)
+<Toast 
+  message="정보 메시지입니다." 
+  type="info" 
+  onClose={() => setToast({ message: "", type: "info" })} 
+/>
+
+// success: 성공 메시지 (초록색)
+<Toast 
+  message="작업이 완료되었습니다." 
+  type="success" 
+  onClose={() => setToast({ message: "", type: "info" })} 
+/>
+
+// warning: 경고 메시지 (노란색)
+<Toast 
+  message="주의가 필요합니다." 
+  type="warning" 
+  onClose={() => setToast({ message: "", type: "info" })} 
+/>
+
+// error: 에러 메시지 (빨간색)
+<Toast 
+  message="오류가 발생했습니다." 
+  type="error" 
+  onClose={() => setToast({ message: "", type: "info" })} 
+/>
+
+// ===== 자동 닫힘 시간 조정 =====
+// duration prop으로 자동 닫힘 시간을 조정할 수 있습니다.
+<Toast 
+  message="5초 후 자동으로 닫힙니다." 
+  type="info" 
+  duration={5000}
+  onClose={() => setToast({ message: "", type: "info" })} 
+/>
+
+// 영구적으로 표시하려면 duration을 매우 큰 값으로 설정
+<Toast 
+  message="수동으로 닫아야 합니다." 
+  type="info" 
+  duration={999999}
+  onClose={() => setToast({ message: "", type: "info" })} 
+/>
+
+// ===== 수동 닫기 =====
+// 사용자가 닫기 버튼(✕)을 클릭하거나 토스트 영역을 클릭하면 즉시 닫힙니다.
+// onClose 핸들러가 호출됩니다.
+
+// ===== 내부 동작 =====
+// useEffect를 사용하여 message가 변경되면 타이머를 설정합니다.
+// duration 시간 후 onClose를 자동으로 호출합니다.
+// 컴포넌트 언마운트 시 타이머를 정리합니다 (cleanup).
+
+// ===== 조건부 렌더링 =====
+// message가 없거나 빈 문자열이면 null을 반환하여 렌더링하지 않습니다.
+// if (!message) return null;
+
+// ===== UI 구조 =====
+// toast: 최상위 컨테이너
+//   toast--{type}: 타입별 클래스 (info, success, warning, error)
+//   toast__dot: 타입별 색상 점 (aria-hidden="true")
+//   toast__message: 메시지 텍스트
+//   toast__close: 닫기 버튼 (✕)
+
+// ===== 접근성 =====
+// - role="status" 제공 (스크린 리더에 상태 변경 알림)
+// - aria-live="polite" 제공 (스크린 리더가 우선순위 낮게 읽음)
+// - 닫기 버튼에 aria-label="토스트 닫기" 제공
+// - 닫기 버튼과 토스트 영역 클릭 시 닫힘
+
+// ===== 토스트 관리 패턴 =====
+// 여러 토스트를 관리하려면 배열로 관리:
+const [toasts, setToasts] = useState([]);
+
+const addToast = (type, message) => {
+  const id = Date.now();
+  setToasts(prev => [...prev, { id, type, message }]);
+  
+  // 자동 제거
+  setTimeout(() => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  }, 3000);
+};
+
+const removeToast = (id) => {
+  setToasts(prev => prev.filter(toast => toast.id !== id));
+};
+
+// 렌더링
+{toasts.map(toast => (
+  <Toast
+    key={toast.id}
+    message={toast.message}
+    type={toast.type}
+    onClose={() => removeToast(toast.id)}
+  />
+))}
+
+// ===== 전역 토스트 관리 =====
+// Context API를 사용하여 전역에서 토스트를 관리할 수 있습니다.
+const ToastContext = createContext();
+
+export const ToastProvider = ({ children }) => {
+  const [toast, setToast] = useState({ message: "", type: "info" });
+  
+  const showToast = (type, message) => {
+    setToast({ message, type });
+  };
+  
+  return (
+    <ToastContext.Provider value={{ showToast }}>
+      {children}
+      <Toast 
+        message={toast.message} 
+        type={toast.type} 
+        onClose={() => setToast({ message: "", type: "info" })} 
+      />
+    </ToastContext.Provider>
+  );
+};
+
+// 사용
+const { showToast } = useContext(ToastContext);
+showToast("success", "작업 완료!");
+
+// ===== 주의사항 =====
+// 1. message가 없으면 토스트가 렌더링되지 않습니다.
+// 2. onClose는 필수이며, duration 후 자동으로 호출됩니다.
+// 3. 같은 토스트를 연속으로 표시하려면 key를 변경해야 합니다.
+// 4. 여러 토스트를 동시에 표시하려면 배열로 관리해야 합니다.
+// 5. duration은 밀리초 단위입니다 (3000 = 3초).
+// 6. 토스트는 클릭하면 즉시 닫힙니다 (닫기 버튼 또는 토스트 영역).
+// 7. useEffect의 cleanup 함수로 타이머를 정리하여 메모리 누수를 방지합니다.
+// 8. 접근성을 위해 role="status"와 aria-live="polite"를 제공합니다.
+// 9. 토스트는 보통 화면 상단 또는 하단에 고정 위치로 표시됩니다.
+// 10. 여러 토스트를 표시할 때는 z-index를 조정하여 겹치지 않도록 해야 합니다.`,
     PreviewComponent: ToastPreview,
   },
   {
@@ -3456,7 +4680,16 @@ const showToast = (type, message) => {
     title: "하단 돗바 내비게이션",
     description:
       "모바일 하단 고정형 돗바 UI. 아이콘/라벨 목록을 props로 받아 활성 상태를 표시하며 onChange로 선택 값을 전달합니다.",
-    code: `const items = [
+    code: `import BottomDock from "./BottomDock";
+import { useState } from "react";
+
+// ===== Props 설명 =====
+// items: 내비게이션 아이템 배열 [{ key, label, icon }] (기본값: defaultItems)
+// onChange: 아이템 선택 핸들러 (선택된 key를 인자로 받음)
+// defaultActive: 기본 활성화된 아이템 key (기본값: "home")
+
+// ===== 기본 사용 =====
+const items = [
   { key: "home", label: "홈", icon: "🏠" },
   { key: "search", label: "검색", icon: "🔍" },
   { key: "bookmark", label: "즐겨찾기", icon: "⭐" },
@@ -3467,7 +4700,44 @@ const showToast = (type, message) => {
   items={items}
   defaultActive="home"
   onChange={(key) => console.log("selected", key)}
-/>`,
+/>
+
+// ===== Controlled 컴포넌트로 사용 =====
+// 외부에서 active 상태를 관리하고 싶을 때
+const [activeTab, setActiveTab] = useState("home");
+
+<BottomDock
+  items={items}
+  defaultActive={activeTab}
+  onChange={(key) => {
+    setActiveTab(key);
+    // 페이지 이동 또는 다른 로직 처리
+    console.log("탭 변경:", key);
+  }}
+/>
+
+// ===== 커스텀 아이템 사용 =====
+const customItems = [
+  { key: "menu1", label: "메뉴 1", icon: "📱" },
+  { key: "menu2", label: "메뉴 2", icon: "💬" },
+  { key: "menu3", label: "메뉴 3", icon: "⚙️" },
+  { key: "menu4", label: "메뉴 4", icon: "📊" },
+  { key: "menu5", label: "메뉴 5", icon: "🔔" },
+];
+
+<BottomDock
+  items={customItems}
+  defaultActive="menu1"
+  onChange={(key) => handleMenuChange(key)}
+/>
+
+// ===== 주의사항 =====
+// 1. items 배열의 각 객체는 key, label, icon 속성을 가져야 함
+// 2. key는 고유한 식별자로 사용되며, defaultActive와 일치해야 함
+// 3. icon은 이모지, 텍스트, 또는 다른 형태의 아이콘을 사용할 수 있음
+// 4. onChange 핸들러는 선택된 아이템의 key를 인자로 받음
+// 5. active 상태는 컴포넌트 내부에서 관리되며, is-active 클래스가 자동으로 적용됨
+// 6. 접근성을 위해 aria-label과 aria-pressed 속성이 자동으로 설정됨`,
     PreviewComponent: BottomDockPreview,
   },
   {
@@ -3476,60 +4746,221 @@ const showToast = (type, message) => {
     title: "선택 리스트 연동",
     description:
       "좌측 버튼 리스트를 클릭하면 우측 리스트에 li로 추가되고, 삭제 버튼을 누르면 선택 목록에서 제거됩니다. onChange로 최신 선택 배열을 전달합니다.",
-    code: `const options = [{ value: "react", label: "React" }, ...];
+    code: `import ListSync from "./ListSync";
+import { useState } from "react";
+
+// ===== Props 설명 =====
+// options: 선택 가능한 옵션 배열 [{ value, label }] (기본값: defaultOptions)
+// onChange: 선택된 항목 변경 핸들러 (선택된 배열을 인자로 받음, 선택)
+
+// ===== 기본 사용 =====
+// ListSync는 두 개의 영역으로 구성됩니다:
+// 1. 소스 영역: 추가할 수 있는 옵션들 (왼쪽)
+// 2. 타겟 영역: 선택된 항목들 (오른쪽)
+const options = [
+  { value: "react", label: "React" },
+  { value: "vue", label: "Vue.js" },
+  { value: "angular", label: "Angular" },
+  { value: "svelte", label: "Svelte" },
+];
+
 const [selected, setSelected] = useState([]);
 
-<ListSync options={options} onChange={setSelected} />`,
+<ListSync 
+  options={options} 
+  onChange={(selectedItems) => {
+    setSelected(selectedItems);
+    console.log("선택된 항목:", selectedItems);
+  }} 
+/>
+
+// ===== 선택된 항목 추적 =====
+// onChange 핸들러를 통해 선택된 항목을 외부에서 관리할 수 있습니다.
+const [selectedItems, setSelectedItems] = useState([]);
+
+const handleChange = (items) => {
+  setSelectedItems(items);
+  // 선택된 항목을 서버에 저장하거나 다른 로직 실행
+  saveSelectedItems(items);
+};
+
+<ListSync options={options} onChange={handleChange} />
+
+// ===== 중복 방지 =====
+// 컴포넌트 내부에서 자동으로 중복을 방지합니다.
+// handleAdd 함수에서 items.some()을 사용하여 value 기준으로 중복 체크:
+// if (items.some((item) => item.value === option.value)) return;
+
+// 같은 value를 가진 옵션은 한 번만 추가됩니다.
+
+// ===== 항목 추가 =====
+// 소스 영역의 옵션 버튼을 클릭하면 타겟 영역에 추가됩니다.
+// handleAdd 함수가 호출되며:
+// 1. 중복 체크
+// 2. items 배열에 추가
+// 3. onChange 호출 (제공된 경우)
+
+// ===== 항목 삭제 =====
+// 타겟 영역의 각 항목 옆에 "삭제" 버튼이 있습니다.
+// handleRemove 함수가 호출되며:
+// 1. 해당 인덱스의 항목을 필터링하여 제거
+// 2. onChange 호출 (제공된 경우)
+
+// ===== 빈 상태 =====
+// 선택된 항목이 없을 때 "아직 선택된 항목이 없습니다." 메시지가 표시됩니다.
+{items.length === 0 && (
+  <p className="list-sync__empty">아직 선택된 항목이 없습니다.</p>
+)}
+
+// ===== 선택된 항목 개수 표시 =====
+// 타겟 영역의 헤더에 선택된 항목 개수가 표시됩니다.
+<div className="list-sync__target-head">
+  <span>선택된 항목</span>
+  <span className="list-sync__count">{items.length}개</span>
+</div>
+
+// ===== 내부 상태 관리 =====
+// 컴포넌트 내부에서 items 상태를 관리합니다:
+// const [items, setItems] = useState([]);
+//
+// onChange prop이 제공되면 외부에서도 선택된 항목을 추적할 수 있습니다.
+
+// ===== UI 구조 =====
+// list-sync: 최상위 컨테이너
+//   list-sync__source: 소스 영역 (추가할 옵션들)
+//     list-sync__option: 각 옵션 버튼
+//   list-sync__target: 타겟 영역 (선택된 항목들)
+//     list-sync__target-head: 헤더 (제목 + 개수)
+//     list-sync__empty: 빈 상태 메시지
+//     list-sync__list: 선택된 항목 리스트
+//       list-sync__remove: 삭제 버튼
+
+// ===== 접근성 =====
+// - 소스 영역에 aria-label="추가할 항목 선택" 제공
+// - 삭제 버튼에 aria-label="{항목명} 삭제" 제공
+// - 키보드 접근성 지원 (버튼은 Enter/Space로 클릭 가능)
+
+// ===== 비동기 옵션 로드 =====
+// API에서 옵션을 로드하는 경우:
+const [options, setOptions] = useState([]);
+const [isLoading, setIsLoading] = useState(true);
+
+useEffect(() => {
+  fetchOptions()
+    .then(setOptions)
+    .catch(console.error)
+    .finally(() => setIsLoading(false));
+}, []);
+
+{isLoading ? (
+  <Loading />
+) : (
+  <ListSync options={options} onChange={setSelected} />
+)}
+
+// ===== 주의사항 =====
+// 1. options 배열의 각 항목은 { value, label } 구조를 가져야 합니다.
+// 2. value는 고유해야 하며, 중복된 value는 한 번만 추가됩니다.
+// 3. onChange는 선택 사항이지만, 외부에서 선택된 항목을 추적하려면 제공해야 합니다.
+// 4. 컴포넌트 내부 상태와 외부 상태를 동기화하려면 onChange를 사용해야 합니다.
+// 5. 옵션이 많을 경우 소스 영역의 스크롤을 고려해야 합니다.
+// 6. 선택된 항목이 많을 경우 타겟 영역의 스크롤을 고려해야 합니다.
+// 7. 삭제 버튼은 각 항목의 우측에 위치합니다.
+// 8. 빈 상태 메시지는 선택된 항목이 없을 때만 표시됩니다.
+// 9. 항목 개수는 실시간으로 업데이트됩니다.
+// 10. 옵션 배열이 변경되면 내부 상태는 자동으로 업데이트되지 않습니다 (외부에서 관리 필요).`,
     PreviewComponent: ListSyncPreview,
   },
   {
     id: "table",
     label: "테이블",
-    title: "가로 스크롤 · 열 고정 테이블",
-    description: "좌우 스크롤 시 첫 두 열(번호·제목)을 고정해 식별성을 유지합니다. `position: sticky`와 고정 너비를 사용합니다.",
-    code: `<div class="table-wrap is-scrollable">
-  <table class="table is-wide is-freeze">
-    <thead>
-      <tr>
-        <th class="is-sticky is-sticky--first">번호</th>
-        <th class="is-sticky is-sticky--second">제목</th>
-        <th>등록일</th>
-        <th>첨부</th>
-        <th>조회수</th>
-        <th>경쟁률</th>
-        <th>상태</th>
-        <th>분류</th>
-        <th>담당자</th>
-        <th>마감일</th>
-        <th>비고</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="is-sticky is-sticky--first">1</td>
-        <td class="is-sticky is-sticky--second">데이터 분석가 채용</td>
-        <td>2025-01-07</td>
-        <td>jd.pdf</td>
-        <td>3,210</td>
-        <td>15:1</td>
-        <td>진행중</td>
-        <td>채용</td>
-        <td>홍길동</td>
-        <td>2025-02-01</td>
-        <td>온라인 면접</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+    title: "테이블 컴포넌트",
+    description: "가로 스크롤, 세로 스크롤, 헤더 & 열 고정 등 다양한 스크롤 타입을 지원하는 테이블 컴포넌트입니다.",
+    code: `import Table from "./Table";
 
-/* 핵심 스타일 */
-.is-freeze {
-  width: max-content;
+// ===== Props 설명 =====
+// scrollType: 'horizontal' | 'vertical' | 'both' (기본값: 'horizontal')
+// headers: 테이블 헤더 배열
+// rows: 테이블 데이터 배열
+
+// ===== 타입 1: 가로 스크롤 · 열 고정 테이블 =====
+// 가로 스크롤만 가능, 첫 번째 열 고정, 헤더 고정 없음
+<Table 
+  scrollType="horizontal"
+  headers={["번호", "제목", "등록일", "첨부", "조회수", "경쟁률", "상태", "분류", "담당자", "마감일", "비고"]}
+  rows={[
+    { id: 1, title: "데이터 분석가 채용", date: "2025-01-07", attachment: "jd.pdf", views: 3210, ratio: "15:1", status: "진행중", category: "채용", owner: "홍길동", deadline: "2025-02-01", note: "온라인 면접" }
+  ]}
+/>
+
+/* 스타일 */
+.table__table-wrapper--scroll-horizontal {
+  overflow-x: auto;
+  overflow-y: hidden;
 }
-.is-freeze .is-sticky { position: sticky; background: #fff; z-index: 2; }
-.is-freeze .is-sticky--first { left: 0; min-width: 90px; z-index: 3; }
-.is-freeze .is-sticky--second { left: 90px; min-width: 240px; }`,
-    PreviewComponent: TableDemoPreview,
+.table__table--freeze .is-sticky--first {
+  position: sticky;
+  left: 0;
+  z-index: 8;
+}
+
+// ===== 타입 2: 세로 스크롤 · 헤더 고정 테이블 =====
+// 세로 스크롤만 가능, 헤더 고정, 열 고정 없음, max-height: 400px
+<Table 
+  scrollType="vertical"
+  headers={["번호", "제목", "등록일", "조회수", "상태"]}
+  rows={[
+    { id: 1, title: "공지사항 제목 1", date: "2025-01-15", views: 1250, status: "공개" }
+  ]}
+/>
+
+/* 스타일 */
+.table__table-wrapper--scroll-vertical {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 400px;
+}
+.table__table-wrapper--scroll-vertical .table__table thead {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+// ===== 타입 3: 가로·세로 스크롤 · 헤더 & 열 고정 테이블 =====
+// 가로·세로 스크롤 모두 가능, 헤더와 첫 번째 열 모두 고정, max-height: 400px
+<Table 
+  scrollType="both"
+  headers={["번호", "제목", "등록일", "첨부", "조회수", "경쟁률", "상태", "분류", "담당자", "마감일", "비고"]}
+  rows={[
+    { id: 1, title: "데이터 분석가 채용", date: "2025-01-07", attachment: "jd.pdf", views: 3210, ratio: "15:1", status: "진행중", category: "채용", owner: "홍길동", deadline: "2025-02-01", note: "온라인 면접" }
+  ]}
+/>
+
+/* 스타일 */
+.table__table-wrapper--scroll-both {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 400px;
+}
+.table__table-wrapper--scroll-both .table__table thead {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.table__table--freeze .is-sticky--first {
+  position: sticky;
+  left: 0;
+  z-index: 8;
+}
+.table__table-wrapper--scroll-both .table__table--freeze thead th.is-sticky--first {
+  z-index: 25; // 헤더와 열이 모두 고정된 경우 가장 위에
+}
+
+// ===== 타입별 차이점 =====
+// horizontal: 가로 스크롤만, 헤더 고정 없음, 높이 제한 없음
+// vertical: 세로 스크롤만, 헤더 고정, 열 고정 없음, max-height: 400px
+// both: 가로·세로 스크롤 모두, 헤더와 열 모두 고정, max-height: 400px`,
+    PreviewComponent: TablePreview,
   },
   {
     id: "popup",
@@ -3537,13 +4968,237 @@ const [selected, setSelected] = useState([]);
     title: "팝업 UI",
     description:
       "Basic 중앙 팝업, 바텀시트(드래그로 닫기), 풀스크린 팝업을 제공합니다.",
-    code: `// 상태
+    code: `import { BasicPopup, BottomSheetPopup, FullscreenPopup } from "./Popup";
+import { useState } from "react";
+import Button from "./Button";
+
+// ===== BasicPopup Props 설명 =====
+// open: 팝업 열림/닫힘 상태 (boolean, 필수)
+// onClose: 팝업 닫기 핸들러 (function, 필수)
+// icon: 아이콘 (이모지, 텍스트 등, 기본값: "🔒")
+// title: 팝업 제목 (string, 필수)
+// description: 팝업 설명 (string, 선택)
+// actions: 액션 버튼 배열 [{ label, variant, onClick }] (기본값: [])
+
+// ===== BottomSheetPopup Props 설명 =====
+// open: 팝업 열림/닫힘 상태 (boolean, 필수)
+// onClose: 팝업 닫기 핸들러 (function, 필수)
+// title: 팝업 제목 (string, 필수)
+// description: 팝업 설명 (string, 선택)
+
+// ===== FullscreenPopup Props 설명 =====
+// open: 팝업 열림/닫힘 상태 (boolean, 필수)
+// onClose: 팝업 닫기 핸들러 (function, 필수)
+// title: 팝업 제목 (string, 필수)
+// body: 팝업 본문 내용 (ReactNode, 필수)
+
+// ===== BasicPopup 사용 =====
+// 중앙에 표시되는 기본 팝업입니다.
 const [isBasicOpen, setIsBasicOpen] = useState(false);
+
+<BasicPopup
+  open={isBasicOpen}
+  onClose={() => setIsBasicOpen(false)}
+  icon="🔒"
+  title="알림"
+  description="이 작업을 계속하시겠습니까?"
+  actions={[
+    {
+      label: "취소",
+      variant: "ghost",
+      onClick: () => setIsBasicOpen(false),
+    },
+    {
+      label: "확인",
+      variant: "primary",
+      onClick: () => {
+        console.log("확인 클릭");
+        setIsBasicOpen(false);
+      },
+    },
+  ]}
+/>
+
+// 아이콘 없이 사용
+<BasicPopup
+  open={isBasicOpen}
+  onClose={() => setIsBasicOpen(false)}
+  title="알림"
+  description="작업이 완료되었습니다."
+  actions={[
+    {
+      label: "확인",
+      variant: "primary",
+      onClick: () => setIsBasicOpen(false),
+    },
+  ]}
+/>
+
+// ===== BottomSheetPopup 사용 =====
+// 하단에서 올라오는 바텀시트 팝업입니다. 드래그로 닫을 수 있습니다.
 const [isSheetOpen, setIsSheetOpen] = useState(false);
+
+<BottomSheetPopup
+  open={isSheetOpen}
+  onClose={() => setIsSheetOpen(false)}
+  title="옵션 선택"
+  description="원하는 옵션을 선택하세요."
+/>
+
+// ===== BottomSheetPopup 드래그 기능 =====
+// 바텀시트는 드래그하여 닫을 수 있습니다.
+// - 드래그 시작: onMouseDown 또는 onTouchStart
+// - 드래그 중: onMouseMove 또는 onTouchMove (최대 240px 이동)
+// - 드래그 종료: onMouseUp 또는 onTouchEnd
+// - 임계값(THRESHOLD): 120px 이상 드래그하면 팝업 닫기
+//
+// 내부 상태 관리:
+// - offset: 드래그 오프셋 (0 ~ 240px)
+// - startY: 드래그 시작 Y 좌표
+//
+// 드래그 종료 시:
+// if (offset > THRESHOLD) {
+//   onClose?.();
+// }
+
+// ===== FullscreenPopup 사용 =====
+// 전체 화면을 덮는 풀스크린 팝업입니다.
 const [isFullOpen, setIsFullOpen] = useState(false);
 
-// 바텀시트 드래그 종료 시
-if (dragDistance > threshold) closeSheet();`,
+<FullscreenPopup
+  open={isFullOpen}
+  onClose={() => setIsFullOpen(false)}
+  title="상세 정보"
+  body={
+    <div>
+      <p>풀스크린 팝업 내용입니다.</p>
+      <p>자유롭게 콘텐츠를 구성할 수 있습니다.</p>
+    </div>
+  }
+/>
+
+// ===== 오버레이 클릭으로 닫기 =====
+// BasicPopup과 BottomSheetPopup은 오버레이 클릭 시 닫힙니다.
+// handleOverlayClick 함수가 onClose를 호출합니다.
+// 팝업 내부 클릭 시 이벤트 전파를 막아 오버레이 클릭으로 인한 닫힘을 방지합니다.
+// const handlePopupClick = (e) => {
+//   e.stopPropagation();
+// };
+
+// ===== 조건부 렌더링 =====
+// 모든 팝업은 open이 false이면 null을 반환하여 렌더링하지 않습니다.
+// if (!open) return null;
+
+// ===== BasicPopup 액션 버튼 =====
+// actions 배열의 각 항목은 Button 컴포넌트로 렌더링됩니다.
+// actions.map((action, idx) => (
+//   <Button
+//     key={idx}
+//     variant={action.variant || "ghost"}
+//     onClick={action.onClick}
+//   >
+//     {action.label}
+//   </Button>
+// ))
+
+// ===== BottomSheetPopup 드래그 핸들 =====
+// 바텀시트 상단에 드래그 핸들이 표시됩니다.
+// <div className="popup__handle" />
+// 시각적으로 드래그 가능함을 나타냅니다.
+
+// ===== FullscreenPopup 닫기 버튼 =====
+// 풀스크린 팝업 헤더에 닫기 버튼(✕)이 있습니다.
+// <button className="popup__close" onClick={onClose} aria-label="닫기">✕</button>
+
+// ===== UI 구조 =====
+// BasicPopup:
+//   popup-overlay: 오버레이 (클릭 시 닫기)
+//     popup popup--basic: 팝업 컨테이너
+//       popup__image: 아이콘 영역
+//       popup__body: 본문 영역
+//       popup__dots: 데코레이션 도트
+//       popup__actions: 액션 버튼 영역
+//
+// BottomSheetPopup:
+//   popup-overlay popup-overlay--sheet: 오버레이
+//     popup popup--sheet: 팝업 컨테이너 (transform 적용)
+//       popup__handle: 드래그 핸들
+//       popup__body: 본문 영역
+//       popup__actions: 액션 버튼 영역
+//
+// FullscreenPopup:
+//   popup-overlay popup-overlay--full: 오버레이
+//     popup popup--full: 팝업 컨테이너
+//       popup__header: 헤더 (제목 + 닫기 버튼)
+//       popup__body: 본문 영역
+
+// ===== Typography 사용 =====
+// 모든 팝업은 내부적으로 Typography 컴포넌트를 사용합니다:
+// - title: Typography variant="h4", size="small"
+// - description: Typography variant="body", size="small", color="muted"
+
+// ===== 접근성 =====
+// - 오버레이 클릭으로 닫기 기능 제공
+// - FullscreenPopup의 닫기 버튼에 aria-label="닫기" 제공
+// - 키보드 접근성 지원 (ESC 키로 닫기 - 구현 필요 시)
+// - 포커스 트랩 (모달 내부에 포커스 유지 - 구현 필요 시)
+
+// ===== 사용 사례 =====
+// 1. 확인 다이얼로그
+const handleDelete = () => {
+  setIsBasicOpen(true);
+};
+
+<BasicPopup
+  open={isBasicOpen}
+  onClose={() => setIsBasicOpen(false)}
+  icon="🗑️"
+  title="삭제 확인"
+  description="정말로 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+  actions={[
+    {
+      label: "취소",
+      variant: "ghost",
+      onClick: () => setIsBasicOpen(false),
+    },
+    {
+      label: "삭제",
+      variant: "primary",
+      onClick: () => {
+        deleteItem();
+        setIsBasicOpen(false);
+      },
+    },
+  ]}
+/>
+
+// 2. 옵션 선택 (바텀시트)
+<BottomSheetPopup
+  open={isSheetOpen}
+  onClose={() => setIsSheetOpen(false)}
+  title="정렬 방식"
+  description="원하는 정렬 방식을 선택하세요."
+/>
+
+// 3. 상세 정보 (풀스크린)
+<FullscreenPopup
+  open={isFullOpen}
+  onClose={() => setIsFullOpen(false)}
+  title="상품 상세 정보"
+  body={<ProductDetail product={product} />}
+/>
+
+// ===== 주의사항 =====
+// 1. open prop이 false이면 팝업이 렌더링되지 않습니다 (null 반환).
+// 2. onClose는 필수이며, 팝업을 닫을 때 호출됩니다.
+// 3. BasicPopup의 actions 배열이 비어있으면 액션 버튼이 표시되지 않습니다.
+// 4. BottomSheetPopup은 드래그로 닫을 수 있으며, 임계값은 120px입니다.
+// 5. BottomSheetPopup이 닫힐 때 offset과 startY 상태가 자동으로 초기화됩니다.
+// 6. FullscreenPopup의 body는 ReactNode이므로 자유롭게 콘텐츠를 구성할 수 있습니다.
+// 7. 오버레이 클릭 시 팝업이 닫히므로, 팝업 내부 클릭 시 stopPropagation을 사용합니다.
+// 8. BasicPopup의 icon은 이모지, 텍스트, SVG 등 다양한 형태를 지원합니다.
+// 9. 모든 팝업은 Typography 컴포넌트를 사용하여 텍스트를 렌더링합니다.
+// 10. 접근성을 위해 적절한 aria-label과 키보드 지원을 제공해야 합니다.`,
     PreviewComponent: PopupPreview,
   },
   {
@@ -3551,11 +5206,144 @@ if (dragDistance > threshold) closeSheet();`,
     label: "이미지 줌 팝업",
     title: "풀스크린 이미지 확대",
     description: "풀팝업 위에 이미지를 올려두고 핀치/휠로 확대·축소하는 예시입니다.",
-    code: `<ImageZoomPopup
-  src="https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&w=1200"
-  open={open}
-  onClose={() => setOpen(false)}
-/>`,
+    code: `import ImageZoomPopup from "./ImageZoomPopup";
+import { useState } from "react";
+
+// ===== Props 설명 =====
+// src: 이미지 URL (필수)
+// alt: 이미지 대체 텍스트 (기본값: "Zoom image")
+// open: 팝업 열림/닫힘 상태 (boolean, 필수)
+// onClose: 팝업 닫기 핸들러 (function, 필수)
+
+// ===== 기본 사용 =====
+const [isOpen, setIsOpen] = useState(false);
+
+<button onClick={() => setIsOpen(true)}>
+  이미지 확대 보기
+</button>
+
+<ImageZoomPopup
+  src="https://example.com/image.jpg"
+  alt="확대할 이미지"
+  open={isOpen}
+  onClose={() => setIsOpen(false)}
+/>
+
+// ===== 상태 관리 예제 =====
+// 컴포넌트 내부에서 상태를 관리하여 팝업 열기/닫기 제어
+const ImageViewer = () => {
+  const [isZoomOpen, setIsZoomOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleImageClick = (imageUrl) => {
+    setSelectedImage(imageUrl);
+    setIsZoomOpen(true);
+  };
+
+  return (
+    <>
+      <img 
+        src="https://example.com/thumbnail.jpg" 
+        onClick={() => handleImageClick("https://example.com/full-image.jpg")}
+        alt="썸네일"
+      />
+      
+      <ImageZoomPopup
+        src={selectedImage}
+        alt="확대 이미지"
+        open={isZoomOpen}
+        onClose={() => {
+          setIsZoomOpen(false);
+          setSelectedImage(null);
+        }}
+      />
+    </>
+  );
+};
+
+// ===== 확대/축소 기능 =====
+// 1. 핀치 줌 (모바일/터치 디바이스)
+//    - 두 손가락으로 터치하여 확대/축소
+//    - 손가락 간 거리 변화에 따라 배율 조정
+//    - 배율 범위: 1배 ~ 3배
+
+// 2. 마우스 휠/트랙패드 (데스크탑)
+//    - 휠을 위로 올리면 확대, 아래로 내리면 축소
+//    - 트랙패드 제스처도 지원
+//    - 배율 범위: 1배 ~ 3배
+
+// ===== 배율 제한 =====
+// clampScale 함수로 배율을 1 ~ 3 범위로 제한
+// - 최소 배율: 1배 (원본 크기)
+// - 최대 배율: 3배 (3배 확대)
+// - 배율은 소수점 3자리까지 정밀하게 계산
+
+// ===== 이미지 로딩 상태 =====
+// 컴포넌트 내부에서 이미지 로딩 상태를 자동으로 관리
+// - isLoading: true일 때 Loading 컴포넌트 표시
+// - 이미지 로드 완료 시 isLoading: false로 변경
+// - onLoad, onError 이벤트로 로딩 상태 업데이트
+
+// ===== 이벤트 핸들러 =====
+// handleWheel: 마우스 휠/트랙패드 이벤트 처리
+//   - e.deltaY 값에 따라 확대/축소
+//   - delta = -e.deltaY * 0.0015 (트랙패드/마우스 휠 지원)
+
+// handleTouchStart: 터치 시작 (핀치 줌 시작)
+//   - 두 손가락 터치 감지
+//   - 시작 거리와 현재 배율 저장
+
+// handleTouchMove: 터치 이동 (핀치 줌 중)
+//   - 두 손가락 간 거리 변화 계산
+//   - 거리 비율에 따라 배율 조정
+//   - e.preventDefault()로 기본 스크롤 방지
+
+// handleTouchEnd: 터치 종료 (핀치 줌 종료)
+//   - pinchRef 초기화
+
+// ===== 거리 계산 로직 =====
+// getDistance 함수로 두 터치 포인트 간 거리 계산
+// const getDistance = (touches) => {
+//   const [a, b] = touches;
+//   const dx = a.clientX - b.clientX;
+//   const dy = a.clientY - b.clientY;
+//   return Math.hypot(dx, dy);
+// };
+
+// 배율 계산: (시작 배율 * 현재 거리) / 시작 거리
+// const next = (pinchRef.current.startScale * dist) / pinchRef.current.startDist;
+
+// ===== 팝업 구조 =====
+// popup-overlay--full: 풀스크린 오버레이
+// popup--full: 풀스크린 팝업 컨테이너
+// popup__header: 헤더 영역 (제목 + 닫기 버튼)
+// popup__zoom-hint: 사용 안내 텍스트
+// popup__image-viewport: 이미지 뷰포트 (확대/축소 이벤트 처리)
+// popup__image-loading: 로딩 중 표시 영역
+// popup__image-zoom-element: 확대/축소 가능한 이미지
+
+// ===== 스타일링 =====
+// transform: scale(scale) - CSS transform으로 확대/축소
+// scale 값은 1 ~ 3 범위로 제한됨 (컴포넌트 내부 useState로 관리)
+// 이미지는 Image 컴포넌트를 사용하여 로드 실패 시 폴백 이미지 표시
+// 실제 사용: style={{ transform: \`scale(\${scale})\` }}
+
+// ===== 접근성 =====
+// - alt 속성으로 이미지 설명 제공
+// - 닫기 버튼에 aria-label="닫기" 추가
+// - 키보드로 닫기 가능 (ESC 키 등은 부모 컴포넌트에서 처리)
+
+// ===== 주의사항 =====
+// 1. open prop이 false이면 컴포넌트가 렌더링되지 않음 (조건부 렌더링)
+// 2. 팝업 오버레이 클릭 시 onClose 호출 (배경 클릭으로 닫기)
+// 3. 팝업 내부 클릭 시 이벤트 전파 방지 (e.stopPropagation())
+// 4. 핀치 줌은 두 손가락 터치일 때만 작동
+// 5. 터치 이동 시 e.preventDefault()로 기본 스크롤 방지
+// 6. 배율은 소수점 3자리까지 정밀하게 계산 (toFixed(3))
+// 7. 이미지 로드 실패 시 Image 컴포넌트의 폴백 이미지 표시
+// 8. 로딩 중에는 Loading 컴포넌트가 표시됨
+// 9. 핀치 줌 시작 정보는 useRef로 저장 (리렌더링 방지)
+// 10. 배율 상태는 useState로 관리 (1 ~ 3 범위)`,
     PreviewComponent: () => {
       const [open, setOpen] = useState(false);
       return (
@@ -3578,7 +5366,113 @@ if (dragDistance > threshold) closeSheet();`,
     label: "데이터피커",
     title: "데이터 피커",
     description: "간단한 캘린더 UI로 날짜를 선택합니다. (센터 팝업 기반)",
-    code: `<DatePicker />`,
+    code: `import DatePicker from "./DatePicker";
+import { useState } from "react";
+
+// ===== DatePicker 컴포넌트 =====
+// DatePicker는 react-day-picker 라이브러리를 기반으로 한 날짜 선택 컴포넌트입니다.
+// 세 가지 모드를 지원합니다:
+// 1. 단일 날짜 선택 (Single)
+// 2. 날짜 범위 선택 (Range)
+// 3. 멀티 캘린더 범위 선택 (Multi-month Range)
+
+// ===== 기본 사용 =====
+// DatePicker 컴포넌트는 내부적으로 상태를 관리하므로 별도의 상태 관리가 필요 없습니다.
+<DatePicker />
+
+// ===== 내부 상태 관리 =====
+// 컴포넌트 내부에서 다음 상태를 관리합니다:
+// - openSingle: 단일 날짜 선택 팝업 열림/닫힘
+// - openRange: 날짜 범위 선택 팝업 열림/닫힘
+// - openMulti: 멀티 캘린더 팝업 열림/닫힘
+// - selected: 선택된 단일 날짜 (Date 객체 또는 null)
+// - range: 선택된 날짜 범위 ({ from: Date | null, to: Date | null })
+// - multiRange: 멀티 캘린더 선택된 범위 ({ from: Date | null, to: Date | null })
+
+// ===== 단일 날짜 선택 =====
+// 하나의 날짜를 선택할 수 있습니다.
+// 날짜를 선택하면 selected 상태가 업데이트됩니다.
+// formatDate 함수를 사용하여 "YYYY-MM-DD" 형식으로 표시됩니다.
+
+// ===== 날짜 범위 선택 =====
+// 시작일과 종료일을 선택할 수 있습니다.
+// 날짜를 선택하면 range 상태가 업데이트됩니다.
+// formatRange 함수를 사용하여 "YYYY-MM-DD ~ YYYY-MM-DD" 형식으로 표시됩니다.
+// 범위가 완전히 선택되지 않으면 "YYYY-MM-DD ~ YYYY-MM-DD"로 표시됩니다.
+
+// ===== 멀티 캘린더 범위 선택 =====
+// 2개월 캘린더를 사용하여 날짜 범위를 선택할 수 있습니다.
+// numberOfMonths={2}로 설정되어 2개월이 동시에 표시됩니다.
+// pagedNavigation prop으로 페이지 네비게이션이 활성화됩니다.
+
+// ===== 날짜 포맷팅 =====
+// formatDate(date): 단일 날짜를 "YYYY-MM-DD" 형식으로 변환
+// formatRange(range): 날짜 범위를 "YYYY-MM-DD ~ YYYY-MM-DD" 형식으로 변환
+// 날짜가 없으면 "YYYY-MM-DD" 또는 "YYYY-MM-DD ~ YYYY-MM-DD"로 표시됩니다.
+
+// ===== 팝업 열기/닫기 =====
+// 각 날짜 선택 입력 필드를 클릭하면 해당 팝업이 열립니다.
+// 팝업은 절대 위치로 표시되며, 입력 필드 바로 아래에 나타납니다.
+// 외부를 클릭하면 자동으로 닫힙니다 (useEffect로 document 클릭 이벤트 감지).
+
+// ===== 닫기 버튼 =====
+// 각 팝업 하단에 "닫기" 버튼이 있습니다.
+// Button 컴포넌트를 사용하며, variant="ghost", size="small"로 설정됩니다.
+// 버튼 클릭 시 해당 팝업이 닫힙니다.
+
+// ===== react-day-picker 설정 =====
+// DayPicker 컴포넌트에 다음 props가 적용됩니다:
+// - mode: "single" | "range" (선택 모드)
+// - selected: 선택된 날짜 또는 범위
+// - onSelect: 날짜 선택 핸들러
+// - numberOfMonths: 표시할 월 개수 (멀티 캘린더에서 2)
+// - pagedNavigation: 페이지 네비게이션 활성화 (멀티 캘린더)
+// - weekStartsOn: 0 (일요일부터 시작)
+// - locale: ko (한국어 로케일)
+// - showOutsideDays: true (이전/다음 달 날짜 표시)
+// - fixedWeeks: true (고정된 주 수)
+
+// ===== 외부 클릭 감지 =====
+// useEffect를 사용하여 팝업 외부 클릭을 감지합니다.
+// containerRef를 사용하여 팝업 컨테이너를 참조합니다.
+// document에 mousedown 이벤트 리스너를 등록하고, 외부 클릭 시 모든 팝업을 닫습니다.
+
+// ===== UI 구조 =====
+// date-picker: 최상위 컨테이너
+//   date-picker__group: 각 날짜 선택 그룹
+//     date-picker__group-title: 그룹 제목
+//     date-picker__input: 날짜 입력 필드 (클릭 가능)
+//       date-picker__icon: 캘린더 아이콘
+//     date-picker__popover: 팝업 컨테이너
+//       DayPicker 컴포넌트
+//       date-picker__close: 닫기 버튼
+
+// ===== 접근성 =====
+// - 팝업에 role="dialog" 및 aria-modal="true" 제공
+// - 닫기 버튼에 적절한 aria-label 제공
+// - 키보드 접근성 지원 (react-day-picker 내장)
+
+// ===== 스타일링 =====
+// react-day-picker의 기본 스타일을 오버라이드하여 커스터마이징합니다.
+// --rdp-cell-size: 36px (날짜 셀 크기)
+// 한국어 로케일을 사용하여 요일과 월 이름이 한글로 표시됩니다.
+
+// ===== 날짜 선택 동작 =====
+// 단일 날짜: 날짜를 클릭하면 selected 상태가 업데이트됩니다.
+// 범위 선택: 첫 번째 날짜 클릭 시 from이 설정되고, 두 번째 날짜 클릭 시 to가 설정됩니다.
+// 범위 선택 시 중간 날짜들은 자동으로 하이라이트됩니다.
+
+// ===== 주의사항 =====
+// 1. DatePicker는 내부적으로 상태를 관리하므로 외부에서 제어하려면 컴포넌트를 수정해야 합니다.
+// 2. 날짜 선택 후 자동으로 팝업이 닫히지 않으며, 닫기 버튼을 클릭해야 합니다.
+// 3. 외부 클릭 시 모든 팝업이 닫히므로, 여러 팝업을 동시에 열 수 없습니다.
+// 4. react-day-picker 라이브러리의 스타일을 오버라이드하여 디자인을 맞춥니다.
+// 5. 한국어 로케일(ko)을 사용하므로 date-fns/locale/ko를 import해야 합니다.
+// 6. 날짜 포맷은 "YYYY-MM-DD" 형식으로 고정되어 있습니다.
+// 7. 멀티 캘린더는 2개월만 지원하며, 더 많은 월을 표시하려면 numberOfMonths를 조정해야 합니다.
+// 8. 팝업은 절대 위치로 표시되므로 부모 요소의 overflow 설정에 주의해야 합니다.
+// 9. 날짜 범위가 완전히 선택되지 않으면 "YYYY-MM-DD ~ YYYY-MM-DD"로 표시됩니다.
+// 10. 컴포넌트를 재사용하려면 props로 상태와 핸들러를 받도록 수정하는 것을 권장합니다.`,
     PreviewComponent: DatePicker,
   },
   {
@@ -3586,12 +5480,129 @@ if (dragDistance > threshold) closeSheet();`,
     label: "툴팁",
     title: "툴팁 컴포넌트",
     description: "물음표 아이콘을 클릭하면 툴팁이 토글되는 UI입니다. top/right/bottom/left 위치를 지원합니다.",
-    code: `<div class="tooltip-row">
+    code: `import Tooltip from "./Tooltip";
+
+// ===== Props 설명 =====
+// label: 트리거 버튼의 aria-label (기본값: "도움말")
+// text: 툴팁에 표시할 텍스트 내용 (기본값: "툴팁 내용")
+// placement: 툴팁 위치 'top' | 'right' | 'bottom' | 'left' (기본값: 'top')
+
+// ===== 기본 사용 =====
+// 물음표 아이콘 버튼을 클릭하면 툴팁이 토글됩니다.
+<Tooltip 
+  text="이것은 툴팁 내용입니다." 
+  placement="top" 
+/>
+
+// ===== Placement 옵션 =====
+// top: 트리거 버튼 위쪽에 표시
+<Tooltip text="위쪽 툴팁" placement="top" />
+
+// right: 트리거 버튼 오른쪽에 표시
+<Tooltip text="오른쪽 툴팁" placement="right" />
+
+// bottom: 트리거 버튼 아래쪽에 표시
+<Tooltip text="아래쪽 툴팁" placement="bottom" />
+
+// left: 트리거 버튼 왼쪽에 표시
+<Tooltip text="왼쪽 툴팁" placement="left" />
+
+// ===== 여러 툴팁 배치 =====
+<div className="tooltip-row">
   <Tooltip text="위쪽 툴팁" placement="top" />
   <Tooltip text="오른쪽 툴팁" placement="right" />
   <Tooltip text="아래쪽 툴팁" placement="bottom" />
   <Tooltip text="왼쪽 툴팁" placement="left" />
-</div>`,
+</div>
+
+// ===== 커스텀 레이블 =====
+// 트리거 버튼의 접근성 레이블을 커스터마이징할 수 있습니다.
+<Tooltip 
+  label="도움말 보기" 
+  text="이 기능에 대한 자세한 설명입니다." 
+  placement="top" 
+/>
+
+// ===== 내부 상태 관리 =====
+// 컴포넌트 내부에서 open 상태를 관리합니다:
+// const [open, setOpen] = useState(false);
+//
+// 트리거 버튼 클릭 시 open 상태가 토글됩니다.
+// open이 true일 때만 툴팁 버블이 표시됩니다.
+
+// ===== 외부 클릭 감지 =====
+// 툴팁이 열려있을 때 외부를 클릭하면 자동으로 닫힙니다.
+// useEffect를 사용하여 document에 클릭 이벤트 리스너를 등록합니다.
+// triggerRef를 사용하여 트리거 버튼 영역을 참조합니다.
+
+// ===== UI 구조 =====
+// tooltip: 최상위 컨테이너 (position: relative)
+//   tooltip__trigger: 트리거 버튼 (물음표 아이콘)
+//   tooltip__bubble: 툴팁 버블 (조건부 렌더링)
+//     tooltip__bubble--{placement}: 위치별 클래스
+//     tooltip__text: 툴팁 텍스트
+//     tooltip__arrow: 화살표 (위치별로 다른 스타일)
+
+// ===== 화살표 위치 =====
+// 각 placement에 따라 화살표가 다른 위치에 표시됩니다:
+// - top: 버블 하단 중앙
+// - right: 버블 왼쪽 중앙
+// - bottom: 버블 상단 중앙
+// - left: 버블 오른쪽 중앙
+//
+// 화살표는 transform: rotate(45deg)로 45도 회전된 정사각형입니다.
+
+// ===== 스타일링 =====
+// 툴팁 버블:
+// - 배경색: #111 (검은색)
+// - 텍스트 색상: #fff (흰색)
+// - 최소 너비: 140px
+// - 최대 너비: 220px
+// - 패딩: 10px 12px
+// - border-radius: 8px
+// - box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18)
+//
+// 트리거 버튼:
+// - 크기: 28px × 28px
+// - border-radius: 50% (원형)
+// - 호버 시 배경색과 테두리 색상 변경
+
+// ===== 접근성 =====
+// - 트리거 버튼에 aria-label 제공 (label prop)
+// - 트리거 버튼에 aria-expanded 속성 제공 (open 상태)
+// - 툴팁 버블에 role="status" 제공
+// - 화살표에 aria-hidden="true" 제공 (장식용)
+// - 키보드 접근성 지원 (버튼은 Enter/Space로 클릭 가능)
+
+// ===== 조건부 렌더링 =====
+// open 상태가 true일 때만 툴팁 버블이 렌더링됩니다:
+{open && (
+  <div className={\`tooltip__bubble tooltip__bubble--\${placement}\`} role="status">
+    <span className="tooltip__text">{text}</span>
+    <span className="tooltip__arrow" aria-hidden="true" />
+  </div>
+)}
+
+// ===== 텍스트 줄바꿈 =====
+// tooltip__text에 word-break: keep-all이 적용되어
+// 한글 단어가 중간에 끊어지지 않도록 합니다.
+// 긴 텍스트는 자동으로 줄바꿈됩니다.
+
+// ===== z-index =====
+// 툴팁 버블의 z-index는 10으로 설정되어
+// 다른 요소 위에 표시됩니다.
+
+// ===== 주의사항 =====
+// 1. placement는 'top', 'right', 'bottom', 'left' 중 하나여야 합니다.
+// 2. 툴팁이 화면 밖으로 나가지 않도록 주의해야 합니다 (추가 로직 필요 시).
+// 3. 외부 클릭 시 자동으로 닫히므로, 여러 툴팁을 동시에 열 수 없습니다.
+// 4. 트리거 버튼은 원형이며, 물음표(?) 텍스트가 표시됩니다.
+// 5. 툴팁 텍스트가 길 경우 자동으로 줄바꿈되며, 최대 너비는 220px입니다.
+// 6. 화살표는 CSS transform을 사용하여 회전된 정사각형입니다.
+// 7. 툴팁 버블은 절대 위치로 표시되므로 부모 요소의 position에 주의해야 합니다.
+// 8. tooltip 컨테이너는 inline-flex로 설정되어 인라인 요소처럼 동작합니다.
+// 9. 여러 툴팁을 나란히 배치할 때는 flexbox나 grid를 사용하는 것이 좋습니다.
+// 10. 접근성을 위해 label prop을 제공하는 것을 권장합니다.`,
     PreviewComponent: () => (
       <div className="guide-preview guide-preview--tooltip">
         <div className="tooltip-row">
@@ -3609,16 +5620,182 @@ if (dragDistance > threshold) closeSheet();`,
     title: "드래그앤드랍 리스트",
     description: "react-draggable을 사용한 세로 리스트 드래그 & 순서 변경 예시입니다.",
     code: `import Draggable from "react-draggable";
+import { useState } from "react";
 
+// ===== 드래그 앤 드롭 리스트 =====
+// react-draggable 라이브러리를 사용하여 리스트 아이템의 순서를 변경할 수 있습니다.
+// 세로 방향(axis="y")으로만 드래그가 가능하며, 드래그 종료 시 순서가 재정렬됩니다.
+
+// ===== 기본 상태 관리 =====
+const [items, setItems] = useState([
+  { id: 1, title: "아이템 1" },
+  { id: 2, title: "아이템 2" },
+  { id: 3, title: "아이템 3" },
+  { id: 4, title: "아이템 4" },
+]);
+
+const itemHeight = 80; // 각 아이템의 높이 (px)
+
+// ===== 순서 재정렬 함수 =====
+// startIndex에서 targetIndex로 아이템을 이동시킵니다.
+const reorder = (startIndex, targetIndex) => {
+  if (startIndex === targetIndex) return;
+  
+  const newItems = [...items];
+  const [removed] = newItems.splice(startIndex, 1);
+  newItems.splice(targetIndex, 0, removed);
+  setItems(newItems);
+};
+
+// ===== clamp 유틸리티 함수 =====
+// 값을 min과 max 사이로 제한합니다.
+const clamp = (value, min, max) => {
+  return Math.min(Math.max(value, min), max);
+};
+
+// ===== 드래그 종료 핸들러 =====
+// 드래그가 끝났을 때 호출되는 함수입니다.
+// data.y는 드래그된 거리(픽셀)를 나타냅니다.
+// deltaIndex는 이동한 아이템 개수를 계산합니다.
 const handleStop = (startIndex, data) => {
   const deltaIndex = Math.round(data.y / itemHeight);
   const target = clamp(startIndex + deltaIndex, 0, items.length - 1);
   reorder(startIndex, target);
 };
 
-<Draggable axis="y" onStop={(e, data) => handleStop(index, data)}>
+// ===== Draggable 컴포넌트 사용 =====
+// axis="y": 세로 방향으로만 드래그 가능
+// onStop: 드래그 종료 시 호출되는 핸들러
+//   - e: 이벤트 객체
+//   - data: { x, y, deltaX, deltaY, lastX, lastY } 드래그 정보
+return (
+  <div className="drag-drop-list">
+    {items.map((item, index) => (
+      <Draggable
+        key={item.id}
+        axis="y"
+        onStop={(e, data) => handleStop(index, data)}
+        handle=".drag-handle" // 드래그 핸들 영역 지정 (선택)
+      >
+        <div className="card">
+          <div className="drag-handle">⋮⋮</div>
+          <h3>{item.title}</h3>
+          <p>드래그하여 순서를 변경할 수 있습니다.</p>
+        </div>
+      </Draggable>
+    ))}
+  </div>
+);
+
+// ===== 드래그 핸들 =====
+// handle prop을 사용하여 특정 영역만 드래그 가능하도록 할 수 있습니다.
+// handle=".drag-handle"로 설정하면 .drag-handle 클래스를 가진 요소만 드래그할 수 있습니다.
+<Draggable
+  axis="y"
+  onStop={(e, data) => handleStop(index, data)}
+  handle=".drag-handle"
+>
+  <div className="card">
+    <div className="drag-handle">드래그 영역</div>
+    <div>이 영역은 드래그할 수 없습니다.</div>
+  </div>
+</Draggable>
+
+// ===== 드래그 제약 =====
+// bounds prop을 사용하여 드래그 범위를 제한할 수 있습니다.
+<Draggable
+  axis="y"
+  onStop={(e, data) => handleStop(index, data)}
+  bounds={{ top: -100, bottom: 100 }} // 위아래 100px 범위로 제한
+>
   <div className="card">...</div>
-</Draggable>`,
+</Draggable>
+
+// ===== 드래그 시작/진행 이벤트 =====
+// onStart: 드래그 시작 시 호출
+// onDrag: 드래그 중 호출 (실시간)
+const handleStart = (e, data) => {
+  console.log("드래그 시작:", data);
+};
+
+const handleDrag = (e, data) => {
+  console.log("드래그 중:", data);
+};
+
+<Draggable
+  axis="y"
+  onStart={handleStart}
+  onDrag={handleDrag}
+  onStop={(e, data) => handleStop(index, data)}
+>
+  <div className="card">...</div>
+</Draggable>
+
+// ===== 드래그 비활성화 =====
+// disabled prop을 사용하여 드래그를 비활성화할 수 있습니다.
+<Draggable
+  axis="y"
+  disabled={isEditing} // 편집 모드일 때 드래그 비활성화
+  onStop={(e, data) => handleStop(index, data)}
+>
+  <div className="card">...</div>
+</Draggable>
+
+// ===== 그리드 스냅 =====
+// grid prop을 사용하여 그리드에 맞춰 스냅할 수 있습니다.
+<Draggable
+  axis="y"
+  grid={[0, itemHeight]} // [x, y] 그리드 크기
+  onStop={(e, data) => handleStop(index, data)}
+>
+  <div className="card">...</div>
+</Draggable>
+
+// ===== 드래그 중 스타일 =====
+// 드래그 중인 아이템에 시각적 피드백을 제공할 수 있습니다.
+const [draggingIndex, setDraggingIndex] = useState(null);
+
+const handleStart = (index) => {
+  setDraggingIndex(index);
+};
+
+const handleStop = (startIndex, data) => {
+  setDraggingIndex(null);
+  const deltaIndex = Math.round(data.y / itemHeight);
+  const target = clamp(startIndex + deltaIndex, 0, items.length - 1);
+  reorder(startIndex, target);
+};
+
+<Draggable
+  axis="y"
+  onStart={() => handleStart(index)}
+  onStop={(e, data) => handleStop(index, data)}
+>
+  <div className={\`card \${draggingIndex === index ? 'is-dragging' : ''}\`}>
+    ...
+  </div>
+</Draggable>
+
+// ===== 접근성 =====
+// - 드래그 가능한 요소에 aria-label 제공
+// - 키보드 접근성 고려 (드래그 대신 위/아래 화살표 키로 순서 변경)
+// - 스크린 리더 사용자를 위한 안내 제공
+
+// ===== 성능 최적화 =====
+// 많은 아이템이 있을 경우 가상화를 고려해야 합니다.
+// react-window나 react-virtualized를 사용하여 렌더링 성능을 개선할 수 있습니다.
+
+// ===== 주의사항 =====
+// 1. react-draggable 라이브러리를 설치해야 합니다: npm install react-draggable
+// 2. axis="y"로 설정하면 세로 방향으로만 드래그 가능합니다.
+// 3. itemHeight는 각 아이템의 실제 높이와 일치해야 정확한 순서 변경이 가능합니다.
+// 4. Math.round()를 사용하여 가장 가까운 아이템 위치로 스냅합니다.
+// 5. clamp 함수로 인덱스가 배열 범위를 벗어나지 않도록 제한해야 합니다.
+// 6. 드래그 중에는 다른 상호작용(클릭 등)이 방해될 수 있으므로 주의해야 합니다.
+// 7. 모바일 환경에서는 터치 이벤트가 제대로 작동하는지 테스트해야 합니다.
+// 8. 드래그 핸들을 제공하면 사용자가 더 쉽게 드래그할 수 있습니다.
+// 9. 드래그 중인 아이템에 시각적 피드백을 제공하면 UX가 개선됩니다.
+// 10. 순서 변경 후 서버에 저장하는 로직을 추가해야 합니다.`,
     PreviewComponent: DragDropList,
   },
   {
@@ -3627,17 +5804,91 @@ const handleStop = (startIndex, data) => {
     title: "Swiper 캐러셀",
     description:
       "react + swiper 캐러셀. 기본 네비게이션/페이지네이션 + loop/간격 옵션을 사용하며, breakpoints로 반응형 슬라이드 수를 조절합니다. fade, cube, coverflow, flip 등 다양한 전환 효과도 제공합니다.",
-    code: `import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
+    code: `import Carousel from "./Carousel";
+
+// ===== Props 설명 =====
+// slides: 슬라이드 데이터 배열 [{ id, title, desc, description, image }] (기본값: defaultSlides)
+// showOptionsPanel: 옵션 패널 표시 여부 (기본값: false)
+
+// ===== 기본 사용 =====
+// 기본 데이터를 사용하여 캐러셀 표시
+<Carousel />
+
+// ===== 커스텀 슬라이드 데이터 =====
+const customSlides = [
+  { 
+    id: 1, 
+    title: "배너 1", 
+    desc: "이곳에 주요 메시지를 노출하세요.",
+    image: "https://example.com/banner1.jpg"
+  },
+  { 
+    id: 2, 
+    title: "배너 2", 
+    desc: "슬라이드를 넘겨 다양한 정보를 전달합니다.",
+    image: "https://example.com/banner2.jpg"
+  },
+  { 
+    id: 3, 
+    title: "배너 3", 
+    desc: "모바일/데스크탑 반응형 지원.",
+    image: "https://example.com/banner3.jpg"
+  },
+];
+
+<Carousel slides={customSlides} />
+
+// ===== 옵션 패널 표시 =====
+// Swiper 옵션 정보를 표시하는 패널 포함
+<Carousel slides={customSlides} showOptionsPanel />
+
+// ===== 슬라이드 1개 케이스 (no-swiper) =====
+// 슬라이드가 1개 이하일 때는 자동으로 no-swiper 클래스가 적용되고 스와이퍼가 실행되지 않음
+const singleSlide = [
+  { 
+    id: 1, 
+    title: "단일 배너", 
+    desc: "슬라이드가 1개일 때는 스와이퍼 없이 표시됩니다.",
+    image: "https://example.com/banner.jpg"
+  }
+];
+
+<Carousel slides={singleSlide} />
+
+// ===== 슬라이드 데이터 구조 =====
+// slides 배열의 각 객체는 다음 속성을 가질 수 있습니다:
+const slideExample = {
+  id: 1,                    // 고유 식별자 (필수)
+  title: "배너 제목",       // 슬라이드 제목 (선택)
+  desc: "슬라이드 설명",    // 슬라이드 설명 (desc 또는 description 사용 가능)
+  description: "슬라이드 설명", // desc와 동일한 용도
+  image: "https://example.com/image.jpg" // 슬라이드 이미지 URL (선택)
+};
+
+// ===== 기본 데이터 구조 =====
+// 컴포넌트 내부에 기본 데이터가 내장되어 있습니다:
+const defaultSlides = [
+  { id: 1, title: "배너 1", desc: "이곳에 주요 메시지를 노출하세요." },
+  { id: 2, title: "배너 2", desc: "슬라이드를 넘겨 다양한 정보를 전달합니다." },
+  { id: 3, title: "배너 3", desc: "모바일/데스크탑 반응형 지원." },
+];
+
+// ===== Swiper 직접 사용 (고급 옵션) =====
+// Carousel 컴포넌트 대신 Swiper를 직접 사용하여 더 세밀한 제어 가능
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, EffectFade, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import "swiper/css/effect-fade";
 
 <Swiper
-  modules={[Navigation, Pagination]}
+  modules={[Navigation, Pagination, EffectFade, Autoplay]}
   navigation               // 좌·우 화살표
   pagination={{ clickable: true }} // bullet + 클릭 이동
+  effect="fade"            // 페이드 효과
   loop                     // 마지막 뒤로 순환
+  autoplay={{ delay: 3000, disableOnInteraction: false }} // 자동 재생
   spaceBetween={16}        // 슬라이드 간격(px)
   slidesPerView={1}        // 기본 1장
   breakpoints={{           // 반응형: 해상도별 슬라이드 수/간격
@@ -3648,7 +5899,37 @@ import "swiper/css/pagination";
 >
   <SwiperSlide>슬라이드 1</SwiperSlide>
   <SwiperSlide>슬라이드 2</SwiperSlide>
-</Swiper>`,
+</Swiper>
+
+// ===== 다양한 Swiper 효과 =====
+// Fade 효과
+<Swiper modules={[Navigation, Pagination, EffectFade]} effect="fade" />
+
+// Cube 효과
+<Swiper modules={[Navigation, Pagination, EffectCube]} effect="cube" />
+
+// Coverflow 효과
+<Swiper 
+  modules={[Navigation, Pagination, EffectCoverflow]} 
+  effect="coverflow"
+  slidesPerView={1.2}
+  centeredSlides
+/>
+
+// Flip 효과
+<Swiper modules={[Navigation, Pagination, EffectFlip]} effect="flip" />
+
+// ===== 주의사항 =====
+// 1. slides 배열의 각 객체는 id 속성을 필수로 가져야 함
+// 2. title, desc, description, image는 모두 선택 사항
+// 3. desc와 description은 동일한 용도로 사용 가능 (description 우선)
+// 4. slides가 1개 이하일 때는 자동으로 no-swiper 클래스가 적용되고 스와이퍼가 실행되지 않음
+// 5. slides가 2개 이상일 때만 스와이퍼 기능이 활성화됨
+// 6. Image 컴포넌트를 사용하여 자동으로 비율 판단 (landscape/portrait/square)
+// 7. Typography 컴포넌트를 사용하여 제목과 설명 스타일 일관성 유지
+// 8. showOptionsPanel은 개발/디버깅 목적으로 사용되며, 실제 프로덕션에서는 false 권장
+// 9. Swiper 모듈은 필요한 것만 import하여 번들 크기 최적화
+// 10. breakpoints를 사용하여 반응형 디자인 구현 권장`,
     PreviewComponent: CarouselPreview,
   },
   {
@@ -3657,10 +5938,144 @@ import "swiper/css/pagination";
     title: "드롭다운 UI",
     description: "클릭으로 열고 닫는 기본/filled/ghost 드롭다운. 선택 값 표시와 선택 이벤트 예시를 포함합니다.",
     code: `import Dropdown from "./Dropdown";
+import { useState } from "react";
+
+// ===== Props 설명 =====
+// options: 옵션 배열 [{ value, label }] (기본값: defaultOptions)
+// variant: 'outline' | 'filled' | 'ghost' (기본값: 'outline')
+// placeholder: 플레이스홀더 텍스트 (기본값: "선택하세요")
+// disabled: 비활성화 여부 (기본값: false)
+// fullWidth: 전체 너비 사용 여부 (기본값: false)
+// onChange: 옵션 선택 핸들러 (선택된 옵션 객체를 인자로 받음, 선택)
+
+// ===== 기본 사용 =====
+const options = [
+  { value: "opt1", label: "옵션 1" },
+  { value: "opt2", label: "옵션 2" },
+  { value: "opt3", label: "옵션 3" },
+];
 
 <Dropdown options={options} />
+
+// ===== Variant 옵션 =====
+// outline: 외곽선 스타일 (기본값)
+<Dropdown options={options} variant="outline" />
+
+// filled: 채워진 배경 스타일
 <Dropdown options={options} variant="filled" />
-<Dropdown options={options} variant="ghost" />`,
+
+// ghost: 투명 배경 스타일
+<Dropdown options={options} variant="ghost" />
+
+// ===== 옵션 선택 추적 =====
+// onChange 핸들러를 통해 선택된 옵션을 외부에서 관리할 수 있습니다.
+const [selectedOption, setSelectedOption] = useState(null);
+
+<Dropdown
+  options={options}
+  onChange={(option) => {
+    setSelectedOption(option);
+    console.log("선택된 옵션:", option);
+  }}
+/>
+
+// ===== 내부 상태 관리 =====
+// 컴포넌트 내부에서 다음 상태를 관리합니다:
+// - open: 드롭다운 메뉴 열림/닫힘 상태
+// - selected: 선택된 옵션 (기본값: options[0] 또는 null)
+//
+// 옵션이 변경되면 selected가 자동으로 options[0]으로 리셋됩니다.
+
+// ===== 외부 클릭 감지 =====
+// 드롭다운이 열려있을 때 외부를 클릭하면 자동으로 닫힙니다.
+// useEffect를 사용하여 document에 클릭 이벤트 리스너를 등록합니다.
+// wrapperRef를 사용하여 드롭다운 컨테이너를 참조합니다.
+
+// ===== 옵션 선택 =====
+// handleSelect 함수가 호출되며:
+// 1. selected 상태 업데이트
+// 2. open 상태를 false로 변경 (메뉴 닫기)
+// 3. onChange 호출 (제공된 경우)
+
+// ===== UI 구조 =====
+// dropdown: 최상위 컨테이너 (position: relative)
+//   dropdown--{variant}: variant별 클래스
+//   dropdown--full: 전체 너비 클래스
+//   dropdown--disabled: 비활성화 클래스
+//   dropdown__toggle: 토글 버튼
+//     dropdown__chevron: 화살표 아이콘 (▾)
+//   dropdown__menu: 드롭다운 메뉴 (조건부 렌더링)
+//     dropdown__option: 각 옵션 버튼
+//       dropdown__option.is-selected: 선택된 옵션 클래스
+
+// ===== 전체 너비 =====
+// fullWidth={true}로 설정하면 최대 너비 제한이 제거됩니다.
+<Dropdown
+  options={options}
+  fullWidth={true}
+/>
+
+// ===== 비활성화 =====
+// disabled={true}로 설정하면 드롭다운이 비활성화됩니다.
+<Dropdown
+  options={options}
+  disabled={true}
+/>
+
+// ===== 커스텀 플레이스홀더 =====
+// placeholder prop으로 플레이스홀더 텍스트를 변경할 수 있습니다.
+<Dropdown
+  options={options}
+  placeholder="카테고리를 선택하세요"
+/>
+
+// ===== 선택된 옵션 표시 =====
+// 토글 버튼에는 선택된 옵션의 label이 표시됩니다.
+// 선택된 옵션이 없으면 placeholder가 표시됩니다.
+// {selected?.label || placeholder}
+
+// ===== 메뉴 위치 =====
+// 드롭다운 메뉴는 토글 버튼 바로 아래에 표시됩니다.
+// position: absolute, top: calc(100% + 6px)로 설정됩니다.
+
+// ===== 접근성 =====
+// - 토글 버튼에 aria-haspopup="listbox" 제공
+// - 토글 버튼에 aria-expanded 속성 제공 (open 상태)
+// - 메뉴에 role="listbox" 제공
+// - 각 옵션에 role="option" 및 aria-selected 속성 제공
+// - 키보드 접근성 지원 (화살표 키로 옵션 탐색, Enter로 선택)
+
+// ===== 스타일링 =====
+// outline variant:
+//   - 배경: var(--color-card)
+//   - 테두리: 1px solid var(--color-border)
+//   - 호버 시 테두리 색상과 box-shadow 변경
+//
+// filled variant:
+//   - 배경: rgba(12, 124, 89, 0.08)
+//   - 테두리: rgba(12, 124, 89, 0.25)
+//   - 호버 시 배경과 테두리 색상 변경
+//
+// ghost variant:
+//   - 배경: transparent
+//   - 테두리: transparent
+//   - 호버 시 테두리와 배경 표시
+
+// ===== 옵션 호버 효과 =====
+// 옵션에 마우스를 올리면 배경색과 텍스트 색상이 변경됩니다.
+// 선택된 옵션은 항상 강조 표시됩니다 (배경색 + 폰트 굵기).
+
+// ===== 주의사항 =====
+// 1. options 배열의 각 항목은 { value, label } 구조를 가져야 합니다.
+// 2. value는 고유해야 하며, 옵션 식별에 사용됩니다.
+// 3. 옵션이 변경되면 내부 selected 상태가 자동으로 첫 번째 옵션으로 리셋됩니다.
+// 4. 외부 클릭 시 메뉴가 자동으로 닫히므로, 여러 드롭다운을 동시에 열 수 없습니다.
+// 5. fullWidth={true}일 때는 최대 너비 제한이 제거되며, 부모 요소의 너비를 따릅니다.
+// 6. disabled 상태에서는 모든 상호작용이 비활성화됩니다 (opacity: 0.5, pointer-events: none).
+// 7. 메뉴는 z-index: 20으로 설정되어 다른 요소 위에 표시됩니다.
+// 8. 옵션이 많을 경우 메뉴에 스크롤을 추가하는 것을 고려해야 합니다.
+// 9. onChange는 선택 사항이지만, 외부에서 선택된 옵션을 추적하려면 제공해야 합니다.
+// 10. 화살표 아이콘(▾)은 aria-hidden="true"로 설정되어 스크린 리더에서 무시됩니다.`,
     PreviewComponent: DropdownPreview,
   },
   {
@@ -3735,14 +6150,143 @@ const [activeTab, setActiveTab] = useState("detail");
     title: "이미지 컴포넌트",
     description:
       "이미지 로드 실패 시 자동으로 'noimage' 이미지를 표시하고, 원본 이미지의 가로/세로 비율에 따라 자동으로 클래스를 부여합니다.",
-    code: `<Image
+    code: `import Image from "./Image";
+
+// ===== Props 설명 =====
+// src: 이미지 URL (필수)
+// alt: 이미지 대체 텍스트 (기본값: "")
+// className: 추가 클래스명 (선택)
+// width: 이미지 너비 (문자열 또는 숫자, 선택)
+// height: 이미지 높이 (문자열 또는 숫자, 선택)
+// fallbackSrc: 커스텀 폴백 이미지 URL (선택, 사용되지 않음 - 내장 폴백 사용)
+// showFallback: 폴백 이미지 표시 여부 (기본값: true)
+// onLoad: 이미지 로드 완료 핸들러 (선택)
+// onError: 이미지 로드 실패 핸들러 (선택)
+
+// ===== 기본 사용 =====
+<Image
+  src="https://example.com/image.jpg"
+  alt="이미지 설명"
+/>
+
+// ===== 크기 지정 =====
+<Image
   src="https://example.com/image.jpg"
   alt="이미지 설명"
   width="300"
   height="200"
-  onLoad={() => console.log('이미지 로드됨')}
-  onError={() => console.log('이미지 로드 실패')}
-/>`,
+/>
+
+// 숫자로도 지정 가능
+<Image
+  src="https://example.com/image.jpg"
+  alt="이미지 설명"
+  width={300}
+  height={200}
+/>
+
+// ===== 이미지 로드 이벤트 핸들러 =====
+const handleImageLoad = () => {
+  console.log("이미지 로드 완료");
+};
+
+const handleImageError = () => {
+  console.log("이미지 로드 실패");
+};
+
+<Image
+  src="https://example.com/image.jpg"
+  alt="이미지 설명"
+  onLoad={handleImageLoad}
+  onError={handleImageError}
+/>
+
+// ===== 폴백 이미지 비활성화 =====
+// showFallback이 false이면 로드 실패 시 아무것도 렌더링하지 않음
+<Image
+  src="https://invalid-url.com/image.jpg"
+  alt="이미지 설명"
+  showFallback={false}
+/>
+
+// ===== 자동 비율 클래스 =====
+// 이미지의 가로/세로 비율에 따라 자동으로 클래스가 적용됨
+// - ratio > 1.1: image--landscape (가로형)
+// - ratio < 0.9: image--portrait (세로형)
+// - 0.9 <= ratio <= 1.1: image--square (정사각형)
+
+// 가로형 이미지 (예: 1920x1080)
+<Image
+  src="https://example.com/landscape.jpg"
+  alt="가로형 이미지"
+  className="image--landscape" // 자동 적용됨
+/>
+
+// 세로형 이미지 (예: 1080x1920)
+<Image
+  src="https://example.com/portrait.jpg"
+  alt="세로형 이미지"
+  className="image--portrait" // 자동 적용됨
+/>
+
+// 정사각형 이미지 (예: 1000x1000)
+<Image
+  src="https://example.com/square.jpg"
+  alt="정사각형 이미지"
+  className="image--square" // 자동 적용됨
+/>
+
+// ===== 로드 상태 클래스 =====
+// 이미지 로드 상태에 따라 자동으로 클래스가 적용됨
+// - image--loading: 로딩 중
+// - image--loaded: 로드 완료 (자동 제거됨)
+// - image--error: 로드 실패
+// - image--fallback: 폴백 이미지 표시 중
+
+// ===== 폴백 이미지 =====
+// 이미지 로드 실패 시 자동으로 내장된 "noimage" SVG 이미지가 표시됨
+// showFallback이 true일 때만 표시됨 (기본값: true)
+
+<Image
+  src="https://invalid-url.com/image.jpg"
+  alt="로드 실패 이미지"
+  showFallback={true} // 기본값
+/>
+
+// ===== 커스텀 클래스 추가 =====
+<Image
+  src="https://example.com/image.jpg"
+  alt="이미지 설명"
+  className="my-custom-image"
+/>
+
+// ===== 이미지 로드 상태 관리 =====
+// 컴포넌트 내부에서 이미지 로드 상태를 자동으로 관리합니다:
+// 1. 초기 상태: "loading"
+// 2. 로드 성공: "loaded"
+// 3. 로드 실패: "error"
+
+// useEffect를 사용하여 이미지 로드를 미리 검증하고
+// 비율을 계산하여 적절한 클래스를 적용합니다.
+
+// ===== 비율 판단 로직 =====
+// 이미지의 naturalWidth와 naturalHeight를 사용하여 비율 계산
+// const ratio = img.naturalWidth / img.naturalHeight;
+// - ratio > 1.1: landscape (가로형)
+// - ratio < 0.9: portrait (세로형)
+// - 0.9 <= ratio <= 1.1: square (정사각형)
+
+// ===== 주의사항 =====
+// 1. src가 없거나 빈 문자열이면 즉시 error 상태로 설정됨
+// 2. 이미지 로드 실패 시 showFallback이 true이면 내장 폴백 이미지 표시
+// 3. showFallback이 false이면 로드 실패 시 null 반환 (아무것도 렌더링하지 않음)
+// 4. 비율 판단은 이미지의 naturalWidth/naturalHeight를 사용 (표시 크기가 아님)
+// 5. onLoad 핸들러는 이미지가 실제로 로드된 후에 호출됨
+// 6. onError 핸들러는 이미지 로드 실패 시 호출됨
+// 7. 접근성을 위해 alt 속성 제공 권장
+// 8. 폴백 이미지는 SVG 형식의 data URL로 내장되어 있음
+// 9. 이미지 로드 전에 비율을 미리 계산하기 위해 임시 img 요소를 생성함
+// 10. aspectRatio 클래스는 이미지 로드 완료 후에만 적용됨`,
     PreviewComponent: ImagePreview,
   },
   {
@@ -3753,8 +6297,116 @@ const [activeTab, setActiveTab] = useState("detail");
       "로딩 상태를 명확히 알려주는 스피너형 인디케이터입니다. size와 thickness로 크기를 조절하고, label로 접근성 텍스트를 제공합니다.",
     code: `import Loading from "./Loading";
 
-// 로딩 상태에서 표시
-<Loading size={48} thickness={4} label="불러오는 중..." />`,
+// ===== Props 설명 =====
+// size: 스피너 크기 (px, 기본값: 48)
+// thickness: 스피너 테두리 두께 (px, 기본값: 4)
+// label: 접근성용 라벨 텍스트 (기본값: "로딩 중...")
+
+// ===== 기본 사용 =====
+// 기본 크기와 두께로 로딩 인디케이터를 표시합니다.
+<Loading />
+
+// ===== 크기 조정 =====
+// size prop으로 스피너 크기를 조정할 수 있습니다.
+<Loading size={32} />  // 작은 크기
+<Loading size={48} />  // 기본 크기
+<Loading size={64} />  // 큰 크기
+<Loading size={96} />  // 매우 큰 크기
+
+// ===== 두께 조정 =====
+// thickness prop으로 스피너 테두리 두께를 조정할 수 있습니다.
+<Loading size={48} thickness={2} />  // 얇은 테두리
+<Loading size={48} thickness={4} />  // 기본 두께
+<Loading size={48} thickness={6} />  // 두꺼운 테두리
+
+// ===== 라벨 커스터마이징 =====
+// label prop으로 접근성 텍스트를 변경할 수 있습니다.
+<Loading label="데이터를 불러오는 중..." />
+<Loading label="처리 중입니다. 잠시만 기다려주세요." />
+<Loading label="로딩" />
+
+// 라벨을 숨기려면 빈 문자열을 전달할 수 있습니다.
+<Loading label="" />
+
+// ===== 크기와 두께 조합 =====
+// size와 thickness를 조합하여 다양한 스타일을 만들 수 있습니다.
+<Loading size={32} thickness={3} label="작은 로딩" />
+<Loading size={48} thickness={4} label="기본 로딩" />
+<Loading size={64} thickness={5} label="큰 로딩" />
+
+// ===== 사용 사례 =====
+// 1. 페이지 로딩
+{isLoading ? (
+  <Loading size={64} thickness={5} label="페이지를 불러오는 중..." />
+) : (
+  <PageContent />
+)}
+
+// 2. 버튼 로딩
+<button disabled={isSubmitting}>
+  {isSubmitting ? (
+    <>
+      <Loading size={16} thickness={2} label="" />
+      <span>제출 중...</span>
+    </>
+  ) : (
+    "제출"
+  )}
+</button>
+
+// 3. 리스트 로딩
+{isLoading ? (
+  <div style={{ textAlign: "center", padding: "40px" }}>
+    <Loading size={48} label="목록을 불러오는 중..." />
+  </div>
+) : (
+  <ItemList items={items} />
+)}
+
+// 4. 모달 로딩
+<Modal>
+  {isLoading ? (
+    <Loading size={48} label="처리 중입니다." />
+  ) : (
+    <ModalContent />
+  )}
+</Modal>
+
+// ===== 인라인 스타일 =====
+// Loading 컴포넌트는 size와 thickness를 인라인 스타일로 적용합니다.
+// const style = {
+//   width: size,
+//   height: size,
+//   borderWidth: thickness,
+// };
+
+// ===== UI 구조 =====
+// loading: 최상위 컨테이너 (div)
+//   loading__spinner: 스피너 요소 (span, 인라인 스타일 적용)
+//   loading__label: 라벨 텍스트 (span, label이 있을 때만 표시)
+
+// ===== 접근성 =====
+// - role="status" 제공 (스크린 리더에 상태 변경 알림)
+// - aria-live="polite" 제공 (스크린 리더가 우선순위 낮게 읽음)
+// - aria-label={label} 제공 (접근성 라벨)
+// - label prop으로 사용자에게 로딩 상태를 알립니다.
+
+// ===== 스피너 애니메이션 =====
+// 스피너는 CSS 애니메이션으로 회전합니다.
+// border-top-color만 색상이 다르게 설정되어 회전 효과를 만듭니다.
+// 애니메이션은 무한 반복됩니다.
+
+// ===== 주의사항 =====
+// 1. size는 픽셀 단위이며, 숫자로 전달합니다.
+// 2. thickness는 픽셀 단위이며, 숫자로 전달합니다.
+// 3. label은 접근성을 위해 제공하는 것을 권장합니다.
+// 4. label이 빈 문자열이면 라벨 요소가 렌더링되지 않습니다.
+// 5. 로딩이 완료되면 즉시 Loading 컴포넌트를 제거해야 합니다.
+// 6. 여러 로딩 인디케이터를 동시에 표시할 때는 각각 다른 label을 제공하는 것이 좋습니다.
+// 7. 버튼 내부에 사용할 때는 작은 크기(size={16})를 사용하는 것이 좋습니다.
+// 8. 전체 페이지 로딩에는 큰 크기(size={64} 이상)를 사용하는 것이 좋습니다.
+// 9. 스피너는 항상 중앙 정렬로 표시하는 것이 일반적입니다.
+// 10. 로딩 시간이 길 경우 진행률 표시를 고려해야 합니다.`,
     PreviewComponent: LoadingPreview,
   },
   {
@@ -3833,26 +6485,127 @@ const itemsWithComponent = [
       "상태, 카테고리, 라벨 등을 표시하는 작은 뱃지 컴포넌트입니다. 다양한 variant와 size, outlined 스타일을 지원합니다.",
     code: `import Badge from "./Badge";
 
-// 기본 사용
+// ===== Props 설명 =====
+// children: 뱃지에 표시할 텍스트 (필수)
+// variant: 뱃지 스타일 'default' | 'success' | 'warning' | 'error' | 'info' (기본값: 'default')
+// size: 뱃지 크기 'small' | 'medium' | 'large' (기본값: 'medium')
+// outlined: 아웃라인 스타일 여부 (기본값: false)
+// className: 추가 클래스명 (선택)
+
+// ===== 기본 사용 =====
+// children으로 텍스트를 전달합니다.
 <Badge>기본</Badge>
 
-// Variant
+// ===== Variant 옵션 =====
+// default: 기본 스타일 (회색)
 <Badge variant="default">기본</Badge>
+
+// success: 성공 상태 (초록색)
 <Badge variant="success">성공</Badge>
+<Badge variant="success">완료</Badge>
+<Badge variant="success">승인</Badge>
+
+// warning: 경고 상태 (노란색)
 <Badge variant="warning">경고</Badge>
+<Badge variant="warning">주의</Badge>
+<Badge variant="warning">대기</Badge>
+
+// error: 오류 상태 (빨간색)
 <Badge variant="error">오류</Badge>
+<Badge variant="error">실패</Badge>
+<Badge variant="error">거부</Badge>
+
+// info: 정보 상태 (파란색)
 <Badge variant="info">정보</Badge>
+<Badge variant="info">신규</Badge>
+<Badge variant="info">알림</Badge>
 
-// Outlined 스타일
+// ===== Outlined 스타일 =====
+// outlined={true}로 설정하면 배경 없이 테두리만 표시됩니다.
 <Badge variant="success" outlined>성공</Badge>
+<Badge variant="warning" outlined>경고</Badge>
+<Badge variant="error" outlined>오류</Badge>
+<Badge variant="info" outlined>정보</Badge>
 
-// Size
+// ===== Size 옵션 =====
+// small: 작은 크기
 <Badge size="small">Small</Badge>
-<Badge size="medium">Medium</Badge>
-<Badge size="large">Large</Badge>
+<Badge variant="success" size="small">작은 뱃지</Badge>
 
-// 조합
-<Badge variant="error" size="small" outlined>HOT</Badge>`,
+// medium: 중간 크기 (기본값)
+<Badge size="medium">Medium</Badge>
+<Badge variant="warning" size="medium">중간 뱃지</Badge>
+
+// large: 큰 크기
+<Badge size="large">Large</Badge>
+<Badge variant="error" size="large">큰 뱃지</Badge>
+
+// ===== Variant, Size, Outlined 조합 =====
+// 모든 옵션을 조합하여 사용할 수 있습니다.
+<Badge variant="error" size="small" outlined>HOT</Badge>
+<Badge variant="success" size="large" outlined>NEW</Badge>
+<Badge variant="info" size="medium">SALE</Badge>
+
+// ===== 사용 사례 =====
+// 1. 상태 표시
+<div>
+  <span>주문 상태: </span>
+  <Badge variant="success">완료</Badge>
+</div>
+
+// 2. 카테고리 표시
+<div>
+  <span>카테고리: </span>
+  <Badge variant="info" outlined>전자제품</Badge>
+</div>
+
+// 3. 알림 뱃지 (숫자)
+<Badge variant="error" size="small">3</Badge>
+
+// 4. 라벨 표시
+<Badge variant="warning" size="small">인기</Badge>
+<Badge variant="error" size="small">할인</Badge>
+<Badge variant="info" size="small">신상품</Badge>
+
+// 5. 버튼과 함께 사용
+<button>
+  알림
+  <Badge variant="error" size="small">5</Badge>
+</button>
+
+// ===== UI 구조 =====
+// badge: 최상위 컨테이너 (span 태그)
+//   badge--{variant}: variant별 클래스 (default, success, warning, error, info)
+//   badge--{size}: size별 클래스 (small, medium, large)
+//   badge--outlined: outlined 스타일 클래스 (outlined={true}일 때)
+
+// ===== 스타일링 =====
+// 각 variant는 고유한 색상을 가집니다:
+// - default: 회색 계열
+// - success: 초록색 계열
+// - warning: 노란색 계열
+// - error: 빨간색 계열
+// - info: 파란색 계열
+//
+// outlined 스타일은 배경이 투명하고 테두리만 표시됩니다.
+// size에 따라 폰트 크기와 패딩이 조정됩니다.
+
+// ===== 접근성 =====
+// Badge는 span 태그로 렌더링되므로 시맨틱한 의미를 전달합니다.
+// 상태를 나타낼 때는 적절한 variant를 사용하여 색상으로 의미를 전달합니다.
+// 스크린 리더 사용자를 위해 추가 설명이 필요할 수 있습니다.
+
+// ===== 주의사항 =====
+// 1. children은 필수이며, 텍스트나 숫자를 전달합니다.
+// 2. variant는 'default', 'success', 'warning', 'error', 'info' 중 하나여야 합니다.
+// 3. size는 'small', 'medium', 'large' 중 하나여야 합니다.
+// 4. outlined는 boolean 값이며, 기본값은 false입니다.
+// 5. className을 추가하여 커스텀 스타일을 적용할 수 있습니다.
+// 6. Badge는 인라인 요소이므로 텍스트와 함께 사용할 수 있습니다.
+// 7. 숫자 뱃지는 보통 작은 크기(small)를 사용합니다.
+// 8. 여러 뱃지를 나란히 배치할 때는 gap을 조정해야 할 수 있습니다.
+// 9. outlined 스타일은 배경이 투명하므로 배경색이 있는 요소 위에 사용하는 것이 좋습니다.
+// 10. 접근성을 위해 색상만으로 의미를 전달하지 말고 텍스트로도 의미를 전달해야 합니다.`,
     PreviewComponent: BadgePreview,
   },
   {
@@ -3862,34 +6615,284 @@ const itemsWithComponent = [
     description:
       "검색 아이콘, 입력 필드, 클리어 버튼, 검색 버튼을 포함한 검색 입력 컴포넌트입니다. Enter 키로 검색할 수 있으며, 다양한 size와 variant를 지원합니다.",
     code: `import SearchField from "./SearchField";
+import { useState } from "react";
 
-// 기본 사용
+// ===== Props 설명 =====
+// placeholder: 플레이스홀더 텍스트 (기본값: "검색어를 입력하세요")
+// value: 입력 값 (controlled 모드, 선택)
+// onChange: 값 변경 핸들러 (e, newValue) => void (선택)
+// onSearch: 검색 실행 핸들러 (Enter 키 또는 검색 버튼 클릭 시, value를 인자로 받음, 선택)
+// onClear: 클리어 핸들러 (클리어 버튼 클릭 시, 선택)
+// showClearButton: 클리어 버튼 표시 여부 (기본값: true)
+// size: 'small' | 'medium' | 'large' (기본값: 'medium')
+// variant: 'default' | 'filled' | 'outlined' (기본값: 'default')
+// disabled: 비활성화 여부 (기본값: false)
+// className: 추가 클래스명 (선택)
+
+// ===== 기본 사용 (Uncontrolled) =====
+// value prop을 제공하지 않으면 내부 상태로 관리
 <SearchField
   placeholder="검색어를 입력하세요"
+  onChange={(e, value) => console.log("입력값:", value)}
+/>
+
+// ===== Controlled 모드 =====
+// value와 onChange를 함께 제공하여 외부에서 상태 관리
+const [searchValue, setSearchValue] = useState("");
+
+<SearchField
+  placeholder="상품명, 브랜드명을 입력하세요"
+  value={searchValue}
+  onChange={(e, value) => setSearchValue(value)}
+  onClear={() => setSearchValue("")}
+/>
+
+// ===== 검색 버튼 포함 =====
+// onSearch prop을 제공하면 검색 버튼이 표시됨
+// Enter 키를 누르거나 검색 버튼을 클릭하면 onSearch 호출
+const [query, setQuery] = useState("");
+
+<SearchField
+  placeholder="검색어를 입력하세요"
+  value={query}
+  onChange={(e, value) => setQuery(value)}
+  onSearch={(value) => {
+    console.log("검색 실행:", value);
+    // 검색 API 호출 등
+    performSearch(value);
+  }}
+  onClear={() => setQuery("")}
+/>
+
+// ===== Enter 키로 검색 =====
+// onSearch가 제공되면 Enter 키를 누르면 자동으로 검색 실행
+// handleKeyDown에서 e.key === "Enter" 체크
+// e.preventDefault()로 기본 폼 제출 방지
+<SearchField
+  placeholder="검색어를 입력하세요"
+  value={query}
+  onChange={(e, value) => setQuery(value)}
+  onSearch={(value) => {
+    console.log("Enter 키로 검색:", value);
+  }}
+/>
+
+// ===== 클리어 버튼 =====
+// showClearButton={true}이고 값이 있을 때만 표시
+// 클리어 버튼 클릭 시:
+// 1. 값 초기화 (controlled/uncontrolled 자동 처리)
+// 2. onChange 호출 (빈 문자열)
+// 3. onClear 호출 (제공된 경우)
+// 4. input에 포커스 이동 (inputRef.current.focus())
+
+<SearchField
+  placeholder="검색어를 입력하세요"
+  value={query}
+  onChange={(e, value) => setQuery(value)}
+  onClear={() => {
+    console.log("검색어가 지워졌습니다");
+    // 추가 로직 (예: 검색 결과 초기화)
+    clearSearchResults();
+  }}
+/>
+
+// 클리어 버튼 숨기기
+<SearchField
+  placeholder="검색어를 입력하세요"
+  showClearButton={false}
+  onChange={(e, value) => setQuery(value)}
+/>
+
+// ===== Size 옵션 =====
+// small: 작은 크기
+<SearchField
+  size="small"
+  placeholder="Small size"
   onChange={(e, value) => console.log(value)}
 />
 
-// 검색 버튼 포함
+// medium: 중간 크기 (기본값)
 <SearchField
-  placeholder="검색어를 입력하세요"
-  onSearch={(value) => console.log("검색:", value)}
-  onClear={() => console.log("지움")}
+  size="medium"
+  placeholder="Medium size"
+  onChange={(e, value) => console.log(value)}
 />
 
-// Controlled 컴포넌트
+// large: 큰 크기
+<SearchField
+  size="large"
+  placeholder="Large size"
+  onChange={(e, value) => console.log(value)}
+/>
+
+// ===== Variant 옵션 =====
+// default: 기본 스타일
+<SearchField
+  variant="default"
+  placeholder="Default variant"
+  onChange={(e, value) => console.log(value)}
+/>
+
+// filled: 채워진 배경
+<SearchField
+  variant="filled"
+  placeholder="Filled variant"
+  onChange={(e, value) => console.log(value)}
+/>
+
+// outlined: 외곽선만
+<SearchField
+  variant="outlined"
+  placeholder="Outlined variant"
+  onChange={(e, value) => console.log(value)}
+/>
+
+// ===== Size & Variant 조합 =====
+<SearchField size="small" variant="default" placeholder="Small default" />
+<SearchField size="medium" variant="filled" placeholder="Medium filled" />
+<SearchField size="large" variant="outlined" placeholder="Large outlined" />
+
+// ===== 비활성화 상태 =====
+// disabled={true}: 입력 불가, 클리어 버튼 숨김, 검색 버튼 비활성화
+<SearchField
+  placeholder="비활성화된 검색 필드"
+  disabled
+  value="수정 불가"
+/>
+
+// ===== 검색 기능 구현 예제 =====
+const SearchPage = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSearch = async (query) => {
+    if (!query.trim()) return;
+    
+    setIsLoading(true);
+    try {
+      const results = await fetchSearchResults(query);
+      setSearchResults(results);
+    } catch (error) {
+      console.error("검색 실패:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleClear = () => {
+    setSearchQuery("");
+    setSearchResults([]);
+  };
+
+  return (
+    <div>
+      <SearchField
+        placeholder="상품명, 브랜드명을 입력하세요"
+        value={searchQuery}
+        onChange={(e, value) => setSearchQuery(value)}
+        onSearch={handleSearch}
+        onClear={handleClear}
+      />
+      
+      {isLoading && <div>검색 중...</div>}
+      {searchResults.length > 0 && (
+        <div>
+          {searchResults.map((item) => (
+            <div key={item.id}>{item.name}</div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ===== Controlled vs Uncontrolled =====
+// Controlled: value prop 제공, 외부에서 상태 관리
 const [value, setValue] = useState("");
 <SearchField
   value={value}
   onChange={(e, newValue) => setValue(newValue)}
 />
 
-// Size & Variant
-<SearchField size="small" variant="default" />
-<SearchField size="medium" variant="filled" />
-<SearchField size="large" variant="outlined" />
+// Uncontrolled: value prop 미제공, 내부 상태로 관리
+<SearchField
+  onChange={(e, newValue) => console.log("입력값:", newValue)}
+/>
 
-// 비활성화
-<SearchField disabled />`,
+// isControlled 체크 로직:
+// const isControlled = controlledValue !== undefined;
+// const value = isControlled ? controlledValue : internalValue;
+
+// ===== 이벤트 핸들러 =====
+// handleChange: 입력 값 변경 시
+// - Uncontrolled: setInternalValue(newValue)
+// - Controlled: onChange만 호출
+// - onChange는 항상 (e, newValue) 형태로 호출
+
+// handleClear: 클리어 버튼 클릭 시
+// - Uncontrolled: setInternalValue("")
+// - Controlled: onChange({ target: { value: "" } }, "")
+// - onClear 호출 (제공된 경우)
+// - input에 포커스 이동
+
+// handleSearch: 검색 실행 시
+// - value.trim() 체크 (빈 문자열이면 실행 안 함)
+// - onSearch(value) 호출
+
+// handleKeyDown: 키보드 이벤트
+// - Enter 키: e.preventDefault() + handleSearch()
+
+// ===== 조건부 렌더링 =====
+// 클리어 버튼: showClearButton && hasValue && !disabled
+// - showClearButton: prop으로 제어
+// - hasValue: value && value.length > 0
+// - !disabled: 비활성화 상태가 아닐 때
+
+// 검색 버튼: onSearch && (항상 표시, disabled || !hasValue일 때 비활성화)
+// - onSearch prop이 제공되면 표시
+// - disabled이거나 값이 없으면 버튼 비활성화
+
+// ===== UI 구조 =====
+// search-field: 최상위 컨테이너
+//   search-field--{size}: 크기 클래스 (small, medium, large)
+//   search-field--{variant}: 스타일 클래스 (default, filled, outlined)
+//   search-field--disabled: 비활성화 클래스
+//   search-field__wrapper: 내부 래퍼
+//     search-field__icon--search: 검색 아이콘 (항상 표시)
+//     search-field__input: 입력 필드
+//     search-field__icon--clear: 클리어 버튼 (조건부 표시)
+//     search-field__button: 검색 버튼 (onSearch 제공 시 표시)
+
+// ===== 접근성 =====
+// - input에 aria-label="검색어 입력" 제공
+// - 클리어 버튼에 aria-label="검색어 지우기" 제공
+// - 검색 버튼에 aria-label="검색" 제공
+// - disabled 상태에서 버튼 비활성화
+
+// ===== 검색 아이콘 =====
+// SVG 아이콘으로 구현 (검색 돋보기 모양)
+// - width="20" height="20"
+// - stroke="currentColor" (색상 상속)
+// - 검색 아이콘은 항상 표시됨
+
+// ===== 클리어 아이콘 =====
+// SVG 아이콘으로 구현 (X 모양)
+// - width="18" height="18"
+// - stroke="currentColor" (색상 상속)
+// - 값이 있고 disabled가 아닐 때만 표시
+
+// ===== 주의사항 =====
+// 1. Controlled 모드 사용 시 value와 onChange를 함께 제공해야 함
+// 2. Uncontrolled 모드에서는 내부 상태로 관리되므로 value prop 제공 불필요
+// 3. onChange는 항상 (e, newValue) 형태로 호출됨
+// 4. onSearch는 value.trim()이 비어있지 않을 때만 호출됨
+// 5. Enter 키를 누르면 자동으로 onSearch 호출 (onSearch 제공 시)
+// 6. 클리어 버튼 클릭 시 input에 자동으로 포커스 이동
+// 7. 검색 버튼은 값이 없거나 disabled일 때 비활성화됨
+// 8. showClearButton={false}로 클리어 버튼 숨김 가능
+// 9. size와 variant는 독립적으로 조합 가능
+// 10. disabled 상태에서는 모든 상호작용 불가`,
     PreviewComponent: SearchFieldPreview,
   },
   {
@@ -3900,19 +6903,152 @@ const [value, setValue] = useState("");
       "타이틀/날짜/뱃지 형태의 공지사항 리스트 컴포넌트입니다. 기본 데이터가 내장되어 있으며 items로 교체 가능하며, 로딩 상태를 skeleton으로 표시할 수 있습니다.",
     code: `import Notice from "./Notice";
 
-// 기본 데이터 사용
+// ===== Props 설명 =====
+// title: 공지사항 제목 (기본값: "공지사항")
+// linkText: 더보기 버튼 텍스트 (기본값: "더보기")
+// items: 공지사항 아이템 배열 [{ id, title, date, badge, href }] (기본값: defaultItems)
+// onClickMore: 더보기 버튼 클릭 핸들러 (선택)
+// loading: 로딩 상태 (기본값: false)
+// skeletonCount: 로딩 시 표시할 스켈레톤 개수 (기본값: 3)
+
+// ===== 기본 사용 (기본 데이터) =====
+// 내장된 기본 데이터를 사용하여 공지사항 표시
 <Notice />
 
-// 커스텀 데이터 사용
-const items = [
-  { id: 1, title: "시스템 점검 안내", date: "2025-01-23", badge: "안내" },
-  { id: 2, title: "정책 변경 안내", date: "2025-01-20", badge: "중요" },
+// ===== 커스텀 제목과 더보기 텍스트 =====
+<Notice 
+  title="새 소식" 
+  linkText="전체보기"
+/>
+
+// ===== 커스텀 데이터 사용 =====
+const customItems = [
+  { 
+    id: 1, 
+    title: "시스템 점검 안내", 
+    date: "2025-01-23", 
+    badge: "안내",
+    href: "/notice/1"
+  },
+  { 
+    id: 2, 
+    title: "정책 변경 안내", 
+    date: "2025-01-20", 
+    badge: "중요",
+    href: "/notice/2"
+  },
+  { 
+    id: 3, 
+    title: "이벤트 안내", 
+    date: "2025-01-15",
+    href: "/notice/3"
+    // badge 없이도 사용 가능, href는 필수
+  },
 ];
 
-<Notice title="새 소식" linkText="전체보기" items={items} />
+<Notice 
+  title="새 소식" 
+  linkText="전체보기" 
+  items={customItems} 
+/>
 
-// 로딩 상태 (스켈레톤)
-<Notice loading skeletonCount={3} />`,
+// ===== 더보기 버튼 클릭 핸들러 =====
+const handleMoreClick = () => {
+  console.log("더보기 클릭");
+  // 전체 공지사항 페이지로 이동 등
+};
+
+<Notice 
+  title="공지사항"
+  linkText="더보기"
+  items={customItems}
+  onClickMore={handleMoreClick}
+/>
+
+// ===== 로딩 상태 (스켈레톤) =====
+// 데이터를 불러오는 중일 때 스켈레톤 표시
+<Notice 
+  loading 
+  skeletonCount={3} 
+/>
+
+// 스켈레톤 개수 조정
+<Notice 
+  loading 
+  skeletonCount={5} 
+/>
+
+// ===== 아이템 데이터 구조 =====
+// items 배열의 각 객체는 다음 속성을 가질 수 있습니다:
+const itemExample = {
+  id: 1,                          // 고유 식별자 (필수)
+  title: "공지사항 제목",          // 공지사항 제목 (필수)
+  date: "2025-01-23",             // 날짜 (필수)
+  badge: "안내",                  // 뱃지 텍스트 (선택, "안내", "중요" 등)
+  href: "/notice/1",              // 링크 URL (선택, 없으면 "#" 사용)
+};
+
+// ===== 기본 데이터 구조 =====
+// 컴포넌트 내부에 기본 데이터가 내장되어 있습니다:
+const defaultItems = [
+  { 
+    id: 1, 
+    title: "시스템 점검 안내 (1/25 02:00~04:00)", 
+    date: "2025-01-23", 
+    badge: "안내",
+    href: "#"
+  },
+  { 
+    id: 2, 
+    title: "개인정보 처리방침 개정 사전 안내", 
+    date: "2025-01-20", 
+    badge: "중요",
+    href: "#"
+  },
+  { 
+    id: 3, 
+    title: "겨울 한정 메뉴 출시 안내", 
+    date: "2025-01-15",
+    href: "#"
+  },
+];
+
+// ===== 로딩 상태와 데이터 표시 전환 =====
+const [isLoading, setIsLoading] = useState(true);
+const [noticeItems, setNoticeItems] = useState([]);
+
+useEffect(() => {
+  // 데이터 로드 시뮬레이션
+  fetchNoticeData()
+    .then((data) => {
+      setNoticeItems(data);
+      setIsLoading(false);
+    })
+    .catch((error) => {
+      console.error("공지사항 로드 실패:", error);
+      setIsLoading(false);
+    });
+}, []);
+
+<Notice 
+  title="공지사항"
+  items={noticeItems}
+  loading={isLoading}
+  onClickMore={() => navigate("/notices")}
+/>
+
+// ===== 주의사항 =====
+// 1. items 배열의 각 객체는 id, title, date 속성을 필수로 가져야 함
+// 2. badge는 선택 사항이며, 제공되면 제목 앞에 표시됨
+// 3. href는 선택 사항이며, 제공되지 않으면 "#"을 기본값으로 사용
+// 4. 각 공지사항 항목은 a 태그로 감싸져 있어 클릭 가능한 링크로 동작
+// 5. loading이 true이면 items는 무시되고 스켈레톤이 표시됨
+// 6. skeletonCount는 로딩 중 표시할 스켈레톤 아이템의 개수
+// 7. onClickMore가 제공되지 않으면 더보기 버튼은 클릭해도 동작하지 않음
+// 8. Typography 컴포넌트를 사용하여 제목 스타일 일관성 유지
+// 9. Button 컴포넌트를 사용하여 더보기 버튼 렌더링
+// 10. 접근성을 위해 aria-label이 더보기 버튼에 자동 설정됨
+// 11. SkeletonPlaceholder 컴포넌트를 사용하여 로딩 상태 표시`,
     PreviewComponent: NoticePreview,
   },
   {
@@ -3923,14 +7059,111 @@ const items = [
       "리스트·카드 로딩 상태에 자주 쓰는 아바타/텍스트/버튼 조합 스켈레톤을 즉시 렌더링하는 헬퍼입니다.",
     code: `import SkeletonPlaceholder from "./Skeleton/SkeletonPlaceholder";
 
-// 기본: 텍스트 3줄
+// ===== Props 설명 =====
+// lines: 표시할 텍스트 라인 수 (기본값: 3)
+// withAvatar: 좌측 동그라미 아바타 표시 여부 (기본값: false)
+// withActions: 우측 버튼 영역 스켈레톤 표시 여부 (기본값: false)
+
+// ===== 기본 사용 =====
+// 텍스트 3줄만 표시 (기본값)
 <SkeletonPlaceholder />
 
-// 아바타 + 텍스트 2줄
+// ===== 텍스트 라인 수 조정 =====
+// lines prop으로 표시할 텍스트 라인 수를 지정할 수 있습니다.
+<SkeletonPlaceholder lines={2} />  // 2줄
+<SkeletonPlaceholder lines={5} />  // 5줄
+
+// lines는 최소 1줄 이상이어야 합니다 (Math.max(1, lines)로 보장).
+
+// ===== 아바타 포함 =====
+// withAvatar={true}로 설정하면 좌측에 원형 아바타 스켈레톤이 표시됩니다.
 <SkeletonPlaceholder withAvatar lines={2} />
 
+// 아바타 크기: 40px × 40px
+// 아바타는 Skeleton 컴포넌트의 circle prop을 사용하여 원형으로 렌더링됩니다.
+
+// ===== 액션 버튼 포함 =====
+// withActions={true}로 설정하면 우측에 버튼 스켈레톤이 표시됩니다.
+<SkeletonPlaceholder withActions lines={3} />
+
+// 액션 버튼: 72px × 32px 크기의 스켈레톤 2개
+// 버튼들은 세로로 배치되며, gap: 6px로 간격이 설정됩니다.
+
+// ===== 모든 옵션 조합 =====
 // 아바타 + 텍스트 3줄 + 우측 버튼
-<SkeletonPlaceholder withAvatar withActions lines={3} />`,
+<SkeletonPlaceholder withAvatar withActions lines={3} />
+
+// ===== 내부 구조 =====
+// SkeletonPlaceholder는 Skeleton 컴포넌트를 사용하여 구성됩니다:
+// - skeleton-placeholder: 최상위 컨테이너 (flex, gap: 12px)
+//   - skeleton-placeholder__avatar: 아바타 영역 (조건부 렌더링)
+//     - Skeleton(width={40}, height={40}, circle)
+//   - skeleton-placeholder__body: 텍스트 영역 (flex: 1)
+//     - skeleton-placeholder__line: 각 텍스트 라인
+//       - Skeleton(width={80 - idx * 8}%, height={14})
+//   - skeleton-placeholder__actions: 액션 버튼 영역 (조건부 렌더링)
+//     - Skeleton(width={72}, height={32}) × 2
+
+// ===== 텍스트 라인 너비 =====
+// 각 텍스트 라인의 너비는 점진적으로 줄어듭니다:
+// - 첫 번째 라인: 80%
+// - 두 번째 라인: 72% (80 - 8)
+// - 세 번째 라인: 64% (80 - 16)
+// - 네 번째 라인: 56% (80 - 24)
+// - ...
+//
+// 이는 실제 텍스트의 자연스러운 길이 변화를 모방합니다.
+
+// ===== 스켈레톤 애니메이션 =====
+// Skeleton 컴포넌트는 shimmer 애니메이션을 사용합니다:
+// - linear-gradient(90deg, #f2f3f5 25%, #e6e8ec 50%, #f2f3f5 75%)
+// - background-size: 320% 100%
+// - animation: skeleton-shimmer 1.6s ease infinite
+//
+// 애니메이션은 좌우로 이동하는 그라데이션 효과를 만듭니다.
+
+// ===== 사용 사례 =====
+// 1. 리스트 아이템 로딩 중
+{isLoading ? (
+  <SkeletonPlaceholder withAvatar lines={2} />
+) : (
+  <ListItem item={item} />
+)}
+
+// 2. 카드 콘텐츠 로딩 중
+{isLoading ? (
+  <SkeletonPlaceholder lines={3} />
+) : (
+  <CardContent content={content} />
+)}
+
+// 3. 프로필 정보 로딩 중
+{isLoading ? (
+  <SkeletonPlaceholder withAvatar withActions lines={4} />
+) : (
+  <ProfileInfo profile={profile} />
+)}
+
+// ===== 접근성 =====
+// Skeleton 컴포넌트는 aria-hidden="true"로 설정되어
+// 스크린 리더에서 무시됩니다.
+// 이는 로딩 상태가 콘텐츠가 아니라는 것을 나타냅니다.
+
+// ===== 성능 =====
+// SkeletonPlaceholder는 가벼운 컴포넌트이며,
+// 많은 수의 스켈레톤을 렌더링해도 성능에 큰 영향을 주지 않습니다.
+
+// ===== 주의사항 =====
+// 1. lines는 최소 1 이상이어야 하며, 0 이하의 값은 1로 보정됩니다.
+// 2. withAvatar와 withActions는 독립적으로 사용할 수 있습니다.
+// 3. 텍스트 라인의 너비는 자동으로 계산되며, 각 라인마다 8%씩 줄어듭니다.
+// 4. 아바타는 항상 원형이며, 크기는 40px × 40px로 고정됩니다.
+// 5. 액션 버튼은 항상 2개가 표시되며, 크기는 72px × 32px로 고정됩니다.
+// 6. 스켈레톤은 실제 콘텐츠의 레이아웃과 유사하게 배치하는 것이 좋습니다.
+// 7. 로딩이 완료되면 즉시 실제 콘텐츠로 교체해야 합니다.
+// 8. 스켈레톤의 색상은 테마에 맞게 조정할 수 있습니다 (Skeleton 컴포넌트 스타일 수정).
+// 9. 많은 스켈레톤을 렌더링할 경우 React.memo를 사용하여 최적화할 수 있습니다.
+// 10. 모바일 환경에서도 스켈레톤이 자연스럽게 보이도록 반응형 디자인을 고려해야 합니다.`,
     PreviewComponent: SkeletonPlaceholderPreview,
   },
   {
@@ -3940,29 +7173,185 @@ const items = [
     description:
       "데이터가 없을 때 표시하는 빈 상태 UI 컴포넌트입니다. 아이콘, 제목, 설명, 액션 버튼을 포함할 수 있으며, 다양한 variant를 지원합니다.",
     code: `import EmptyState from "./EmptyState";
+import Button from "./Button";
 
-// 기본 사용
+// ===== Props 설명 =====
+// title: 제목 텍스트 (기본값: "데이터가 없습니다")
+// description: 설명 텍스트 (선택)
+// icon: 아이콘 (이모지, SVG, 컴포넌트 등, 선택)
+// action: 액션 버튼/링크 (ReactNode, 선택)
+// variant: 스타일 변형 'default' | 'minimal' | 'illustration' (기본값: 'default')
+// className: 추가 클래스명 (선택)
+
+// ===== 기본 사용 =====
+// 필수 prop인 title만 제공하면 기본 스타일로 표시됩니다.
+<EmptyState
+  title="데이터가 없습니다"
+/>
+
+// ===== 설명 추가 =====
+// description prop으로 추가 설명을 제공할 수 있습니다.
+<EmptyState
+  title="데이터가 없습니다"
+  description="표시할 데이터가 없습니다."
+/>
+
+// ===== 아이콘 추가 =====
+// icon prop으로 이모지, SVG, 또는 React 컴포넌트를 전달할 수 있습니다.
 <EmptyState
   title="데이터가 없습니다"
   description="표시할 데이터가 없습니다."
   icon="📭"
 />
 
-// 액션 버튼 포함
+// SVG 아이콘 사용
+<EmptyState
+  title="데이터가 없습니다"
+  icon={
+    <svg width="64" height="64" viewBox="0 0 24 24">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+    </svg>
+  }
+/>
+
+// ===== 액션 버튼 포함 =====
+// action prop으로 버튼이나 링크를 추가할 수 있습니다.
 <EmptyState
   title="검색 결과가 없습니다"
   description="다른 검색어로 시도해보세요."
   icon="🔍"
   action={
-    <button onClick={() => console.log("검색 초기화")}>
+    <Button onClick={() => console.log("검색 초기화")}>
       검색 초기화
-    </button>
+    </Button>
   }
 />
 
-// Variant
-<EmptyState variant="minimal" title="리스트가 비어있습니다" />
-<EmptyState variant="illustration" title="장바구니가 비어있습니다" />`,
+// 여러 액션 버튼
+<EmptyState
+  title="장바구니가 비어있습니다"
+  description="상품을 추가해보세요."
+  icon="🛒"
+  action={
+    <div style={{ display: "flex", gap: "8px" }}>
+      <Button variant="primary" onClick={() => navigateToProducts()}>
+        쇼핑하기
+      </Button>
+      <Button variant="ghost" onClick={() => navigateToHome()}>
+        홈으로
+      </Button>
+    </div>
+  }
+/>
+
+// ===== Variant 옵션 =====
+// default: 기본 스타일 (아이콘, 제목, 설명이 세로로 배치)
+<EmptyState
+  variant="default"
+  title="데이터가 없습니다"
+  description="표시할 데이터가 없습니다."
+  icon="📭"
+/>
+
+// minimal: 최소한의 스타일 (간결한 디자인)
+<EmptyState
+  variant="minimal"
+  title="리스트가 비어있습니다"
+/>
+
+// illustration: 일러스트레이션 스타일 (큰 아이콘, 강조된 디자인)
+<EmptyState
+  variant="illustration"
+  title="장바구니가 비어있습니다"
+  description="상품을 추가해보세요."
+  icon="🛒"
+/>
+
+// ===== 사용 사례 =====
+// 1. 빈 리스트
+{items.length === 0 ? (
+  <EmptyState
+    title="아이템이 없습니다"
+    description="새로운 아이템을 추가해보세요."
+    icon="📋"
+    action={
+      <Button onClick={handleAddItem}>아이템 추가</Button>
+    }
+  />
+) : (
+  <ItemList items={items} />
+)}
+
+// 2. 검색 결과 없음
+{searchResults.length === 0 && searchQuery ? (
+  <EmptyState
+    title="검색 결과가 없습니다"
+    description="다른 검색어로 시도해보세요."
+    icon="🔍"
+    action={
+      <Button onClick={handleClearSearch}>검색 초기화</Button>
+    }
+  />
+) : null}
+
+// 3. 장바구니 비어있음
+{cartItems.length === 0 ? (
+  <EmptyState
+    variant="illustration"
+    title="장바구니가 비어있습니다"
+    description="맛있는 상품을 추가해보세요."
+    icon="🛒"
+    action={
+      <Button variant="primary" onClick={navigateToProducts}>
+        쇼핑하기
+      </Button>
+    }
+  />
+) : (
+  <CartList items={cartItems} />
+)}
+
+// 4. 즐겨찾기 없음
+{favorites.length === 0 ? (
+  <EmptyState
+    variant="minimal"
+    title="즐겨찾기가 없습니다"
+    description="관심 있는 상품을 즐겨찾기에 추가해보세요."
+  />
+) : (
+  <FavoriteList items={favorites} />
+)}
+
+// ===== UI 구조 =====
+// empty-state: 최상위 컨테이너 (div)
+//   empty-state--{variant}: variant별 클래스 (default, minimal, illustration)
+//   empty-state__icon: 아이콘 영역 (조건부 렌더링)
+//   empty-state__title: 제목 (Typography h3)
+//   empty-state__description: 설명 (Typography body, 조건부 렌더링)
+//   empty-state__action: 액션 영역 (조건부 렌더링)
+
+// ===== Typography 사용 =====
+// EmptyState는 내부적으로 Typography 컴포넌트를 사용합니다:
+// - title: Typography variant="h3", size="small"
+// - description: Typography variant="body", size="small", color="muted"
+
+// ===== 접근성 =====
+// - 시맨틱한 HTML 구조 사용 (div, Typography)
+// - 제목은 h3 태그로 렌더링되어 스크린 리더에서 제목으로 인식됩니다.
+// - 설명은 body 텍스트로 렌더링됩니다.
+// - 액션 버튼은 적절한 aria-label을 제공해야 합니다.
+
+// ===== 주의사항 =====
+// 1. title은 필수이며, 기본값이 "데이터가 없습니다"입니다.
+// 2. description, icon, action은 선택 사항입니다.
+// 3. icon은 이모지, SVG, React 컴포넌트 등 다양한 형태를 지원합니다.
+// 4. action은 단일 요소 또는 여러 요소를 포함하는 ReactNode입니다.
+// 5. variant는 'default', 'minimal', 'illustration' 중 하나여야 합니다.
+// 6. EmptyState는 조건부 렌더링과 함께 사용하는 것이 일반적입니다.
+// 7. 데이터가 있을 때는 EmptyState를 표시하지 않아야 합니다.
+// 8. action 버튼은 Button 컴포넌트를 사용하는 것을 권장합니다.
+// 9. variant에 따라 레이아웃과 스타일이 달라집니다.
+// 10. 접근성을 위해 의미 있는 title과 description을 제공해야 합니다.`,
     PreviewComponent: EmptyStatePreview,
   },
   {
@@ -3972,32 +7361,179 @@ const items = [
     description:
       "에러 발생 시 표시하는 공통 에러 화면 컴포넌트입니다. error, nodata, network, notfound 타입을 지원하며, 재시도 버튼 등을 포함할 수 있습니다.",
     code: `import ErrorState from "./ErrorState";
+import Button from "./Button";
 
-// 기본 에러
+// ===== Props 설명 =====
+// type: 에러 타입 'error' | 'nodata' | 'network' | 'notfound' (기본값: 'error')
+// title: 제목 텍스트 (선택, type별 기본값 제공)
+// message: 에러 메시지 (선택, type별 기본값 제공)
+// icon: 아이콘 (이모지, SVG, 컴포넌트 등, 선택, type별 기본값 제공)
+// action: 액션 버튼/링크 (ReactNode, 선택)
+// className: 추가 클래스명 (선택)
+
+// ===== 기본 사용 =====
+// type만 제공하면 해당 타입의 기본 제목, 메시지, 아이콘이 표시됩니다.
 <ErrorState type="error" />
 
-// 재시도 버튼 포함
+// ===== Type별 기본값 =====
+// error: 일반 오류
+//   - title: "오류가 발생했습니다"
+//   - message: "일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+//   - icon: "⚠️"
+<ErrorState type="error" />
+
+// nodata: 데이터 없음
+//   - title: "데이터를 불러올 수 없습니다"
+//   - message: "데이터를 불러오는 중 문제가 발생했습니다."
+//   - icon: "📭"
+<ErrorState type="nodata" />
+
+// network: 네트워크 오류
+//   - title: "네트워크 오류"
+//   - message: "인터넷 연결을 확인하고 다시 시도해주세요."
+//   - icon: "📡"
+<ErrorState type="network" />
+
+// notfound: 페이지 없음
+//   - title: "페이지를 찾을 수 없습니다"
+//   - message: "요청하신 페이지가 존재하지 않습니다."
+//   - icon: "🔍"
+<ErrorState type="notfound" />
+
+// ===== 재시도 버튼 포함 =====
+// action prop으로 재시도 버튼을 추가할 수 있습니다.
 <ErrorState
   type="error"
   action={
-    <button onClick={() => console.log("재시도")}>
+    <Button onClick={() => {
+      console.log("재시도");
+      retryOperation();
+    }}>
       다시 시도
-    </button>
+    </Button>
   }
 />
 
-// 타입별 사용
-<ErrorState type="nodata" />
-<ErrorState type="network" />
-<ErrorState type="notfound" />
+// 여러 액션 버튼
+<ErrorState
+  type="network"
+  action={
+    <div style={{ display: "flex", gap: "8px" }}>
+      <Button variant="primary" onClick={handleRetry}>
+        다시 시도
+      </Button>
+      <Button variant="ghost" onClick={handleGoHome}>
+        홈으로
+      </Button>
+    </div>
+  }
+/>
 
-// 커스텀 메시지
+// ===== 커스텀 메시지 =====
+// title, message, icon을 커스터마이징할 수 있습니다.
 <ErrorState
   type="error"
   title="서버 오류"
-  message="서버에 일시적인 문제가 발생했습니다."
+  message="서버에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해주세요."
   icon="⚠️"
-/>`,
+/>
+
+// 타입은 유지하되 메시지만 변경
+<ErrorState
+  type="network"
+  message="인터넷 연결이 불안정합니다. Wi-Fi 또는 모바일 데이터를 확인해주세요."
+/>
+
+// ===== 사용 사례 =====
+// 1. API 에러 처리
+{error ? (
+  <ErrorState
+    type="error"
+    action={
+      <Button onClick={handleRetry}>다시 시도</Button>
+    }
+  />
+) : (
+  <DataDisplay data={data} />
+)}
+
+// 2. 네트워크 에러
+{networkError ? (
+  <ErrorState
+    type="network"
+    action={
+      <Button onClick={checkConnection}>연결 확인</Button>
+    }
+  />
+) : null}
+
+// 3. 404 페이지
+<ErrorState
+  type="notfound"
+  action={
+    <Button onClick={() => navigate("/")}>홈으로 이동</Button>
+  }
+/>
+
+// 4. 데이터 로드 실패
+{loadError ? (
+  <ErrorState
+    type="nodata"
+    message="데이터를 불러오지 못했습니다. 페이지를 새로고침해주세요."
+    action={
+      <Button onClick={() => window.location.reload()}>
+        새로고침
+      </Button>
+    }
+  />
+) : (
+  <DataList data={data} />
+)}
+
+// ===== 내부 동작 =====
+// ErrorState는 type에 따라 defaultConfig에서 기본값을 가져옵니다.
+// props로 전달된 값이 있으면 그것을 사용하고, 없으면 기본값을 사용합니다.
+// const config = defaultConfig[type] || defaultConfig.error;
+// const displayTitle = title || config.title;
+// const displayMessage = message || config.message;
+// const displayIcon = icon !== undefined ? icon : config.icon;
+
+// ===== UI 구조 =====
+// error-state: 최상위 컨테이너 (div)
+//   error-state--{type}: type별 클래스 (error, nodata, network, notfound)
+//   error-state__icon: 아이콘 영역
+//   error-state__title: 제목 (Typography h3)
+//   error-state__message: 메시지 (Typography body, 조건부 렌더링)
+//   error-state__action: 액션 영역 (조건부 렌더링)
+
+// ===== Typography 사용 =====
+// ErrorState는 내부적으로 Typography 컴포넌트를 사용합니다:
+// - title: Typography variant="h3", size="small"
+// - message: Typography variant="body", size="small", color="muted"
+
+// ===== 접근성 =====
+// - 시맨틱한 HTML 구조 사용 (div, Typography)
+// - 제목은 h3 태그로 렌더링되어 스크린 리더에서 제목으로 인식됩니다.
+// - 메시지는 body 텍스트로 렌더링됩니다.
+// - 액션 버튼은 적절한 aria-label을 제공해야 합니다.
+
+// ===== 에러 타입 선택 가이드 =====
+// - error: 일반적인 서버 오류, 예상치 못한 오류
+// - nodata: 데이터를 불러올 수 없는 경우
+// - network: 네트워크 연결 문제
+// - notfound: 404 페이지, 리소스를 찾을 수 없는 경우
+
+// ===== 주의사항 =====
+// 1. type은 필수이며, 'error', 'nodata', 'network', 'notfound' 중 하나여야 합니다.
+// 2. title, message, icon은 선택 사항이며, type별 기본값이 제공됩니다.
+// 3. icon이 undefined가 아닌 경우에만 props의 icon을 사용합니다 (null도 기본값 사용).
+// 4. action은 선택 사항이며, 재시도 버튼 등을 포함할 수 있습니다.
+// 5. ErrorState는 조건부 렌더링과 함께 사용하는 것이 일반적입니다.
+// 6. 에러가 없을 때는 ErrorState를 표시하지 않아야 합니다.
+// 7. action 버튼은 Button 컴포넌트를 사용하는 것을 권장합니다.
+// 8. type에 따라 적절한 기본 메시지가 제공되므로, 커스터마이징이 필요할 때만 props를 제공합니다.
+// 9. 접근성을 위해 의미 있는 title과 message를 제공해야 합니다.
+// 10. 재시도 기능이 있는 경우 action으로 버튼을 제공하는 것이 좋습니다.`,
     PreviewComponent: ErrorStatePreview,
   },
   {
@@ -4007,10 +7543,38 @@ const items = [
     description:
       "After Effects에서 제작한 애니메이션을 JSON 형식으로 내보내 웹에서 재생할 수 있는 Lottie 애니메이션 컴포넌트입니다. 반복 재생, 재생 속도, 자동 재생 등을 제어할 수 있습니다.",
     code: `import LottieAnimation from "./Lottie";
+import { useState } from "react";
 
-// 기본 사용법
+// ===== Props 설명 =====
+// animationData: Lottie JSON 데이터 객체 또는 URL 문자열 (필수)
+// loop: 반복 재생 여부 (기본값: true)
+// autoplay: 자동 재생 여부 (기본값: true)
+// speed: 재생 속도 (기본값: 1, 0.5 ~ 2 범위 권장)
+// className: 추가 CSS 클래스 (선택)
+// width: 너비 (px, 선택)
+// height: 높이 (px, 선택)
+// onComplete: 애니메이션 완료 시 콜백 함수 (선택)
+// onLoopComplete: 루프 완료 시 콜백 함수 (선택)
+
+// ===== 기본 사용법 (JSON 객체) =====
+// 로컬 JSON 데이터를 직접 전달
+const animationData = {
+  v: "5.7.4",
+  fr: 30,
+  ip: 0,
+  op: 60,
+  w: 200,
+  h: 200,
+  nm: "Loading Circle",
+  ddd: 0,
+  assets: [],
+  layers: [
+    // ... Lottie JSON 구조
+  ]
+};
+
 <LottieAnimation
-  animationData={animationJson}
+  animationData={animationData}
   loop={true}
   autoplay={true}
   speed={1}
@@ -4018,12 +7582,209 @@ const items = [
   height={200}
 />
 
-// URL에서 로드
+// ===== URL에서 로드 =====
+// animationData가 문자열(URL)인 경우 자동으로 fetch하여 로드
+// 로딩 중에는 "로딩 중..." 메시지 표시
+// 로드 실패 시 "애니메이션을 불러올 수 없습니다." 메시지 표시
 <LottieAnimation
-  animationData="https://example.com/animation.json"
+  animationData="https://assets5.lottiefiles.com/packages/lf20_jcikwtux.json"
+  loop={true}
+  autoplay={true}
+  speed={1}
+  width={200}
+  height={200}
+/>
+
+// ===== 반복 재생 제어 =====
+// loop={false}: 한 번만 재생
+<LottieAnimation
+  animationData={animationData}
   loop={false}
-  onComplete={() => console.log("완료")}
-/>`,
+  autoplay={true}
+  onComplete={() => console.log("애니메이션 완료")}
+/>
+
+// loop={true}: 무한 반복 재생
+<LottieAnimation
+  animationData={animationData}
+  loop={true}
+  autoplay={true}
+  onLoopComplete={() => console.log("루프 완료")}
+/>
+
+// ===== 재생 속도 제어 =====
+// speed 값에 따라 재생 속도 조절
+// - 0.5: 절반 속도 (느리게)
+// - 1: 정상 속도
+// - 2: 2배 속도 (빠르게)
+const [speed, setSpeed] = useState(1);
+
+<LottieAnimation
+  animationData={animationData}
+  speed={speed}
+  loop={true}
+  autoplay={true}
+/>
+
+// 슬라이더로 속도 조절
+<input
+  type="range"
+  min="0.5"
+  max="2"
+  step="0.1"
+  value={speed}
+  onChange={(e) => setSpeed(parseFloat(e.target.value))}
+/>
+
+// ===== 자동 재생 제어 =====
+// autoplay={false}: 자동 재생하지 않음 (수동으로 재생 시작 필요)
+const [isPlaying, setIsPlaying] = useState(false);
+
+<LottieAnimation
+  animationData={animationData}
+  autoplay={isPlaying}
+  loop={true}
+/>
+
+<button onClick={() => setIsPlaying(!isPlaying)}>
+  {isPlaying ? "일시정지" : "재생"}
+</button>
+
+// ===== 크기 지정 =====
+// width, height로 애니메이션 크기 지정
+<LottieAnimation
+  animationData={animationData}
+  width={300}
+  height={300}
+  loop={true}
+  autoplay={true}
+/>
+
+// ===== 이벤트 콜백 =====
+// onComplete: 애니메이션이 완료되었을 때 호출 (loop={false}일 때만)
+// onLoopComplete: 루프가 완료되었을 때 호출 (loop={true}일 때)
+<LottieAnimation
+  animationData={animationData}
+  loop={true}
+  autoplay={true}
+  onComplete={() => {
+    console.log("애니메이션 완료");
+  }}
+  onLoopComplete={() => {
+    console.log("루프 완료");
+  }}
+/>
+
+// ===== 상태 관리 예제 =====
+// 애니메이션 제어를 위한 상태 관리
+const LottieController = () => {
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [speed, setSpeed] = useState(1);
+  const [loop, setLoop] = useState(true);
+  const animationUrl = "https://assets5.lottiefiles.com/packages/lf20_jcikwtux.json";
+
+  return (
+    <div>
+      <LottieAnimation
+        animationData={animationUrl}
+        loop={loop}
+        autoplay={isPlaying}
+        speed={speed}
+        width={200}
+        height={200}
+        onComplete={() => console.log("완료")}
+        onLoopComplete={() => console.log("루프 완료")}
+      />
+      
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={isPlaying}
+            onChange={(e) => setIsPlaying(e.target.checked)}
+          />
+          자동 재생
+        </label>
+        
+        <label>
+          <input
+            type="checkbox"
+            checked={loop}
+            onChange={(e) => setLoop(e.target.checked)}
+          />
+          반복 재생
+        </label>
+        
+        <label>
+          재생 속도: {speed}x
+          <input
+            type="range"
+            min="0.5"
+            max="2"
+            step="0.1"
+            value={speed}
+            onChange={(e) => setSpeed(parseFloat(e.target.value))}
+          />
+        </label>
+      </div>
+    </div>
+  );
+};
+
+// ===== 로딩 상태 처리 =====
+// URL에서 로드하는 경우 자동으로 로딩 상태 관리
+// - isLoading: true일 때 "로딩 중..." 메시지 표시
+// - error: 로드 실패 시 "애니메이션을 불러올 수 없습니다." 메시지 표시
+// - animationJson: 로드된 JSON 데이터
+
+// 컴포넌트 내부에서 자동 처리:
+// useEffect(() => {
+//   if (typeof animationData === "string") {
+//     setIsLoading(true);
+//     fetch(animationData)
+//       .then(res => res.json())
+//       .then(data => {
+//         setAnimationJson(data);
+//         setIsLoading(false);
+//       })
+//       .catch(err => {
+//         setError(err);
+//         setIsLoading(false);
+//       });
+//   }
+// }, [animationData]);
+
+// ===== speed 변경 처리 =====
+// speed prop이 변경되면 자동으로 애니메이션 속도 업데이트
+// useEffect(() => {
+//   if (lottieRef.current && lottieRef.current.setSpeed) {
+//     lottieRef.current.setSpeed(speed);
+//   }
+// }, [speed]);
+
+// ===== Lottie JSON 형식 =====
+// After Effects에서 Bodymovin 플러그인으로 내보낸 JSON 파일
+// 필수 필드:
+// - v: Lottie 버전
+// - fr: 프레임 레이트
+// - ip: 시작 프레임
+// - op: 종료 프레임
+// - w: 너비
+// - h: 높이
+// - assets: 에셋 배열
+// - layers: 레이어 배열
+
+// ===== 주의사항 =====
+// 1. animationData가 없으면 null 반환 (아무것도 렌더링하지 않음)
+// 2. URL에서 로드하는 경우 CORS 정책 확인 필요
+// 3. speed는 lottie-react의 setSpeed 메서드를 사용하여 동적으로 변경 가능
+// 4. loop={false}일 때만 onComplete 호출됨
+// 5. loop={true}일 때는 onLoopComplete가 각 루프마다 호출됨
+// 6. URL 로드 실패 시 에러 메시지 표시 (에러 상태 관리)
+// 7. 로딩 중에는 "로딩 중..." 메시지 표시
+// 8. width, height를 지정하지 않으면 컨테이너 크기에 맞춰짐
+// 9. className으로 추가 스타일링 가능
+// 10. lottie-react 라이브러리를 사용하므로 해당 라이브러리 설치 필요`,
     PreviewComponent: LottiePreview,
   },
   {
@@ -4372,31 +8133,193 @@ const grids = [
     title: "JavaScript 인터랙션",
     description:
       "React의 이벤트 핸들링, 상태 관리, API 연동을 포함한 인터랙션 구현 패턴입니다. 사용자 입력에 따라 UI가 동적으로 변화합니다.",
-    code: `// 상태 관리
-const [count, setCount] = useState(0);
+    code: `import { useState, useEffect, useRef } from "react";
 
-// 이벤트 핸들러
+// ===== 상태 관리 =====
+// useState를 사용하여 컴포넌트의 상태를 관리합니다.
+const [count, setCount] = useState(0);
+const [data, setData] = useState(null);
+const [isLoading, setIsLoading] = useState(false);
+const [error, setError] = useState(null);
+
+// ===== 이벤트 핸들러 =====
+// 사용자 상호작용에 반응하는 함수입니다.
 const handleClick = () => {
+  // 함수형 업데이트를 사용하여 이전 값을 기반으로 상태를 업데이트합니다.
   setCount(prev => prev + 1);
 };
 
-// 비동기 데이터 로드
+// 인라인 핸들러
+<button onClick={() => setCount(count + 1)}>
+  클릭: {count}
+</button>
+
+// ===== 비동기 데이터 로드 =====
+// fetch API를 사용하여 서버에서 데이터를 가져옵니다.
 const loadData = async () => {
+  setIsLoading(true);
+  setError(null);
+  
   try {
     const response = await fetch('/api/data');
+    
+    // HTTP 상태 코드 확인
+    if (!response.ok) {
+      throw new Error(\`HTTP error! status: \${response.status}\`);
+    }
+    
     const data = await response.json();
     setData(data);
   } catch (error) {
     console.error('데이터 로드 실패:', error);
+    setError(error.message);
+  } finally {
+    setIsLoading(false);
   }
 };
 
-// 폼 제출
+// ===== useEffect를 사용한 데이터 로드 =====
+// 컴포넌트 마운트 시 자동으로 데이터를 로드합니다.
+useEffect(() => {
+  loadData();
+}, []); // 빈 배열: 마운트 시 한 번만 실행
+
+// 의존성 배열이 있는 경우
+useEffect(() => {
+  loadData();
+}, [userId]); // userId가 변경될 때마다 실행
+
+// ===== 폼 제출 =====
+// 폼 제출 이벤트를 처리합니다.
 const handleSubmit = (event) => {
-  event.preventDefault();
+  event.preventDefault(); // 기본 폼 제출 동작 방지
+  
+  // 폼 데이터 수집
+  const formData = new FormData(event.target);
+  const data = Object.fromEntries(formData);
+  
   // 폼 데이터 처리
-  console.log('폼 제출됨');
-};`,
+  console.log('폼 제출됨:', data);
+  
+  // 서버에 전송
+  submitForm(data);
+};
+
+// ===== 입력 필드 제어 =====
+// Controlled 컴포넌트: React 상태로 입력 값을 제어합니다.
+const [inputValue, setInputValue] = useState("");
+
+const handleChange = (e) => {
+  setInputValue(e.target.value);
+};
+
+<input
+  type="text"
+  value={inputValue}
+  onChange={handleChange}
+/>
+
+// ===== 조건부 렌더링 =====
+// 상태에 따라 다른 UI를 표시합니다.
+{isLoading && <Loading />}
+{error && <Error message={error} />}
+{data && <DataDisplay data={data} />}
+
+// 삼항 연산자
+{isLoggedIn ? <UserDashboard /> : <LoginForm />}
+
+// && 연산자 (조건이 true일 때만 렌더링)
+{hasItems && <ItemList items={items} />}
+
+// ===== 리스트 렌더링 =====
+// 배열 데이터를 리스트로 렌더링합니다.
+const items = [
+  { id: 1, name: "아이템 1" },
+  { id: 2, name: "아이템 2" },
+  { id: 3, name: "아이템 3" },
+];
+
+return (
+  <ul>
+    {items.map(item => (
+      <li key={item.id}>{item.name}</li>
+    ))}
+  </ul>
+);
+
+// ===== useRef를 사용한 DOM 참조 =====
+// DOM 요소에 직접 접근해야 할 때 사용합니다.
+const inputRef = useRef(null);
+
+const handleFocus = () => {
+  inputRef.current?.focus();
+};
+
+<input ref={inputRef} type="text" />
+
+// ===== 타이머 관리 =====
+// setTimeout/setInterval을 사용할 때는 cleanup이 필요합니다.
+useEffect(() => {
+  const timer = setTimeout(() => {
+    console.log("5초 후 실행");
+  }, 5000);
+  
+  // cleanup: 컴포넌트 언마운트 시 타이머 제거
+  return () => clearTimeout(timer);
+}, []);
+
+// ===== 이벤트 리스너 등록 =====
+// window 이벤트나 document 이벤트를 사용할 때 cleanup이 필요합니다.
+useEffect(() => {
+  const handleResize = () => {
+    console.log("윈도우 크기 변경:", window.innerWidth);
+  };
+  
+  window.addEventListener('resize', handleResize);
+  
+  // cleanup: 컴포넌트 언마운트 시 이벤트 리스너 제거
+  return () => window.removeEventListener('resize', handleResize);
+}, []);
+
+// ===== 커스텀 훅 =====
+// 재사용 가능한 로직을 커스텀 훅으로 분리합니다.
+const useCounter = (initialValue = 0) => {
+  const [count, setCount] = useState(initialValue);
+  
+  const increment = () => setCount(prev => prev + 1);
+  const decrement = () => setCount(prev => prev - 1);
+  const reset = () => setCount(initialValue);
+  
+  return { count, increment, decrement, reset };
+};
+
+// 사용
+const { count, increment, decrement, reset } = useCounter(0);
+
+// ===== 에러 처리 =====
+// try-catch를 사용하여 에러를 처리합니다.
+const handleAction = async () => {
+  try {
+    await riskyOperation();
+  } catch (error) {
+    console.error("에러 발생:", error);
+    setError(error.message);
+    // 사용자에게 에러 메시지 표시
+    showToast("작업 중 오류가 발생했습니다.");
+  }
+};
+
+// ===== 주의사항 =====
+// 1. useState의 함수형 업데이트를 사용하면 최신 상태를 보장할 수 있습니다.
+// 2. useEffect의 cleanup 함수를 항상 제공하여 메모리 누수를 방지해야 합니다.
+// 3. 의존성 배열을 올바르게 설정하여 불필요한 재실행을 방지해야 합니다.
+// 4. 비동기 작업은 항상 에러 처리를 포함해야 합니다.
+// 5. 폼 제출 시 event.preventDefault()를 호출하여 기본 동작을 방지해야 합니다.
+// 6. 리스트 렌더링 시 key prop을 고유한 값으로 제공해야 합니다.
+// 7. useRef로 참조한 DOM 요소는 current 속성으로 접근합니다.
+// 8. 조건부 렌더링 시 null을 반환하면 아무것도 렌더링되지 않습니다.
+// 9. 비동기 함수는 async/await 또는 .then()을 사용하여 처리합니다.
+// 10. 상태 업데이트는 비동기적으로 처리되므로, 즉시 반영되지 않을 수 있습니다.`,
     PreviewComponent: ScriptPreview,
   },
   {
@@ -4405,53 +8328,222 @@ const handleSubmit = (event) => {
     title: "페이지네이션 레이아웃",
     description:
       "대량의 데이터를 여러 페이지로 나누어 표시하는 네비게이션 컴포넌트입니다. 현재 페이지 표시와 이전/다음 이동 기능을 제공하며, 긴 목록을 효율적으로 탐색할 수 있습니다.",
-    code: `// 페이지네이션 상태 관리
-const [currentPage, setCurrentPage] = useState(1);
-const itemsPerPage = 10;
-const totalPages = Math.ceil(totalItems / itemsPerPage);
+    code: `import { useState, useEffect } from "react";
 
-// 페이지 변경 핸들러
+// ===== 페이지네이션 상태 관리 =====
+// 현재 페이지와 전체 아이템 정보를 관리합니다.
+const [currentPage, setCurrentPage] = useState(1);
+const [items, setItems] = useState([]);
+const [totalItems, setTotalItems] = useState(0);
+const [isLoading, setIsLoading] = useState(false);
+
+const itemsPerPage = 10; // 한 페이지에 표시할 아이템 개수
+const totalPages = Math.ceil(totalItems / itemsPerPage); // 전체 페이지 수
+
+// ===== 페이지 변경 핸들러 =====
+// 페이지 번호를 변경하고 해당 페이지의 데이터를 로드합니다.
 const handlePageChange = (page) => {
+  // 유효한 페이지 범위 확인
   if (page >= 1 && page <= totalPages) {
     setCurrentPage(page);
     // 데이터 로드 로직
     loadPageData(page);
+    // 페이지 상단으로 스크롤 (선택)
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 };
 
-// 페이지네이션 UI 렌더링
+// ===== 페이지 데이터 로드 =====
+// 특정 페이지의 데이터를 서버에서 가져옵니다.
+const loadPageData = async (page) => {
+  setIsLoading(true);
+  try {
+    const response = await fetch(\`/api/items?page=\${page}&limit=\${itemsPerPage}\`);
+    const data = await response.json();
+    setItems(data.items);
+    setTotalItems(data.total);
+  } catch (error) {
+    console.error("데이터 로드 실패:", error);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+// ===== 초기 데이터 로드 =====
+// 컴포넌트 마운트 시 첫 페이지 데이터를 로드합니다.
+useEffect(() => {
+  loadPageData(currentPage);
+}, []);
+
+// ===== 페이지네이션 UI 렌더링 (기본) =====
+// 모든 페이지 번호를 버튼으로 표시합니다.
 const renderPagination = () => {
   const pages = [];
   for (let i = 1; i <= totalPages; i++) {
     pages.push(
       <button
         key={i}
-        className={i === currentPage ? 'active' : ''}
         onClick={() => handlePageChange(i)}
+        className={currentPage === i ? "active" : ""}
+        aria-label={\`페이지 \${i}로 이동\`}
+        aria-current={currentPage === i ? "page" : undefined}
       >
         {i}
       </button>
     );
   }
+  return pages;
+};
 
-  return (
-    <div className="pagination">
+// ===== 이전/다음 버튼 =====
+// 이전 페이지와 다음 페이지로 이동하는 버튼을 추가합니다.
+const handlePrev = () => {
+  if (currentPage > 1) {
+    handlePageChange(currentPage - 1);
+  }
+};
+
+const handleNext = () => {
+  if (currentPage < totalPages) {
+    handlePageChange(currentPage + 1);
+  }
+};
+
+<div className="pagination">
+  <button
+    onClick={handlePrev}
+    disabled={currentPage === 1}
+    aria-label="이전 페이지"
+  >
+    이전
+  </button>
+  {renderPagination()}
+  <button
+    onClick={handleNext}
+    disabled={currentPage === totalPages}
+    aria-label="다음 페이지"
+  >
+    다음
+  </button>
+</div>
+
+// ===== 페이지 범위 표시 =====
+// 현재 표시 중인 아이템 범위를 표시합니다.
+const startIndex = (currentPage - 1) * itemsPerPage + 1;
+const endIndex = Math.min(currentPage * itemsPerPage, totalItems);
+
+<div className="pagination-info">
+  {startIndex}-{endIndex} / {totalItems}개
+</div>
+
+// ===== 페이지 번호 범위 제한 =====
+// 페이지가 많을 경우 일부만 표시하고 생략 표시를 추가합니다.
+const getVisiblePages = () => {
+  const maxVisible = 5; // 표시할 최대 페이지 수
+  const half = Math.floor(maxVisible / 2);
+  
+  let start = Math.max(1, currentPage - half);
+  let end = Math.min(totalPages, start + maxVisible - 1);
+  
+  // 끝에서 시작하는 경우 조정
+  if (end - start < maxVisible - 1) {
+    start = Math.max(1, end - maxVisible + 1);
+  }
+  
+  const pages = [];
+  
+  // 첫 페이지와 생략 표시
+  if (start > 1) {
+    pages.push(
+      <button key={1} onClick={() => handlePageChange(1)}>1</button>
+    );
+    if (start > 2) {
+      pages.push(<span key="ellipsis-start">...</span>);
+    }
+  }
+  
+  // 가시적 페이지 범위
+  for (let i = start; i <= end; i++) {
+    pages.push(
       <button
-        disabled={currentPage === 1}
-        onClick={() => handlePageChange(currentPage - 1)}
+        key={i}
+        onClick={() => handlePageChange(i)}
+        className={currentPage === i ? "active" : ""}
       >
-        이전
+        {i}
       </button>
-      {pages}
-      <button
-        disabled={currentPage === totalPages}
-        onClick={() => handlePageChange(currentPage + 1)}
-      >
-        다음
+    );
+  }
+  
+  // 마지막 페이지와 생략 표시
+  if (end < totalPages) {
+    if (end < totalPages - 1) {
+      pages.push(<span key="ellipsis-end">...</span>);
+    }
+    pages.push(
+      <button key={totalPages} onClick={() => handlePageChange(totalPages)}>
+        {totalPages}
       </button>
-    </div>
-  );
-};`,
+    );
+  }
+  
+  return pages;
+};
+
+// ===== URL 쿼리 파라미터와 동기화 =====
+// URL의 쿼리 파라미터와 페이지 상태를 동기화합니다.
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const page = parseInt(params.get("page")) || 1;
+  if (page !== currentPage) {
+    setCurrentPage(page);
+  }
+}, []);
+
+const handlePageChange = (page) => {
+  setCurrentPage(page);
+  // URL 업데이트 (히스토리 API 사용)
+  const url = new URL(window.location);
+  url.searchParams.set("page", page);
+  window.history.pushState({}, "", url);
+  loadPageData(page);
+};
+
+// ===== 클라이언트 사이드 페이지네이션 =====
+// 모든 데이터를 한 번에 로드하고 클라이언트에서 페이지를 나눕니다.
+const [allItems, setAllItems] = useState([]);
+const [currentPage, setCurrentPage] = useState(1);
+const itemsPerPage = 10;
+
+const startIndex = (currentPage - 1) * itemsPerPage;
+const endIndex = startIndex + itemsPerPage;
+const currentItems = allItems.slice(startIndex, endIndex);
+const totalPages = Math.ceil(allItems.length / itemsPerPage);
+
+// ===== 접근성 =====
+// - 각 페이지 버튼에 aria-label 제공
+// - 현재 페이지에 aria-current="page" 제공
+// - 이전/다음 버튼에 aria-label 제공
+// - disabled 상태일 때 aria-disabled 제공
+// - 키보드 접근성 지원 (Tab, Enter, Space)
+
+// ===== 스타일링 =====
+// - 현재 페이지는 다른 스타일로 강조 표시
+// - disabled 상태의 버튼은 시각적으로 구분
+// - 호버 효과 제공
+// - 모바일 환경에서는 터치 친화적인 크기 유지
+
+// ===== 주의사항 =====
+// 1. currentPage는 1부터 시작하는 것이 일반적입니다 (0이 아님).
+// 2. totalPages는 Math.ceil()을 사용하여 올림 처리해야 합니다.
+// 3. 페이지 변경 시 데이터를 다시 로드해야 합니다.
+// 4. 페이지가 많을 경우 범위 제한을 고려해야 합니다.
+// 5. URL 쿼리 파라미터와 동기화하면 북마크 및 공유가 가능합니다.
+// 6. 로딩 상태를 표시하여 사용자 경험을 개선해야 합니다.
+// 7. 첫 페이지와 마지막 페이지에서는 이전/다음 버튼을 비활성화해야 합니다.
+// 8. 페이지 번호는 고유한 key를 가져야 합니다 (React 리스트 렌더링).
+// 9. 접근성을 위해 적절한 ARIA 속성을 제공해야 합니다.
+// 10. 모바일 환경에서는 페이지 번호 대신 이전/다음 버튼만 표시하는 것도 고려할 수 있습니다.`,
     PreviewComponent: PaginationPreview,
   },
 ];
@@ -4481,7 +8573,7 @@ const guideGroups = [
   {
     id: "list-card-group",
     label: "리스트 & 카드",
-    items: ["card", "list", "notice"],
+    items: ["card", "list", "list-container", "notice"],
   },
   {
     id: "media-group",
@@ -4537,8 +8629,42 @@ const sectionMap = guideSections.reduce((acc, cur) => {
 }, {});
 
 function PublishingGuidePage() {
-  const [activeSection, setActiveSection] = useState(guideGroups[0].items[0]);
+  // localStorage에서 마지막으로 본 섹션 복원
+  const getInitialSection = () => {
+    const saved = localStorage.getItem('publishing-guide-active-section');
+    if (saved && guideSections.find(s => s.id === saved)) {
+      return saved;
+    }
+    return guideGroups[0].items[0];
+  };
+
+  const [activeSection, setActiveSection] = useState(getInitialSection);
   const [isMobileLnbOpen, setIsMobileLnbOpen] = useState(false);
+
+  // activeSection이 변경될 때마다 localStorage에 저장
+  useEffect(() => {
+    localStorage.setItem('publishing-guide-active-section', activeSection);
+  }, [activeSection]);
+
+  // 페이지 로드 시 저장된 섹션으로 스크롤 이동
+  useEffect(() => {
+    const saved = localStorage.getItem('publishing-guide-active-section');
+    if (saved && guideSections.find(s => s.id === saved)) {
+      // DOM이 완전히 로드된 후 스크롤 이동
+      setTimeout(() => {
+        const element = document.getElementById(saved);
+        if (element) {
+          const navElement = document.querySelector('.app-nav');
+          const navHeight = navElement ? navElement.offsetHeight : 0;
+          const targetPosition = element.offsetTop - navHeight - 20;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'auto' // 즉시 이동
+          });
+        }
+      }, 100);
+    }
+  }, []); // 컴포넌트 마운트 시 한 번만 실행
 
   // 네비게이션 클릭 핸들러 - 네비게이션 바 높이 고려한 부드러운 스크롤
   const handleNavClick = (sectionId) => {
@@ -4601,6 +8727,40 @@ function PublishingGuidePage() {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  // 모바일 LNB 모달이 열릴 때 활성화된 링크로 즉시 스크롤 이동
+  useEffect(() => {
+    if (!isMobileLnbOpen) return;
+
+    // 모달이 렌더링된 직후 즉시 스크롤 위치 설정
+    const scrollToActiveLink = () => {
+      const modal = document.querySelector('.publishing-guide__mobile-lnb-modal');
+      if (!modal) return;
+
+      const activeLink = modal.querySelector('.publishing-guide__lnb-link.is-active');
+      if (!activeLink) return;
+
+      const modalBody = modal.querySelector('.publishing-guide__mobile-lnb-body');
+      if (!modalBody) return;
+
+      // 활성화된 링크의 위치 계산
+      const linkTop = activeLink.offsetTop;
+      const linkHeight = activeLink.offsetHeight;
+      const modalBodyHeight = modalBody.clientHeight;
+      const linkCenter = linkTop + linkHeight / 2;
+      const scrollPosition = linkCenter - modalBodyHeight / 2;
+
+      // 즉시 스크롤 이동 (애니메이션 없음)
+      modalBody.scrollTop = Math.max(0, scrollPosition);
+    };
+
+    // requestAnimationFrame을 사용하여 다음 프레임에서 실행 (DOM 렌더링 완료 후)
+    const rafId = requestAnimationFrame(() => {
+      scrollToActiveLink();
+    });
+
+    return () => cancelAnimationFrame(rafId);
+  }, [isMobileLnbOpen, activeSection]);
 
   return (
     <PageTemplate title="퍼블리싱 가이드">

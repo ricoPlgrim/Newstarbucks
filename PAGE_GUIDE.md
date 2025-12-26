@@ -279,12 +279,13 @@ function MyPage() {
 프로젝트에 이미 구현된 컴포넌트들을 활용하세요. 자세한 사용법은 `PublishingGuidePage`에서 확인할 수 있습니다.
 
 ### 레이아웃
-- **Header** - 모바일 헤더 (햄버거 메뉴)
+- **Header** - 모바일 헤더 (메인 헤더: 햄버거 메뉴 / 서브 헤더: 뒤로가기, 카테고리명, 유틸리티 버튼)
 - **Footer** - 푸터
 - **PageTemplate** - 페이지 템플릿 (다크모드, 폰트 스케일 지원)
+- **ListContainer** - 리스트 컨테이너 (section/article 태그 기반)
 
 ### 입력 컴포넌트
-- **Input** - 텍스트 입력 (text, password, number)
+- **Input** - 텍스트 입력 (text, password, number, tel, email, 자동 하이픈 포맷팅)
 - **Select** - 셀렉트 박스
 - **Textarea** - 여러 줄 텍스트 입력
 - **FileUpload** - 파일 업로드 (이미지 미리보기, 최대 3개)
@@ -297,7 +298,8 @@ function MyPage() {
 ### 리스트 & 카드
 - **Card** - 카드 컴포넌트 (상품 카드, 콘텐츠 카드)
 - **List / ListItem** - 리스트 컴포넌트 (텍스트 리스트, 아이콘 리스트)
-- **Notice** - 공지사항 리스트
+- **ListContainer** - 리스트 컨테이너 (section/article 태그 기반)
+- **Notice** - 공지사항 리스트 (링크 지원)
 
 ### 네비게이션
 - **Tabs** - 탭 인터페이스 (default, scroll, swiper 타입)
@@ -308,11 +310,11 @@ function MyPage() {
 ### 피드백
 - **Toast** - 토스트 알림
 - **Tooltip** - 툴팁
-- **Popup** - 팝업 (기본, 시트, 풀스크린)
+- **Popup** - 팝업 (기본: Swiper 캐러셀 지원 / 시트: 드래그로 닫기 / 풀스크린)
 
 ### 미디어
-- **Image** - 이미지 컴포넌트 (에러 처리, 비율 자동 판단)
-- **Carousel** - 캐러셀 (Swiper 기반)
+- **Image** - 이미지 컴포넌트 (에러 처리, 비율 자동 판단, fallback 이미지 지원)
+- **Carousel** - 캐러셀 (Swiper 기반, 단일 슬라이드 시 no-swiper 클래스, lazy loading)
 - **Lottie** - Lottie 애니메이션
 
 ### 상태 & 로딩
@@ -328,9 +330,9 @@ function MyPage() {
 - **Button** - 버튼 (Primary, Secondary, Ghost, Small/Medium/Large, Disabled)
 - **Toggle** - 토글 스위치
 - **Dropdown** - 드롭다운
-- **DatePicker** - 날짜 선택
-- **TableDemo** - 테이블
-- **FormSample** - 폼 요소 (Input 컴포넌트 사용)
+- **DatePicker** - 날짜 선택 (닫기 버튼, 자동 닫기 제거)
+- **Table** - 테이블 (가로 스크롤·열 고정 / 세로 스크롤·헤더 고정 / 가로·세로 스크롤·헤더&열 고정)
+- **Form** - 폼 요소 (유효성 검사 포함, Button 컴포넌트 사용)
 - **DragDropList** - 드래그앤드랍 리스트
 - **ListSync** - 리스트 동기화
 - **Icon** - 아이콘 컴포넌트 (이모지, SVG, 텍스트 지원, 크기/색상 옵션)

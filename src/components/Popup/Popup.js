@@ -1,35 +1,143 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import Typography from "../Typography/Typography";
+import Button from "../Button/Button";
+import Image from "../Image/Image";
 import "./Popup.scss";
 
-export function BasicPopup({ open, onClose, icon = "🔒", title, description, actions = [] }) {
+/**
+ * BasicPopup 컴포넌트
+ * 기본 팝업 형태의 모달 컴포넌트
+ * 
+ * @param {boolean} open - 팝업 열림/닫힘 상태
+ * @param {function} onClose - 팝업 닫기 핸들러
+ * @param {string} icon - 아이콘 (이모지, 텍스트 등, 기본값: "🔒", images가 없을 때 사용)
+ * @param {Array} images - 이미지 URL 배열 (선택, images가 있으면 icon 대신 이미지 캐러셀 표시)
+ * @param {string} title - 팝업 제목
+ * @param {string} description - 팝업 설명
+ * @param {Array} actions - 액션 버튼 배열 [{ label, variant, onClick }]
+ */
+export function BasicPopup({ open, onClose, icon = "🔒", images = [], title, description, actions = [] }) {
+  // Swiper 인스턴스 참조
+  const swiperRef = useRef(null);
+  // 현재 슬라이드 인덱스
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // 팝업이 닫혀있으면 렌더링하지 않음
   if (!open) return null;
+
+  // 이미지가 2개 이상일 때만 Swiper 사용
+  const shouldUseSwiper = images && images.length > 1;
+
+  // 오버레이 클릭 시 팝업 닫기 핸들러
+  const handleOverlayClick = () => {
+    onClose?.();
+  };
+
+  // 팝업 내부 클릭 시 이벤트 전파 방지 (오버레이 클릭으로 인한 닫힘 방지)
+  const handlePopupClick = (e) => {
+    e.stopPropagation();
+  };
+
+  // 이전 슬라이드로 이동
+  const handlePrev = () => {
+    swiperRef.current?.slidePrev();
+  };
+
+  // 다음 슬라이드로 이동
+  const handleNext = () => {
+    swiperRef.current?.slideNext();
+  };
+
   return (
-    <div className="popup-overlay" onClick={onClose}>
-      <div className="popup popup--basic" onClick={(e) => e.stopPropagation()}>
-        <div className="popup__image">
-          <span className="popup__image-icon">{icon}</span>
-        </div>
+    <div className="popup-overlay" onClick={handleOverlayClick}>
+      <div className={`popup popup--basic ${shouldUseSwiper ? "" : "popup--no-swiper"}`} onClick={handlePopupClick}>
+        {/* 이미지 영역: images가 있으면 캐러셀, 없으면 icon */}
+        {images && images.length > 0 ? (
+          <div className="popup__image">
+            {shouldUseSwiper ? (
+              // Swiper 캐러셀: 이미지가 2개 이상일 때
+              <div className="popup__image-carousel">
+                <Swiper
+                  onSwiper={(swiper) => {
+                    swiperRef.current = swiper;
+                  }}
+                  onSlideChange={(swiper) => {
+                    setCurrentIndex(swiper.realIndex);
+                  }}
+                  spaceBetween={0}
+                  slidesPerView={1}
+                  loop={images.length > 2}
+                  className="popup__swiper"
+                >
+                  {images.map((imageUrl, idx) => (
+                    <SwiperSlide key={idx}>
+                      <div className="popup__image-wrapper">
+                        <img
+                          src={imageUrl}
+                          alt={`${title || "팝업"} 이미지 ${idx + 1}`}
+                          className="popup__image-element"
+                          loading={idx === 0 ? "eager" : "lazy"}
+                        />
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+                {/* 커스텀 좌우 네비게이션 버튼 */}
+                <button
+                  type="button"
+                  className="popup__nav-button popup__nav-button--prev"
+                  onClick={handlePrev}
+                  aria-label="이전 이미지"
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  className="popup__nav-button popup__nav-button--next"
+                  onClick={handleNext}
+                  aria-label="다음 이미지"
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            ) : (
+              // 단일 이미지: 이미지가 1개일 때 (Swiper 미사용)
+              <div className="popup__image-wrapper">
+                <Image
+                  src={images[0]}
+                  alt={title || "팝업 이미지"}
+                  className="popup__image-element"
+                />
+              </div>
+            )}
+          </div>
+        ) : (
+          // 아이콘 영역: images가 없을 때
+          <div className="popup__image">
+            <span className="popup__image-icon">{icon}</span>
+          </div>
+        )}
+        {/* 팝업 본문 영역 */}
         <div className="popup__body popup__body--center">
-          <h4>{title}</h4>
-          <p>{description}</p>
+          <Typography variant="h4" size="small">{title}</Typography>
+          <Typography variant="body" size="small" color="muted">{description}</Typography>
         </div>
-        <div className="popup__dots" aria-hidden="true">
-          <span className="is-active"></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
+        {/* 액션 버튼 영역 */}
         <div className="popup__actions popup__actions--stack">
           {actions.map((action, idx) => (
-            <button
+            <Button
               key={idx}
-              type="button"
-              className={`popup__btn popup__btn--${action.variant || "ghost"}`}
+              variant={action.variant || "ghost"}
               onClick={action.onClick}
             >
               {action.label}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -37,43 +145,94 @@ export function BasicPopup({ open, onClose, icon = "🔒", title, description, a
   );
 }
 
+/**
+ * BottomSheetPopup 컴포넌트
+ * 하단에서 올라오는 바텀시트 형태의 모달 컴포넌트
+ * 드래그로 닫을 수 있는 기능 포함
+ * 
+ * @param {boolean} open - 팝업 열림/닫힘 상태
+ * @param {function} onClose - 팝업 닫기 핸들러
+ * @param {string} title - 팝업 제목
+ * @param {string} description - 팝업 설명
+ */
 export function BottomSheetPopup({ open, onClose, title, description }) {
+  // 팝업 요소 참조
+  const popupRef = useRef(null);
+  // 팝업 높이 상태
+  const [popupHeight, setPopupHeight] = useState(0);
+  // 드래그 오프셋 상태 (팝업이 아래로 내려간 거리)
   const [offset, setOffset] = useState(0);
+  // 드래그 시작 Y 좌표
   const [startY, setStartY] = useState(null);
-  const THRESHOLD = 120;
+  // 닫기 애니메이션 중인지 여부
+  const [isClosing, setIsClosing] = useState(false);
 
+  // 팝업이 열릴 때 높이 측정
   useEffect(() => {
-    if (!open) {
+    if (open && popupRef.current) {
+      const height = popupRef.current.offsetHeight;
+      setPopupHeight(height);
+      // 상태 초기화
       setOffset(0);
       setStartY(null);
+      setIsClosing(false);
+    } else if (!open) {
+      // 팝업이 닫힐 때 상태 초기화
+      setOffset(0);
+      setStartY(null);
+      setIsClosing(false);
     }
   }, [open]);
 
+  // 팝업이 닫혀있으면 렌더링하지 않음
   if (!open) return null;
 
+  // 드래그 임계값 (팝업 높이의 절반)
+  const threshold = popupHeight / 2;
+
+  // 드래그 시작 핸들러 (터치 또는 마우스)
   const onStart = (e) => {
+    if (isClosing) return; // 닫기 애니메이션 중에는 드래그 불가
     const y = e.touches ? e.touches[0].clientY : e.clientY;
     setStartY(y);
   };
 
+  // 드래그 중 핸들러
+  // 드래그 거리에 따라 팝업을 아래로 이동 (최대 팝업 높이까지)
   const onMove = (e) => {
-    if (startY === null) return;
+    if (startY === null || isClosing) return;
     const y = e.touches ? e.touches[0].clientY : e.clientY;
     const delta = y - startY;
-    setOffset(Math.max(0, Math.min(delta, 240)));
+    // 0 ~ 팝업 높이 범위로 제한
+    setOffset(Math.max(0, Math.min(delta, popupHeight)));
   };
 
+  // 드래그 종료 핸들러
+  // 임계값 이상 드래그했으면 팝업을 완전히 내린 후 닫기
   const onEnd = () => {
-    if (offset > THRESHOLD) {
-      onClose?.();
+    if (isClosing) return;
+    
+    if (offset > threshold) {
+      // 닫기 애니메이션 시작: 팝업을 완전히 아래로 내림
+      setIsClosing(true);
+      setOffset(popupHeight);
+      
+      // 애니메이션 완료 후 팝업 닫기
+      // transition 시간(0.2s) + 약간의 여유 시간
+      setTimeout(() => {
+        onClose?.();
+      }, 250);
+    } else {
+      // 임계값 미만이면 원래 위치로 복귀
+      setOffset(0);
+      setStartY(null);
     }
-    setOffset(0);
-    setStartY(null);
   };
 
   return (
     <div className="popup-overlay popup-overlay--sheet" onClick={onClose}>
       <div
+        ref={popupRef}
         className="popup popup--sheet"
         style={{ transform: `translateY(${offset}px)` }}
         onClick={(e) => e.stopPropagation()}
@@ -85,29 +244,45 @@ export function BottomSheetPopup({ open, onClose, title, description }) {
         onTouchMove={onMove}
         onTouchEnd={onEnd}
       >
+        {/* 드래그 핸들 (시각적 표시) */}
         <div className="popup__handle" />
+        {/* 팝업 본문 영역 */}
         <div className="popup__body popup__body--center">
-          <h4>{title}</h4>
-          <p>{description}</p>
+          <Typography variant="h4" size="small">{title}</Typography>
+          <Typography variant="body" size="small" color="muted">{description}</Typography>
         </div>
+        {/* 액션 버튼 영역 */}
         <div className="popup__actions popup__actions--stack">
-          <button className="popup__btn popup__btn--ghost" onClick={onClose}>Cancel</button>
-          <button className="popup__btn popup__btn--primary" onClick={onClose}>OK</button>
+          <Button variant="ghost" onClick={onClose}>Cancel</Button>
+          <Button variant="primary" onClick={onClose}>OK</Button>
         </div>
       </div>
     </div>
   );
 }
 
+/**
+ * FullscreenPopup 컴포넌트
+ * 전체 화면을 덮는 풀스크린 모달 컴포넌트
+ * 
+ * @param {boolean} open - 팝업 열림/닫힘 상태
+ * @param {function} onClose - 팝업 닫기 핸들러
+ * @param {string} title - 팝업 제목
+ * @param {ReactNode} body - 팝업 본문 내용
+ */
 export function FullscreenPopup({ open, onClose, title, body }) {
+  // 팝업이 닫혀있으면 렌더링하지 않음
   if (!open) return null;
+
   return (
     <div className="popup-overlay popup-overlay--full">
       <div className="popup popup--full">
+        {/* 헤더 영역: 제목 + 닫기 버튼 */}
         <div className="popup__header">
-          <h4>{title}</h4>
-          <button className="popup__close" onClick={onClose}>✕</button>
+          <Typography variant="h4" size="small">{title}</Typography>
+          <button className="popup__close" onClick={onClose} aria-label="닫기">✕</button>
         </div>
+        {/* 본문 영역 */}
         <div className="popup__body">
           {body}
         </div>

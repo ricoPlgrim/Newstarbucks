@@ -45,22 +45,64 @@ const Input = ({
   const value = isControlled ? controlledValue : internalValue;
   // password 타입 여부 확인
   const isPassword = type === "password";
+  // tel 타입 여부 확인 (휴대폰 번호)
+  const isTel = type === "tel";
+  // email 타입 여부 확인
+  const isEmail = type === "email";
   // 실제 input type 결정 (password 타입이고 showPassword가 true면 "text"로 변경)
   const inputType = isPassword && showPassword ? "text" : type;
+
+  /**
+   * 휴대폰 번호 포맷팅 함수
+   * 숫자만 추출하여 010-1234-5678 형식으로 변환
+   * @param {string} phone - 입력된 휴대폰 번호
+   * @returns {string} - 포맷팅된 휴대폰 번호
+   */
+  const formatPhoneNumber = (phone) => {
+    // 숫자만 추출
+    const numbers = phone.replace(/[^\d]/g, "");
+    // 11자리까지만 허용
+    const limitedNumbers = numbers.slice(0, 11);
+    
+    // 길이에 따라 하이픈 추가
+    if (limitedNumbers.length <= 3) {
+      return limitedNumbers;
+    } else if (limitedNumbers.length <= 7) {
+      return `${limitedNumbers.slice(0, 3)}-${limitedNumbers.slice(3)}`;
+    } else {
+      return `${limitedNumbers.slice(0, 3)}-${limitedNumbers.slice(3, 7)}-${limitedNumbers.slice(7)}`;
+    }
+  };
 
   /**
    * 입력값 변경 이벤트 핸들러
    * @param {Event} e - input change 이벤트 객체
    */
   const handleChange = (e) => {
-    const newValue = e.target.value;
+    let newValue = e.target.value;
+    
+    // 휴대폰 번호 타입일 때 자동 포맷팅
+    if (isTel) {
+      newValue = formatPhoneNumber(newValue);
+    }
+    
     // uncontrolled 모드일 때 내부 상태 업데이트
     if (!isControlled) {
       setInternalValue(newValue);
     }
+    
+    // 이벤트 객체의 value도 업데이트
+    const updatedEvent = {
+      ...e,
+      target: {
+        ...e.target,
+        value: newValue,
+      },
+    };
+    
     // 외부 onChange 핸들러 호출 (이벤트 객체와 새 값 전달)
     if (onChange) {
-      onChange(e, newValue);
+      onChange(updatedEvent, newValue);
     }
   };
 

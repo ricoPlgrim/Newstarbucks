@@ -1,5 +1,6 @@
 import Image from "../Image/Image";
 import Badge from "../Badge/Badge";
+import Typography from "../Typography/Typography";
 import "./Card.scss";
 
 /**
@@ -31,8 +32,18 @@ const Card = ({
   hoverable = true,
   className = "",
 }) => {
+  // 카드 타입 확인 (상품 카드인지 콘텐츠 카드인지)
   const isProduct = variant === "product";
+  // 클릭 가능한 카드인지 확인
   const isClickable = !!onClick;
+
+  // 키보드 접근성: Enter 또는 Space 키로 클릭 가능
+  const handleKeyDown = (e) => {
+    if (isClickable && (e.key === "Enter" || e.key === " ")) {
+      e.preventDefault();
+      onClick?.(e);
+    }
+  };
 
   return (
     <div
@@ -42,16 +53,13 @@ const Card = ({
       onClick={onClick}
       role={isClickable ? "button" : undefined}
       tabIndex={isClickable ? 0 : undefined}
-      onKeyDown={(e) => {
-        if (isClickable && (e.key === "Enter" || e.key === " ")) {
-          e.preventDefault();
-          onClick?.(e);
-        }
-      }}
+      onKeyDown={handleKeyDown}
     >
+      {/* 이미지 영역 */}
       {image && (
         <div className="card__image">
           <Image src={image} alt={imageAlt || title || ""} className="card__image-element" />
+          {/* 뱃지 표시 (이미지 위에 오버레이) */}
           {badge && (
             <div className="card__badge">
               <Badge variant={badgeVariant} size="small">
@@ -62,10 +70,23 @@ const Card = ({
         </div>
       )}
 
+      {/* 카드 콘텐츠 영역 */}
       <div className="card__content">
-        {title && <h4 className="card__title">{title}</h4>}
-        {description && <p className="card__description">{description}</p>}
+        {/* 카드 제목 */}
+        {title && (
+          <Typography variant="h4" size="small" className="card__title">
+            {title}
+          </Typography>
+        )}
+        {/* 카드 설명 */}
+        {description && (
+          <Typography variant="body" size="small" color="muted" className="card__description">
+            {description}
+          </Typography>
+        )}
+        {/* 가격 표시 (상품 카드일 때만) */}
         {price && <div className="card__price">{price}</div>}
+        {/* 추가 콘텐츠 */}
         {children}
       </div>
     </div>

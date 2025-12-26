@@ -34,7 +34,25 @@
     border: 2px dashed var(--color-border);
     border-radius: px-to-rem(8);
     object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
+}
+
+.image__fallback-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: px-to-rem(8);
+  padding: px-to-rem(16);
+}
+
+.image__fallback-text {
+  font-size: px-to-rem(14);
+  color: var(--color-muted);
+  font-weight: 500;
 }
 
 

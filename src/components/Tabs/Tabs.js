@@ -71,24 +71,57 @@ function Tabs({
 
     if (type === "scroll") {
       // Scroll 타입: 부모 스크롤바를 이용한 가운데 정렬 이동
-      const targetElement = tabRefs.current[itemId];
-      if (targetElement && scrollContainerId) {
-        const container = document.getElementById(scrollContainerId);
-        if (container) {
-          // 컨테이너와 타겟 요소의 위치 정보 가져오기
-          const containerRect = container.getBoundingClientRect();
-          const targetRect = targetElement.getBoundingClientRect();
-          // 가운데 정렬을 위한 스크롤 위치 계산
-          // (타겟 요소가 컨테이너 중앙에 오도록 스크롤 위치 계산)
-          const scrollLeft = container.scrollLeft + targetRect.left - containerRect.left - (containerRect.width / 2) + (targetRect.width / 2);
-          
-          // 부드러운 스크롤 애니메이션으로 이동
-          container.scrollTo({
-            left: scrollLeft,
-            behavior: "smooth",
-          });
+      // requestAnimationFrame을 사용하여 DOM 업데이트 후 스크롤 실행
+      requestAnimationFrame(() => {
+        const targetElement = tabRefs.current[itemId];
+        if (!targetElement || !scrollContainerId) return;
+        
+        // scrollContainerId로 설정된 요소를 찾고, 그 안의 tabs__scroll-container를 찾거나
+        // scrollContainerId가 tabs__scroll-container의 id인 경우 직접 사용
+        let container = document.getElementById(scrollContainerId);
+        
+        // 만약 외부 컨테이너를 찾았다면, 그 안의 tabs__scroll-container를 찾기
+        if (container && !container.classList.contains('tabs__scroll-container')) {
+          container = container.querySelector('.tabs__scroll-container');
         }
-      }
+        
+        // tabs__scroll-container를 직접 찾기 (id로 찾지 못한 경우)
+        if (!container) {
+          container = targetElement.closest('.tabs--scroll')?.querySelector('.tabs__scroll-container');
+        }
+        
+        if (!container) return;
+        
+        // 컨테이너와 타겟 요소의 위치 정보 가져오기
+        const containerRect = container.getBoundingClientRect();
+        const targetRect = targetElement.getBoundingClientRect();
+        
+        // 가운데 정렬을 위한 스크롤 위치 계산
+        // (타겟 요소가 컨테이너 중앙에 오도록 스크롤 위치 계산)
+        const targetScrollLeft = Math.max(0, container.scrollLeft + targetRect.left - containerRect.left - (containerRect.width / 2) + (targetRect.width / 2));
+        const startScrollLeft = container.scrollLeft;
+        const distance = targetScrollLeft - startScrollLeft;
+        const duration = 300; // Swiper 타입과 동일한 300ms
+        const startTime = performance.now();
+        
+        // 300ms 동안 부드러운 스크롤 애니메이션
+        const animateScroll = (currentTime) => {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          
+          // easeOutCubic 이징 함수 사용 (Swiper와 유사한 느낌)
+          const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+          const currentScrollLeft = startScrollLeft + distance * easeOutCubic;
+          
+          container.scrollLeft = currentScrollLeft;
+          
+          if (progress < 1) {
+            requestAnimationFrame(animateScroll);
+          }
+        };
+        
+        requestAnimationFrame(animateScroll);
+      });
     } else if (type === "swiper" && swiperRef.current) {
       // Swiper 타입: Swiper를 이용한 가운데 정렬
       // slideTo 전에 상태를 업데이트했으므로 active 클래스가 즉시 적용됨
@@ -161,7 +194,7 @@ function Tabs({
   // Scroll 타입
   if (type === "scroll") {
     return (
-      <div className={`tabs tabs--scroll ${className}`}>
+      <div className={`tabs tabs--scroll ${className}`}> 
         <div className="tabs__scroll-container" id={scrollContainerId || undefined}>
           <div className="tabs__tablist" role="tablist" aria-label="스크롤 탭 메뉴">
             {items.map((item, index) => (

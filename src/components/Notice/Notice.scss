@@ -60,11 +60,23 @@
   }
 
   &__item {
+    min-width: 0; // flexbox 오버플로우 방지
+  }
+
+  &__item-link {
     display: flex;
     justify-content: space-between;
     gap: px(12);
     align-items: center;
     min-width: 0; // flexbox 오버플로우 방지
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(12, 124, 89, 0.04);
+      border-radius: px(8);
+    }
   }
 
   &__title {

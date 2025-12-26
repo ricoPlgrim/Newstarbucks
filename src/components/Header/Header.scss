@@ -17,6 +17,11 @@
     padding: px-to-rem(12) px-to-rem(16);
     max-width: 1200px;
     margin: 0 auto;
+
+    &--sub {
+      padding: px-to-rem(12) px-to-rem(16);
+      gap: px-to-rem(12);
+    }
   }
 
   &__logo {
@@ -25,6 +30,83 @@
       font-size: px-to-rem(20);
       font-weight: 700;
       color: var(--color-accent);
+    }
+  }
+
+  // 서브 헤더 전용 스타일
+  &__back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: px-to-rem(40);
+    height: px-to-rem(40);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text);
+    padding: 0;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+
+    svg {
+      width: px-to-rem(24);
+      height: px-to-rem(24);
+      display: block;
+    }
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    &:active {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &__category {
+    flex: 1;
+    margin: 0;
+    font-size: px-to-rem(18);
+    font-weight: 600;
+    color: var(--color-text);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__utilities {
+    display: flex;
+    align-items: center;
+    gap: px-to-rem(8);
+  }
+
+  &__utility-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: px-to-rem(40);
+    height: px-to-rem(40);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text);
+    padding: 0;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+
+    svg {
+      width: px-to-rem(24);
+      height: px-to-rem(24);
+      display: block;
+    }
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    &:active {
+      background-color: rgba(0, 0, 0, 0.1);
     }
   }
 

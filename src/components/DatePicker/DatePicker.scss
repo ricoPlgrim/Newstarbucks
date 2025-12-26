@@ -65,6 +65,16 @@
   gap: px(12);
 }
 
+.date-picker__close {
+  width: 100%;
+  margin-top: px(8);
+  border: 1px solid var(--color-border) !important;
+  
+  &:hover {
+    border-color: var(--color-accent) !important;
+  }
+}
+
 .date-picker__section {
   border: 1px solid var(--color-border);
   border-radius: px(12);
@@ -110,11 +120,13 @@
   border-radius: px(8);
   color: var(--color-text);
   border: 1px solid transparent;
+  box-sizing: border-box;
   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 
-  &:hover {
-    border-color: var(--color-accent);
-    color: var(--color-accent);
+  &:hover:not(.rdp-day_selected):not(.rdp-day_range_start):not(.rdp-day_range_end):not(.rdp-day_range_middle):not(.rdp-day_disabled) {
+    border-color: transparent !important;
+    color: var(--color-accent) !important;
+    background-color: transparent !important;
   }
 }
 
@@ -123,6 +135,77 @@
   background-color: var(--color-accent);
   color: #fff;
   border-color: var(--color-accent);
+  border-radius: px(8);
+}
+
+// Range 모드 스타일 - L자 라인 완전 제거
+.rdp-day {
+  &::before,
+  &::after {
+    display: none !important;
+    content: none !important;
+    background: none !important;
+    border: none !important;
+  }
+}
+
+.rdp-day_range_start,
+.rdp-day_range_end,
+.rdp-day_range_middle {
+  &::before,
+  &::after {
+    display: none !important;
+    content: none !important;
+    background: none !important;
+    border: none !important;
+  }
+}
+
+.rdp-day_range_start,
+.rdp-day_range_end {
+  background-color: var(--color-accent) !important;
+  color: #fff !important;
+  border: 1px solid var(--color-accent) !important;
+  border-radius: px(8) !important;
+  position: relative !important;
+
+  &::before,
+  &::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  &:hover {
+    background-color: var(--color-accent) !important;
+    color: #fff !important;
+    border: 1px solid var(--color-accent) !important;
+    border-radius: px(8) !important;
+  }
+}
+
+.rdp-day_range_middle {
+  background-color: var(--rdp-background-color) !important;
+  color: var(--color-text) !important;
+  border: 1px solid transparent !important;
+  border-radius: px(8) !important;
+  position: relative !important;
+
+  &::before,
+  &::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  &:hover {
+    background-color: var(--rdp-background-color) !important;
+    color: var(--color-text) !important;
+    border: 1px solid var(--color-accent) !important;
+    border-radius: px(8) !important;
+  }
+}
+
+.rdp-day_range_start.rdp-day_range_end {
+  border-radius: px(8) !important;
 }
 
 .rdp-day_today:not(.rdp-day_selected) {
@@ -150,3 +233,15 @@
   color: var(--color-muted);
 }
 
+.rdp-day{
+  border: none !important;
+  border-radius: 0 !important;
+}
+.rdp-day:hover{
+  border: none !important;
+  border-radius: 0 !important;
+}
+.rdp-day_button{
+  border: none !important;
+  border-radius: 0 !important;
+} 
