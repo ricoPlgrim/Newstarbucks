@@ -25,6 +25,7 @@
     "start": "cross-env SASS_SILENCE_DEPRECATIONS=all react-app-rewired start",
     "build": "cross-env BUILD_PATH=docs SASS_SILENCE_DEPRECATIONS=all react-app-rewired build && node scripts/copy-404.js",
     "build:analyze": "cross-env ANALYZE_BUILD=true BUILD_PATH=docs SASS_SILENCE_DEPRECATIONS=all react-app-rewired build && node scripts/copy-404.js",
+    "check:tsx": "node scripts/check-tsx-has-jsx.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "storybook dev -p 6006",
@@ -52,6 +53,10 @@
     "@storybook/addon-docs": "^10.0.8",
     "@storybook/preset-create-react-app": "^10.0.8",
     "@storybook/react-webpack5": "^10.0.8",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.0.3",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
     "cross-env": "^7.0.3",
     "customize-cra": "^1.0.0",
     "eslint-plugin-storybook": "^10.0.8",
@@ -60,6 +65,7 @@
     "sass-embedded": "^1.93.3",
     "speed-measure-webpack-plugin": "^1.5.0",
     "storybook": "^10.0.8",
+    "typescript": "^5.9.3",
     "webpack": "^5.103.0"
   },
   "overrides": {

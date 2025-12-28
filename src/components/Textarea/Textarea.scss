@@ -26,11 +26,20 @@
     }
 
     &--error {
-      border-color: #ef4444;
+      border-color: #ef4444 !important;
 
       &:focus-within {
-        border-color: #ef4444;
-        box-shadow: 0 0 0 px(3) rgba(239, 68, 68, 0.1);
+        border-color: #ef4444 !important;
+        box-shadow: 0 0 0 px(3) rgba(239, 68, 68, 0.1) !important;
+      }
+    }
+
+    &--byte-limit {
+      border-color: #ef4444 !important;
+
+      &:focus-within {
+        border-color: #ef4444 !important;
+        box-shadow: 0 0 0 px(3) rgba(239, 68, 68, 0.1) !important;
       }
     }
   }
@@ -39,30 +48,48 @@
   &--small {
     .textarea-field__wrapper {
       padding: px(8) px(12);
+      padding-bottom: px(36);
     }
 
     .textarea-field__textarea {
       @include px(font-size, 13);
+    }
+
+    .textarea-field__byte-counter {
+      bottom: px(8);
+      left: px(12);
     }
   }
 
   &--medium {
     .textarea-field__wrapper {
       padding: px(12) px(16);
+      padding-bottom: px(40);
     }
 
     .textarea-field__textarea {
       @include px(font-size, 14);
+    }
+
+    .textarea-field__byte-counter {
+      bottom: px(12);
+      left: px(16);
     }
   }
 
   &--large {
     .textarea-field__wrapper {
       padding: px(16) px(20);
+      padding-bottom: px(44);
     }
 
     .textarea-field__textarea {
       @include px(font-size, 16);
+    }
+
+    .textarea-field__byte-counter {
+      bottom: px(16);
+      left: px(20);
     }
   }
 
@@ -95,6 +122,20 @@
 
     &--error {
       color: #ef4444;
+    }
+  }
+
+  &__byte-counter {
+    position: absolute;
+    bottom: px(12);
+    left: px(16);
+    @include px(font-size, 12);
+    color: var(--color-muted);
+    line-height: 1.4;
+
+    &--exceeded {
+      color: #ef4444;
+      font-weight: 600;
     }
   }
 }
