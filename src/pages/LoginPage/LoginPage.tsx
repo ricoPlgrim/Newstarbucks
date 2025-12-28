@@ -53,6 +53,7 @@ const LoginPage = () => {
               onChange={(e, value) => handleInputChange(e, value, "id")}
               size="large"
               className="login-page__input"
+              showClearButton={true}
             />
           </div>
 

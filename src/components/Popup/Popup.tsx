@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import type { ReactNode } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import Typography from "../Typography/Typography";
@@ -214,6 +215,20 @@ export function BottomSheetPopup({ open, onClose, title, description }) {
   // 드래그 임계값 (팝업 높이의 절반)
   const threshold = popupHeight / 2;
 
+  // 닫기 애니메이션 공통 처리
+  const closeWithAnimation = () => {
+    if (isClosing) return;
+    const height = popupRef.current?.offsetHeight || popupHeight || 0;
+    setIsClosing(true);
+    setOffset(height);
+    offsetRef.current = height;
+
+    // transition 시간(0.2s) + 여유
+    setTimeout(() => {
+      onClose?.();
+    }, 250);
+  };
+
   // 드래그 시작 핸들러 (터치 또는 마우스)
   const onStart = (e) => {
     console.log('onStart 호출됨', { isClosing, e: e?.type });
@@ -278,16 +293,7 @@ export function BottomSheetPopup({ open, onClose, title, description }) {
     console.log(`드래그 종료: ${(dragRatio * 100).toFixed(1)}% (${currentOffset}px / ${popupHeight}px) - ${shouldClose ? '50% 이상 (닫기)' : '50% 이하 (복귀)'}`);
     
     if (shouldClose) {
-      // 닫기 애니메이션 시작: 팝업을 완전히 아래로 내림
-      setIsClosing(true);
-      setOffset(popupHeight);
-      offsetRef.current = popupHeight;
-      
-      // 애니메이션 완료 후 팝업 닫기
-      // transition 시간(0.2s) + 약간의 여유 시간
-      setTimeout(() => {
-        onClose?.();
-      }, 250);
+      closeWithAnimation();
     } else {
       // 임계값 미만이면 원래 위치로 복귀
       setOffset(0);
@@ -297,7 +303,7 @@ export function BottomSheetPopup({ open, onClose, title, description }) {
   };
 
   return (
-    <div className="popup-overlay popup-overlay--sheet" onClick={onClose}>
+    <div className="popup-overlay popup-overlay--sheet" onClick={closeWithAnimation}>
       <div
         ref={popupRef}
         className="popup popup--sheet"
@@ -320,8 +326,8 @@ export function BottomSheetPopup({ open, onClose, title, description }) {
         </div>
         {/* 액션 버튼 영역 */}
         <div className="popup__actions popup__actions--stack">
-          <Button variant="ghost" onClick={onClose}>Cancel</Button>
-          <Button variant="primary" onClick={onClose}>OK</Button>
+          <Button variant="ghost" onClick={closeWithAnimation}>Cancel</Button>
+          <Button variant="primary" onClick={closeWithAnimation}>OK</Button>
         </div>
       </div>
     </div>
@@ -336,10 +342,27 @@ export function BottomSheetPopup({ open, onClose, title, description }) {
  * @param {function} onClose - 팝업 닫기 핸들러
  * @param {string} title - 팝업 제목
  * @param {ReactNode} body - 팝업 본문 내용
+ * @param {string} description - 제목 아래에 표시할 설명 텍스트
  * @param {boolean} showHeaderClose - 헤더 오른쪽 X 버튼 표시 여부 (기본값: true)
  * @param {boolean} showBottomClose - 하단 닫기 버튼 표시 여부 (기본값: false)
  */
-export function FullscreenPopup({ open, onClose, title, body, showHeaderClose = true, showBottomClose = false }) {
+export function FullscreenPopup({
+  open,
+  onClose,
+  title,
+  body,
+  description,
+  showHeaderClose = true,
+  showBottomClose = false,
+}: {
+  open: boolean;
+  onClose: () => void;
+  title: string;
+  body?: ReactNode;
+  description?: string;
+  showHeaderClose?: boolean;
+  showBottomClose?: boolean;
+}) {
   // 팝업이 닫혀있으면 렌더링하지 않음
   if (!open) return null;
 
@@ -358,6 +381,11 @@ export function FullscreenPopup({ open, onClose, title, body, showHeaderClose = 
         </div>
         {/* 본문 영역 */}
         <div className="popup__body">
+          {description && (
+            <Typography variant="body" size="small" color="muted">
+              {description}
+            </Typography>
+          )}
           {body}
         </div>
         {/* 하단 닫기 버튼 영역 */}

@@ -6,7 +6,7 @@ import Button from "../Button/Button";
 import "./DatePicker.scss";
 
 function formatDate(date) {
-  if (!date) return "YYYY-MM-DD";
+  if (!date) return "날짜를 선택하세요";
   const yyyy = date.getFullYear();
   const mm = `${date.getMonth() + 1}`.padStart(2, "0");
   const dd = `${date.getDate()}`.padStart(2, "0");
@@ -14,7 +14,7 @@ function formatDate(date) {
 }
 
 function formatRange(range: DateRange | undefined) {
-  if (!range?.from && !range?.to) return "YYYY-MM-DD ~ YYYY-MM-DD";
+  if (!range?.from && !range?.to) return "날짜를 선택하세요";
   const from = range?.from ? formatDate(range.from) : "";
   const to = range?.to ? formatDate(range.to) : "";
   return `${from} ~ ${to}`;

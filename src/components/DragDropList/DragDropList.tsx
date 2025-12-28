@@ -13,7 +13,7 @@ const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
 const DragDropList = () => {
   const [items, setItems] = useState(initialItems);
-  const [dragMeta, setDragMeta] = useState({ id: null, index: -1, z: 1 });
+  const [dragMeta, setDragMeta] = useState({ id: null, index: -1, z: 1, offsetY: 0 });
   const listRef = useRef(null);
   const [itemHeight, setItemHeight] = useState(80); // fallback height
   const nodeRefs = useRef({});
@@ -28,16 +28,23 @@ const DragDropList = () => {
     }
   }, [items.length]);
 
-  const handleStop = (itemId, startIndex) => (e, data) => {
+  const handleStop = (itemId, startIndex) => (_e, data) => {
     const deltaIndex = Math.round(data.y / itemHeight);
     const targetIndex = clamp(startIndex + deltaIndex, 0, items.length - 1);
+
     if (targetIndex !== startIndex) {
       const next = [...items];
       const [moved] = next.splice(startIndex, 1);
       next.splice(targetIndex, 0, moved);
       setItems(next);
     }
-    setDragMeta((prev) => ({ ...prev, id: null, index: -1 }));
+
+    // 드롭 직후 위치 리셋
+    setDragMeta((prev) => ({ ...prev, id: null, index: -1, offsetY: 0 }));
+  };
+
+  const handleDrag = (_e, data) => {
+    setDragMeta((prev) => ({ ...prev, offsetY: data.y }));
   };
 
   return (
@@ -55,9 +62,10 @@ const DragDropList = () => {
             <Draggable
               key={item.id}
               axis="y"
-              position={{ x: 0, y: 0 }} // 드래그 끝나면 원위치로 리셋
-              onStart={() => setDragMeta((prev) => ({ id: item.id, index, z: prev.z + 1 }))}
+              position={{ x: 0, y: dragMeta.id === item.id ? dragMeta.offsetY : 0 }} // 드래그 중 카드가 따라오고, 드롭 시 0으로 복귀
+              onStart={() => setDragMeta((prev) => ({ id: item.id, index, z: prev.z + 1, offsetY: 0 }))}
               onStop={handleStop(item.id, index)}
+              onDrag={handleDrag}
               nodeRef={nodeRef}
             >
               <div
@@ -74,6 +82,15 @@ const DragDropList = () => {
             </Draggable>
           );
         })}
+      </div>
+      <div className="dnd-order">
+        <div className="dnd-order__list">
+          {items.map((item, index) => (
+            <div key={item.id} className="dnd-order__item">
+              {index + 1}. {item.id}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

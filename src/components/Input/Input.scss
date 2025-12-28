@@ -101,6 +101,12 @@
     min-width: 0;
     padding: 0;
 
+    // Edge/IE 기본 password 눈 아이콘 숨김 (커스텀 아이콘과 중복 방지)
+    &[type="password"]::-ms-reveal,
+    &[type="password"]::-ms-clear {
+      display: none;
+    }
+
     &::placeholder {
       color: var(--color-muted);
     }
