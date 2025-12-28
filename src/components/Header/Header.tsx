@@ -420,6 +420,7 @@ function Header({
         cancelAnimationFrame(rafId3);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expandedItems]);
 
   /**

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import "./SearchField.scss";
 
 type SearchFieldSize = "small" | "medium" | "large";
