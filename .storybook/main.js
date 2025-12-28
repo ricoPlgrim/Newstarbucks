@@ -16,6 +16,16 @@ const config = {
   },
   "staticDirs": [
     "..\\public"
-  ]
+  ],
+  // GitHub Pages 서브디렉토리 배포를 위한 설정
+  "managerHead": (head, { configType }) => {
+    if (configType === 'PRODUCTION') {
+      return `
+        ${head}
+        <base href="/Newstarbucks/storybook/">
+      `;
+    }
+    return head;
+  }
 };
 export default config;

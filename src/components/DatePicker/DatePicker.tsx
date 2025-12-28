@@ -5,18 +5,21 @@ import "react-day-picker/dist/style.css";
 import Button from "../Button/Button";
 import "./DatePicker.scss";
 
-function formatDate(date) {
-  if (!date) return "날짜를 선택하세요";
-  const yyyy = date.getFullYear();
-  const mm = `${date.getMonth() + 1}`.padStart(2, "0");
-  const dd = `${date.getDate()}`.padStart(2, "0");
-  return `${yyyy}-${mm}-${dd}`;
+function formatDate(date: Date | undefined) {
+  if (!date) return "날짜를 선택해주세요.";
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return `${year}년 ${month}월 ${day}일`;
 }
 
 function formatRange(range: DateRange | undefined) {
-  if (!range?.from && !range?.to) return "날짜를 선택하세요";
+  if (!range?.from && !range?.to) return "날짜를 선택해주세요.";
   const from = range?.from ? formatDate(range.from) : "";
   const to = range?.to ? formatDate(range.to) : "";
+  if (!from && !to) return "날짜를 선택해주세요.";
+  if (!from) return `${to}까지`;
+  if (!to) return `${from}부터`;
   return `${from} ~ ${to}`;
 }
 

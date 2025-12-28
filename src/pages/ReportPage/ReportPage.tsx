@@ -280,7 +280,7 @@ const ReportPage = () => {
             <div className="report-page__time-wrapper" ref={datePickerRef}>
               <div className="report-page__time-input" onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}>
                 <Typography variant="body" size="medium" style={{ whiteSpace: "nowrap", flex: 1, minWidth: 0 }}>
-                  {formatDate(formData.occurrenceDate) || "YYYY년 MM월 DD일"}
+                  {formatDate(formData.occurrenceDate) || "날짜를 선택해주세요."}
                 </Typography>
                 <span className="report-page__time-icon">▼</span>
               </div>
