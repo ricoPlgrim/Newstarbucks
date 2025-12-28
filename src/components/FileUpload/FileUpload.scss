@@ -1,113 +1,131 @@
 @use "../../styles/index.scss" as *;
 
 .file-upload-demo {
-  border: px(1) solid var(--color-border);
-  border-radius: px(12);
-  padding: px(20);
-  background-color: var(--color-card);
-  box-shadow: var(--shadow-soft);
   display: flex;
   flex-direction: column;
   gap: px(16);
 }
 
-.file-upload-demo__field {
-  display: flex;
-  flex-direction: column;
-  gap: px(8);
-}
+.file-upload-demo__container {
+  overflow-x: auto;
+  overflow-y: hidden;
 
-.file-upload-demo__label {
-  font-weight: 700;
-  color: var(--color-text);
-  @include px(font-size, 14);
-}
+  // 파일이 있을 때는 내용물 크기에 맞춤
+  &:has(.file-upload-demo__preview-list) {
+    width: fit-content;
+    max-width: 100%;
+  }
 
-.file-upload-demo input[type="file"] {
-  border: px(1) dashed var(--color-border);
-  padding: px(12);
-  border-radius: px(10);
-  background-color: rgba(12, 124, 89, 0.03);
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    border-color: var(--color-accent);
-    background-color: rgba(12, 124, 89, 0.06);
+  // 파일이 없을 때는 전체 너비
+  &:not(:has(.file-upload-demo__preview-list)) {
+    width: 100%;
   }
 }
 
-.file-upload-demo__hint {
-  margin: 0;
-  color: var(--color-muted);
-  @include px(font-size, 12);
-  line-height: 1.5;
-}
-
-.file-upload-demo__preview {
-  display: flex;
-  flex-direction: column;
-  gap: px(12);
-}
-
-.file-upload-demo__preview-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: px(8);
-}
-
-.file-upload-demo__preview-title {
-  margin: 0;
-  font-weight: 700;
-  color: var(--color-text);
-  @include px(font-size, 14);
-}
-
-.file-upload-demo__clear-all {
-  border: px(1) solid var(--color-border);
+.file-upload-demo__upload-area {
+  display: block;
+  min-height: px(200);
   border-radius: px(8);
-  padding: px(6) px(12);
-  background: transparent;
-  color: var(--color-text);
+  background-color: #f5f5f5;
+  border: none;
   cursor: pointer;
-  @include px(font-size, 12);
-  font-weight: 600;
-  transition: all 0.2s ease;
+  position: relative;
+  transition: background-color 0.2s ease;
+  overflow: hidden;
+  flex-shrink: 0;
 
   &:hover {
-    border-color: #ef4444;
-    color: #ef4444;
-    background: rgba(239, 68, 68, 0.08);
+    background-color: #eeeeee;
+  }
+
+  // 파일이 없을 때는 전체 너비
+  .file-upload-demo__container > &:not(.file-upload-demo__upload-area--small) {
+    width: 100%;
+  }
+
+  &--small {
+    width: px(120);
+    min-height: px(120);
+    height: px(120);
   }
 }
 
-.file-upload-demo__preview-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(px(150), 1fr));
+.file-upload-demo__input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.file-upload-demo__icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #666666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: px(48);
+    height: px(48);
+  }
+}
+
+.file-upload-demo__upload-area--small .file-upload-demo__icon svg {
+  width: px(32);
+  height: px(32);
+}
+
+.file-upload-demo__preview-list {
+  display: flex;
   gap: px(12);
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: px(4);
+
+  // 스크롤바 스타일
+  &::-webkit-scrollbar {
+    height: px(8);
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: px(4);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: px(4);
+
+    &:hover {
+      background: #555;
+    }
+  }
 }
 
 .file-upload-demo__preview-item {
-  display: flex;
-  flex-direction: column;
-  gap: px(8);
-  border: px(1) solid var(--color-border);
-  border-radius: px(10);
-  padding: px(8);
+  width: px(120);
+  height: px(120);
+  flex-shrink: 0;
+  position: relative;
+  border-radius: px(8);
+  overflow: hidden;
   background: var(--color-bg);
   transition: all 0.2s ease;
 
   &:hover {
-    border-color: var(--color-accent);
-    box-shadow: 0 px(2) px(8) rgba(12, 124, 89, 0.1);
+    transform: scale(1.02);
+    box-shadow: 0 px(4) px(12) rgba(0, 0, 0, 0.15);
   }
 }
 
 .file-upload-demo__preview-image-wrapper {
   position: relative;
   width: 100%;
-  min-height: px(150);
+  height: 100%;
   border-radius: px(8);
   overflow: hidden;
   background: var(--color-bg);
@@ -127,34 +145,27 @@
 }
 
 .file-upload-demo__preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   display: block;
-  max-width: 100%;
-  max-height: 100%;
-
-  // Image 컴포넌트의 비율 클래스에 따른 스타일
-  &.image--landscape {
-    width: 100%;
-    height: auto;
-  }
-
-  &.image--portrait {
-    width: auto;
-    height: 100%;
-  }
-
+  
+  // Image 컴포넌트의 비율 클래스와 함께 사용할 때
+  &.image--landscape,
+  &.image--portrait,
   &.image--square {
+    object-fit: contain;
     width: 100%;
     height: 100%;
-    object-fit: cover;
   }
 }
 
 .file-upload-demo__preview-remove {
   position: absolute;
-  top: px(6);
-  right: px(6);
-  width: px(28);
-  height: px(28);
+  top: px(4);
+  right: px(4);
+  width: px(24);
+  height: px(24);
   border: none;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.6);
@@ -173,31 +184,9 @@
 
   svg {
     display: block;
+    width: px(14);
+    height: px(14);
   }
-}
-
-.file-upload-demo__preview-info {
-  display: flex;
-  flex-direction: column;
-  gap: px(4);
-}
-
-.file-upload-demo__preview-name {
-  margin: 0;
-  @include px(font-size, 12);
-  font-weight: 600;
-  color: var(--color-text);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  line-height: 1.4;
-}
-
-.file-upload-demo__preview-size {
-  margin: 0;
-  @include px(font-size, 11);
-  color: var(--color-muted);
-  line-height: 1.4;
 }
 
 .file-upload-demo__empty {
@@ -213,3 +202,4 @@
   color: var(--color-muted);
   @include px(font-size, 14);
 }
+

@@ -1,0 +1,65 @@
+@use "../../styles/index.scss" as *;
+
+.scroll-top {
+  position: fixed;
+  bottom: px(80);
+  right: px(24);
+  width: px(48);
+  height: px(48);
+  border-radius: 50%;
+  background-color: #fff;
+  color: #00C896;
+  border: px(2) solid #00C896;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 200, 150, 0.2);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(px(20));
+  pointer-events: none;
+
+  svg {
+    width: px(24);
+    height: px(24);
+  }
+
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  &:hover {
+    background-color: #00C896;
+    color: #fff;
+    transform: translateY(px(-4));
+    box-shadow: 0 4px 12px rgba(0, 200, 150, 0.3);
+  }
+
+  &:active {
+    transform: translateY(px(-2));
+    box-shadow: 0 2px 6px rgba(0, 200, 150, 0.25);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 px(3) rgba(0, 200, 150, 0.3);
+  }
+
+  // 모바일 대응
+  @media (max-width: 768px) {
+    bottom: px(80);
+    right: px(16);
+    width: px(44);
+    height: px(44);
+
+    svg {
+      width: px(20);
+      height: px(20);
+    }
+  }
+}
+

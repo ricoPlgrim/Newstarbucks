@@ -6,7 +6,7 @@
 src/
 ├── pages/              # 페이지 컴포넌트
 │   ├── YourPage/
-│   │   ├── YourPage.js
+│   │   ├── YourPage.tsx  # TypeScript 파일
 │   │   └── YourPage.scss
 ├── components/         # 재사용 가능한 컴포넌트
 │   ├── PageTemplate/  # 페이지 레이아웃 템플릿 (다크모드, 폰트 스케일)
@@ -23,25 +23,32 @@ src/
 
 ## 🎯 페이지 생성 기준
 
-### ⭐ **기본 퍼블리싱 템플릿: SamplePage.js**
+### ⭐ **기본 퍼블리싱 템플릿: SamplePage.tsx**
 
-**새 페이지를 만들 때는 `SamplePage.js`를 복사해서 사용하세요!**
+**새 페이지를 만들 때는 `SamplePage.tsx`를 복사해서 사용하세요!**
 
 이 파일은 기본적인 퍼블리싱 구조를 포함하고 있습니다:
+
+**참고**: 프로젝트는 TypeScript로 작성되어 있습니다. 모든 파일은 `.tsx` 또는 `.ts` 확장자를 사용합니다.
 - Header 컴포넌트
 - 히어로 섹션 (메인 비주얼 영역)
 - 콘텐츠 섹션 (그리드 레이아웃)
 - CTA 섹션 (행동 유도 영역)
 - 로딩/에러 상태 처리 예시
 
-```jsx
+```tsx
 import Header from "../../components/Header/Header";
 import "./YourPage.scss";
 
-function YourPage() {
+const YourPage = () => {
   return (
     <div className="your-page">
-      <Header currentPage="your-page" onPageChange={() => {}} />
+      <Header 
+        variant="main" 
+        currentPage="your-page" 
+        onPageChange={() => {}} 
+        sticky={false}
+      />
       
       <main className="your-page__main">
         {/* 히어로 섹션 */}
@@ -56,7 +63,7 @@ function YourPage() {
       </main>
     </div>
   );
-}
+};
 
 export default YourPage;
 ```
@@ -67,11 +74,11 @@ export default YourPage;
 
 **예시**: `PublishingGuidePage`, `PublishingUrlPage`, `ExamplePage`
 
-```jsx
+```tsx
 import PageTemplate from "../../components/PageTemplate/PageTemplate";
 import "./YourPage.scss";
 
-function YourPage() {
+const YourPage = () => {
   return (
     <PageTemplate title="페이지 제목">
       <div className="your-page">
@@ -79,7 +86,7 @@ function YourPage() {
       </div>
     </PageTemplate>
   );
-}
+};
 
 export default YourPage;
 ```
@@ -95,25 +102,25 @@ export default YourPage;
 
 ```bash
 src/pages/YourPage/
-├── YourPage.js
+├── YourPage.tsx  # TypeScript 파일
 └── YourPage.scss
 ```
 
 ### Step 2: 기본 페이지 구조 작성
 
-**SamplePage.js를 복사하여 YourPage.js 생성 후 수정:**
+**SamplePage.tsx를 복사하여 YourPage.tsx 생성 후 수정:**
 
-```jsx
+```tsx
 import { useState, useEffect } from "react";
 import Header from "../../components/Header/Header";
 import "./YourPage.scss";
 // import { fetchMockData } from "../../mocks/mockData"; // 필요시 주석 해제
 
-function YourPage() {
+const YourPage = () => {
   // 상태 관리 (필요시)
-  const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [data, setData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   // 데이터 로드 (필요시 주석 해제)
   // useEffect(() => {
@@ -240,16 +247,17 @@ const [currentPage, setCurrentPage] = useState(() => {
 프로젝트에 이미 구현된 컴포넌트들을 활용하세요:
 
 ### 레이아웃
-- **Header** - 모바일 헤더 (메인 헤더: 햄버거 메뉴 / 서브 헤더: 뒤로가기, 카테고리명, 유틸리티 버튼)
+- **Header** - 모바일 헤더 (메인 헤더: 햄버거 메뉴 / 서브 헤더: 뒤로가기, 카테고리명, 유틸리티 버튼, `sticky` prop으로 sticky 위치 지정 가능)
 - **Footer** - 푸터
 - **PageTemplate** - 페이지 템플릿 (다크모드, 폰트 스케일 지원)
 - **ListContainer** - 리스트 컨테이너 (section/article 태그 기반)
+- **ScrollTop** - 스크롤 탑 버튼 (스크롤 시 나타나는 상단 이동 버튼)
 
 ### 입력 컴포넌트
 - **Input** - 텍스트 입력 (text, password, number, tel, email, 자동 하이픈 포맷팅)
 - **Select** - 셀렉트 박스
-- **Textarea** - 여러 줄 텍스트 입력
-- **FileUpload** - 파일 업로드 (이미지 미리보기, 최대 3개)
+- **Textarea** - 여러 줄 텍스트 입력 (바이트 카운터 지원, 한글 2바이트/영문 1바이트 계산)
+- **FileUpload** - 파일 업로드 (이미지 미리보기, 무제한 업로드, 가로 스크롤, 이미지 파일 타입 검증 강화)
 - **SearchField** - 검색 필드 (검색 아이콘, 클리어 버튼)
 
 ### 선택 컴포넌트
@@ -312,9 +320,9 @@ const [currentPage, setCurrentPage] = useState(() => {
 새 페이지를 만들 때 확인할 사항:
 
 - [ ] `src/pages/YourPage/` 폴더 생성
-- [ ] `YourPage.js` 파일 생성 (기본 구조 작성)
+- [ ] `YourPage.tsx` 파일 생성 (기본 구조 작성, TypeScript 사용)
 - [ ] `YourPage.scss` 파일 생성 (스타일 작성)
-- [ ] `App.js`에 페이지 등록
+- [ ] `App.tsx`에 페이지 등록 (React Router 사용)
 - [ ] 로딩 상태 처리 (Skeleton 또는 Loading 컴포넌트)
 - [ ] 에러 상태 처리
 - [ ] 반응형 디자인 적용
@@ -327,4 +335,6 @@ const [currentPage, setCurrentPage] = useState(() => {
 2. **컴포넌트 재사용**: 기존 컴포넌트를 최대한 활용하세요
 3. **스타일 일관성**: `px()` 믹스인과 CSS 변수를 사용하세요
 4. **접근성**: 키보드 네비게이션, 스크린 리더 지원을 고려하세요
+5. **TypeScript 사용**: 모든 컴포넌트는 TypeScript로 작성하며, 타입을 명시하세요
+6. **새로운 페이지 예시**: `ReportPage`, `SearchSamplePage`, `LoginPage`를 참고하세요
 

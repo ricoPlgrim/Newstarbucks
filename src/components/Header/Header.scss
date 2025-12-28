@@ -1,14 +1,18 @@
 @use "../../styles/index.scss" as *;
 
 .header {
-  position: sticky;
-  top: 0;
-  left: 0;
-  right: 0;
+  position: relative;
   z-index: 1000;
   background-color: var(--color-bg);
   border-bottom: 1px solid var(--color-border);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &--sticky {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
 
   &__inner {
     display: flex;
@@ -21,6 +25,8 @@
     &--sub {
       padding: px-to-rem(12) px-to-rem(16);
       gap: px-to-rem(12);
+      position: relative;
+      justify-content: flex-start;
     }
   }
 
@@ -64,7 +70,9 @@
   }
 
   &__category {
-    flex: 1;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     margin: 0;
     font-size: px-to-rem(18);
     font-weight: 600;
@@ -73,6 +81,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: calc(100% - px-to-rem(120)); // 뒤로가기 버튼과 유틸리티 영역 제외
   }
 
   &__utilities {

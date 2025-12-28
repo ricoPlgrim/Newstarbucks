@@ -1,0 +1,62 @@
+@use "../../styles/index.scss" as *;
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg-secondary, #f5f5f5);
+  padding: px(20);
+
+  &__container {
+    width: 100%;
+    max-width: px(720);
+    background-color: var(--color-bg);
+    border-radius: px(8);
+  }
+
+  &__header {
+    text-align: center;
+    margin-bottom: px(100);
+  }
+
+  &__logo {
+    display: block;
+    width: 100%;
+    max-width: px(200);
+    height: auto;
+    margin: 0 auto;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: px(18);
+  }
+
+  &__input-group {
+    width: 100%;
+  }
+
+  &__input {
+    width: 100%;
+  }
+
+  &__checkbox-group {
+    display: flex;
+    align-items: center;
+  }
+
+  &__checkbox {
+    font-size: px(14);
+    color: var(--color-text);
+  }
+
+  &__submit-btn {
+    width: 100%;
+    margin-top: px(8);
+    font-size: px(16);
+    font-weight: 600;
+  }
+}
+

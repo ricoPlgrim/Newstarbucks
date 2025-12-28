@@ -69,6 +69,7 @@ import Icon from "../../components/Icon/Icon";
 import Button from "../../components/Button/Button";
 import BorderAnimation from "../../components/BorderAnimation/BorderAnimation";
 import ListContainer from "../../components/ListContainer/ListContainer";
+import ScrollTop from "../../components/ScrollTop/ScrollTop";
 
 // 코드 블록 컴포넌트 (구문 강조 적용)
 const CodeBlock = ({ code, language = "tsx" }) => {
@@ -2793,6 +2794,33 @@ const LayoutSpacingPreview = () => {
   );
 };
 
+const ScrollTopPreview = () => {
+  return (
+    <div className="guide-preview guide-preview--scroll-top">
+      <div style={{ padding: "40px", minHeight: "200vh", background: "linear-gradient(to bottom, #f5f5f5, #e0e0e0)" }}>
+        <h4 style={{ marginBottom: "24px", fontSize: "16px", fontWeight: 700 }}>
+          스크롤을 내려보세요. 오른쪽 하단에 버튼이 나타납니다.
+        </h4>
+        <div style={{ marginBottom: "40px" }}>
+          <p style={{ marginBottom: "16px", lineHeight: "1.6" }}>
+            이 페이지는 스크롤 탑 버튼의 동작을 확인하기 위해 충분한 높이를 가지고 있습니다.
+          </p>
+          <p style={{ marginBottom: "16px", lineHeight: "1.6" }}>
+            페이지를 아래로 스크롤하면 오른쪽 하단에 "맨 위로 이동" 버튼이 나타납니다.
+          </p>
+          <p style={{ marginBottom: "16px", lineHeight: "1.6" }}>
+            버튼을 클릭하면 페이지 상단으로 부드럽게 스크롤됩니다.
+          </p>
+        </div>
+        <div style={{ height: "1500px", display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255, 255, 255, 0.5)", borderRadius: "8px" }}>
+          <p style={{ fontSize: "14px", color: "#666" }}>더 많은 콘텐츠 영역...</p>
+        </div>
+        <ScrollTop showAfter={200} smooth={true} />
+      </div>
+    </div>
+  );
+};
+
 const BorderAnimationPreview = () => {
   return (
     <div className="guide-preview guide-preview--border-animation">
@@ -2929,7 +2957,7 @@ const guideSections = [
     description:
       "모바일 환경을 위한 반응형 헤더 디자인입니다. 메인 헤더는 햄버거 버튼으로 사이드 메뉴를 열 수 있으며, 3뎁스 메뉴 구조를 지원합니다. 서브 헤더는 뒤로가기 버튼, 카테고리 이름, 유틸리티 버튼들로 구성됩니다.",
     code: `import Header from "./Header";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Page = "guide" | "url" | "sample";
 type UtilityType = "search" | "more";
@@ -2942,11 +2970,12 @@ type UtilityType = "search" | "more";
 // onBack?: () => void;
 // onCartClick?: () => void;
 // onUtilityClick?: (type: UtilityType) => void;
+// sticky?: boolean;                  // sticky 활성화 여부 (기본값: false)
 
 // ===== 메인 헤더 기본 사용 =====
 const [currentPage, setCurrentPage] = useState<Page>("guide");
 
-const handlePageChange = (page: Page) => {
+const handlePageChange = (page: Page): void => {
   setCurrentPage(page);
   navigateToPage(page);
 };
@@ -2955,6 +2984,14 @@ const handlePageChange = (page: Page) => {
   currentPage={currentPage} 
   onPageChange={handlePageChange} 
   variant="main"
+/>;
+
+// ===== 메인 헤더 sticky 활성화 =====
+<Header 
+  currentPage={currentPage} 
+  onPageChange={handlePageChange} 
+  variant="main"
+  sticky={true}
 />;
 
 // ===== 서브 헤더 기본 사용 =====
@@ -2971,6 +3008,46 @@ const handlePageChange = (page: Page) => {
     }
   }}
 />;
+
+// ===== 서브 헤더 sticky 활성화 =====
+<Header 
+  variant="sub"
+  categoryName="음료"
+  sticky={true}
+  onBack={() => navigateBack()}
+  onCartClick={() => navigateToCart()}
+  onUtilityClick={(type: UtilityType) => {
+    if (type === "search") {
+      openSearchModal();
+    } else {
+      openMoreMenu();
+    }
+  }}
+/>;
+
+// ===== 조건부 sticky 적용 =====
+const PageWithHeader = () => {
+  const [isSticky, setIsSticky] = useState<boolean>(false);
+
+  const handleScroll = (): void => {
+    // 스크롤 위치에 따라 sticky 활성화/비활성화
+    setIsSticky(window.scrollY > 100);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <Header 
+      variant="main"
+      sticky={isSticky}
+      currentPage={currentPage}
+      onPageChange={handlePageChange}
+    />
+  );
+};
 
 // ===== gnbMenu 구조 =====
 // { id: string; label: string; href?: string; children?: GnbItem[] }[];`,
@@ -6735,6 +6812,46 @@ const examples = [
     PreviewComponent: SpacingPreview,
   },
   {
+    id: "scroll-top",
+    label: "스크롤 탑",
+    title: "ScrollTop 컴포넌트",
+    description:
+      "페이지를 스크롤했을 때 나타나서 클릭하면 페이지 상단으로 이동하는 버튼 컴포넌트입니다. 일정 픽셀 이상 스크롤했을 때만 표시되며, 부드러운 스크롤 애니메이션을 지원합니다.",
+    code: `import ScrollTop from "./ScrollTop";
+
+// 기본 사용
+<ScrollTop />;
+
+// 커스텀 옵션
+<ScrollTop 
+  showAfter={400}  // 400px 이상 스크롤했을 때 표시
+  smooth={true}    // 부드러운 스크롤 사용
+/>;
+
+// 즉시 표시 (스크롤 위치와 무관)
+<ScrollTop showAfter={0} />;
+
+// 즉시 스크롤 (애니메이션 없음)
+<ScrollTop smooth={false} />;
+
+// 상태 관리 예제
+const PageWithScrollTop = () => {
+  return (
+    <div>
+      {/* 페이지 콘텐츠 */}
+      <div style={{ minHeight: "200vh" }}>
+        <h1>긴 페이지 콘텐츠</h1>
+        <p>스크롤을 내려보세요...</p>
+      </div>
+      
+      {/* 스크롤 탑 버튼 */}
+      <ScrollTop showAfter={300} smooth={true} />
+    </div>
+  );
+};`,
+    PreviewComponent: ScrollTopPreview,
+  },
+  {
     id: "layout",
     label: "레이아웃",
     title: "Layout 컴포넌트",
@@ -7081,7 +7198,7 @@ const guideGroups = [
   {
     id: "navigation-group",
     label: "네비게이션",
-    items: ["accordion", "dock", "pagination", "tab"],
+    items: ["accordion", "dock", "pagination", "scroll-top", "tab"],
   },
   {
     id: "data-display-group",

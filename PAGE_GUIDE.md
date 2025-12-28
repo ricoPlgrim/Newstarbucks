@@ -17,22 +17,34 @@
 src/
 ├── components/
 │   ├── AccessibilityHelper/    # 오른쪽 고정 접근성 도우미 컴포넌트
-│   │   ├── AccessibilityHelper.js
+│   │   ├── AccessibilityHelper.tsx
 │   │   └── AccessibilityHelper.scss
+│   ├── ScrollTop/               # 스크롤 탑 버튼 컴포넌트
+│   │   ├── ScrollTop.tsx
+│   │   └── ScrollTop.scss
 │   └── PageTemplate/            # 페이지 템플릿 컴포넌트
-│       ├── PageTemplate.js
+│       ├── PageTemplate.tsx
 │       └── PageTemplate.scss
 ├── pages/
+│   ├── ReportPage/              # 보고 작성 페이지
+│   │   ├── ReportPage.tsx
+│   │   └── ReportPage.scss
+│   ├── SearchSamplePage/        # 검색 샘플 페이지
+│   │   ├── SearchSamplePage.tsx
+│   │   └── SearchSamplePage.scss
+│   ├── LoginPage/               # 로그인 페이지
+│   │   ├── LoginPage.tsx
+│   │   └── LoginPage.scss
 │   └── ExamplePage/             # 예시 페이지
-│       ├── ExamplePage.js
+│       ├── ExamplePage.tsx
 │       └── ExamplePage.scss
 ├── styles/
 │   ├── _variables.scss          # CSS 변수 (다크모드, 폰트 스케일)
 │   ├── _mixins.scss             # SCSS 믹스인 (px)
 │   ├── _base.scss               # 기본 스타일
 │   └── index.scss               # 스타일 통합 파일
-├── App.js                       # 메인 앱 컴포넌트
-└── index.js                     # 진입점
+├── App.tsx                      # 메인 앱 컴포넌트 (React Router 사용)
+└── index.tsx                    # 진입점
 ```
 
 ---
@@ -41,16 +53,18 @@ src/
 
 새로운 페이지를 만들 때는 `PageTemplate` 컴포넌트를 사용하세요.
 
-```jsx
+```tsx
 import PageTemplate from "../../components/PageTemplate/PageTemplate";
 
-function MyPage() {
+const MyPage = () => {
   return (
     <PageTemplate title="내 페이지 제목">
       {/* 페이지 내용 */}
     </PageTemplate>
   );
-}
+};
+
+export default MyPage;
 ```
 
 `PageTemplate`은 다음 기능을 제공합니다:
@@ -275,16 +289,17 @@ function MyPage() {
 프로젝트에 이미 구현된 컴포넌트들을 활용하세요. 자세한 사용법은 `PublishingGuidePage`에서 확인할 수 있습니다.
 
 ### 레이아웃
-- **Header** - 모바일 헤더 (메인 헤더: 햄버거 메뉴 / 서브 헤더: 뒤로가기, 카테고리명, 유틸리티 버튼)
+- **Header** - 모바일 헤더 (메인 헤더: 햄버거 메뉴 / 서브 헤더: 뒤로가기, 카테고리명, 유틸리티 버튼, `sticky` prop으로 sticky 위치 지정 가능)
 - **Footer** - 푸터
 - **PageTemplate** - 페이지 템플릿 (다크모드, 폰트 스케일 지원)
 - **ListContainer** - 리스트 컨테이너 (section/article 태그 기반)
+- **ScrollTop** - 스크롤 탑 버튼 (스크롤 시 나타나는 상단 이동 버튼, `showAfter`, `smooth` props 지원)
 
 ### 입력 컴포넌트
 - **Input** - 텍스트 입력 (text, password, number, tel, email, 자동 하이픈 포맷팅)
 - **Select** - 셀렉트 박스
-- **Textarea** - 여러 줄 텍스트 입력
-- **FileUpload** - 파일 업로드 (이미지 미리보기, 최대 3개)
+- **Textarea** - 여러 줄 텍스트 입력 (바이트 카운터 지원, 한글 2바이트/영문 1바이트 계산, `maxByte`, `showByteCounter` props)
+- **FileUpload** - 파일 업로드 (이미지 미리보기, 무제한 업로드, 가로 스크롤, 이미지 파일 타입 검증 강화, .ico 파일 제외)
 - **SearchField** - 검색 필드 (검색 아이콘, 클리어 버튼)
 
 ### 선택 컴포넌트

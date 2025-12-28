@@ -1,6 +1,6 @@
 # 모바일 웹 프로젝트 - 접근성 중심 React 앱
 
-모바일 웹을 위한 React 프로젝트로, **다크모드**와 **큰글씨 모드**를 핵심 기능으로 제공하며, 접근성을 최우선으로 고려한 프로젝트입니다.
+모바일 웹을 위한 **TypeScript + React** 프로젝트로, **다크모드**와 **큰글씨 모드**를 핵심 기능으로 제공하며, 접근성을 최우선으로 고려한 프로젝트입니다.
 
 ## 📋 목차
 
@@ -28,8 +28,11 @@
 ### 🛠 기술 스택
 
 - **React 19.2.0**: 최신 React 기능 활용
+- **TypeScript**: 타입 안정성 제공
 - **SCSS/Sass**: 모듈화된 스타일 시스템
 - **Create React App**: 빠른 개발 환경 설정
+- **React Router**: 페이지 라우팅
+- **react-day-picker**: 날짜 선택 컴포넌트
 
 ---
 
@@ -102,10 +105,11 @@ Newstarbucks/
 │   │   ├── FileUpload/               # 파일 업로드 컴포넌트
 │   │   ├── Footer/                   # 푸터 컴포넌트
 │   │   ├── Form/                     # 폼 컴포넌트
-│   │   ├── Header/                   # 헤더 컴포넌트 (메인/서브 헤더)
+│   │   ├── Header/                   # 헤더 컴포넌트 (메인/서브 헤더, sticky 지원)
 │   │   ├── Icon/                     # 아이콘 컴포넌트
 │   │   ├── Image/                    # 이미지 컴포넌트
 │   │   ├── Input/                    # 입력 컴포넌트
+│   │   ├── ScrollTop/                # 스크롤 탑 버튼 컴포넌트
 │   │   ├── Layout/                   # 레이아웃 컴포넌트 (디자인 시스템)
 │   │   ├── List/                     # 리스트 컴포넌트
 │   │   ├── ListContainer/            # 리스트 컨테이너 컴포넌트
@@ -132,15 +136,18 @@ Newstarbucks/
 │   │   ├── AmericanoPage/            # 아메리카노 페이지
 │   │   ├── PublishingGuidePage/      # 퍼블리싱 가이드 페이지
 │   │   ├── PublishingUrlPage/        # 퍼블리싱 URL 관리 페이지
-│   │   └── SamplePage/               # 샘플 페이지
+│   │   ├── ReportPage/                # 보고 작성 페이지
+│   │   ├── SearchSamplePage/          # 검색 샘플 페이지
+│   │   ├── LoginPage/                 # 로그인 페이지
+│   │   └── SamplePage/                # 샘플 페이지
 │   ├── styles/                       # 전역 스타일
 │   │   ├── _variables.scss           # CSS 변수 정의 (다크모드, 색상 등)
 │   │   ├── _mixins.scss              # SCSS 믹스인 (px-to-rem, 보더 애니메이션)
 │   │   ├── _utilities.scss           # 유틸리티 클래스 (mt-10, pt-20 등)
 │   │   ├── _base.scss                # 기본 스타일 (리셋, 기본 설정)
 │   │   └── index.scss                 # 스타일 통합 파일
-│   ├── App.js                        # 메인 앱 컴포넌트
-│   └── index.js                      # 진입점
+│   ├── App.tsx                       # 메인 앱 컴포넌트 (React Router 사용)
+│   └── index.tsx                     # 진입점
 ├── PAGE_GUIDE.md                     # 페이지 개발 가이드
 ├── PAGE_CREATION_GUIDE.md            # 페이지 생성 가이드
 └── README.md                         # 프로젝트 문서 (현재 파일)
@@ -160,7 +167,7 @@ Newstarbucks/
 
 #### 사용법
 
-```jsx
+```tsx
 // PageTemplate을 사용하면 자동으로 다크모드 지원
 <PageTemplate title="내 페이지">
   {/* 컨텐츠 */}
@@ -192,7 +199,7 @@ Newstarbucks/
 
 큰글씨 모드는 **메인 컨텐츠 영역에만 적용**되며, 헤더와 접근성 도우미는 제외됩니다.
 
-```jsx
+```tsx
 // PageTemplate의 main 영역에 자동으로 .font-scale-applied 클래스 적용
 <PageTemplate title="제목">
   {/* 이 영역의 텍스트만 큰글씨 모드 적용 */}
@@ -201,7 +208,7 @@ Newstarbucks/
 
 #### 다른 엘리먼트에 적용하려면
 
-```jsx
+```tsx
 <div className="font-scale-applied">
   {/* 이 영역의 텍스트만 큰글씨 모드 적용 */}
 </div>
@@ -209,7 +216,7 @@ Newstarbucks/
 
 또는
 
-```jsx
+```tsx
 <div data-font-scale-applied>
   {/* 이 영역의 텍스트만 큰글씨 모드 적용 */}
 </div>
@@ -232,10 +239,10 @@ Newstarbucks/
 
 #### 사용법
 
-```jsx
+```tsx
 import PageTemplate from "../../components/PageTemplate/PageTemplate";
 
-function MyPage() {
+const MyPage = () => {
   return (
     <PageTemplate title="페이지 제목">
       <section>
@@ -244,7 +251,9 @@ function MyPage() {
       </section>
     </PageTemplate>
   );
-}
+};
+
+export default MyPage;
 ```
 
 #### Props
@@ -289,16 +298,17 @@ function MyPage() {
 - **Icon** - 아이콘 컴포넌트 (이모지, SVG, 텍스트 지원, size/color 옵션, 모바일/태블릿에서 한 줄 표시)
 
 #### 레이아웃
-- **Header** - 모바일 헤더 (메인 헤더: 햄버거 메뉴, 3뎁스 메뉴 구조 / 서브 헤더: 뒤로가기, 카테고리명, 유틸리티 버튼)
+- **Header** - 모바일 헤더 (메인 헤더: 햄버거 메뉴, 3뎁스 메뉴 구조 / 서브 헤더: 뒤로가기, 카테고리명, 유틸리티 버튼, `sticky` prop으로 sticky 위치 지정 가능)
 - **Footer** - 푸터
 - **PageTemplate** - 페이지 템플릿 (다크모드, 폰트 스케일 지원)
 - **ListContainer** - 리스트 컨테이너 (section/article 태그 기반, 제목/설명, bordered/divided 옵션)
+- **ScrollTop** - 스크롤 탑 버튼 (스크롤 시 나타나는 상단 이동 버튼, `showAfter`, `smooth` props 지원)
 
 #### 입력 컴포넌트
 - **Input** - 텍스트 입력 (text, password, number, tel, email, validation states, help text, clear button, 자동 하이픈 포맷팅)
 - **Select** - 셀렉트 박스 (native select with custom styling)
-- **Textarea** - 여러 줄 텍스트 입력
-- **FileUpload** - 파일 업로드 (이미지 미리보기, 최대 3개, 삭제 기능)
+- **Textarea** - 여러 줄 텍스트 입력 (바이트 카운터 지원, 한글 2바이트/영문 1바이트 계산, `maxByte`, `showByteCounter` props)
+- **FileUpload** - 파일 업로드 (이미지 미리보기, 무제한 업로드, 가로 스크롤, 이미지 파일 타입 검증 강화, .ico 파일 제외)
 - **SearchField** - 검색 필드 (검색 아이콘, 클리어 버튼)
 
 #### 선택 컴포넌트
@@ -524,12 +534,12 @@ function MyPage() {
 2. `PageTemplate` 컴포넌트 사용
 3. SCSS 파일에서 `px-to-rem` 믹스인 활용
 
-```jsx
-// src/pages/MyPage/MyPage.js
+```tsx
+// src/pages/MyPage/MyPage.tsx
 import PageTemplate from "../../components/PageTemplate/PageTemplate";
 import "./MyPage.scss";
 
-function MyPage() {
+const MyPage = () => {
   return (
     <PageTemplate title="내 페이지">
       <section className="my-section">
@@ -538,7 +548,7 @@ function MyPage() {
       </section>
     </PageTemplate>
   );
-}
+};
 
 export default MyPage;
 ```
@@ -635,7 +645,7 @@ export default MyPage;
 - 📋 **뎁스1 ~ 뎁스4** 계층 구조로 URL 분류
 - 🔗 URL 클릭 시 새 탭에서 열기
 - 📊 깔끔한 테이블 레이아웃 (table-layout: fixed로 로딩 중/후 일관된 레이아웃 유지)
-- 📱 모바일 반응형 디자인
+- 📱 모바일 반응형 디자인 (가로 스크롤, 컬럼 너비 최적화)
 - ⏳ Loading 컴포넌트로 로딩 상태 표시 (가운데 정렬)
 
 ### ExamplePage (예시 페이지)
@@ -653,6 +663,31 @@ export default MyPage;
 - ✅ Header/공통 레이아웃 유지, 본문은 자유롭게 교체 가능
 - ✅ 히어로/콘텐츠 그리드/CTA 예시 블록 제공
 - ✅ 반응형 레이아웃
+
+### ReportPage (보고 작성 페이지)
+재해시설 보고서 작성 페이지입니다.
+
+- ✅ 다양한 입력 필드 (응급조치, 발생매장, 발생시간, 발생장소, 영업가부, 재난피해)
+- ✅ 파일 업로드 (사진 첨부)
+- ✅ 날짜/시간 선택기 (react-day-picker 사용)
+- ✅ 바이트 카운터가 있는 상세내용 입력
+- ✅ 보고내용 미리보기 (선택한 항목 자동 표시)
+- ✅ 서브 헤더 사용 (sticky 지원)
+
+### SearchSamplePage (검색 샘플 페이지)
+검색 기능을 보여주는 샘플 페이지입니다.
+
+- ✅ 최근 검색어 관리 (localStorage 사용)
+- ✅ 검색 결과 표시
+- ✅ 연관검색어 표시
+- ✅ 빈 검색 결과 처리 (EmptyState 컴포넌트)
+
+### LoginPage (로그인 페이지)
+사용자 로그인 페이지입니다.
+
+- ✅ 아이디/비밀번호 입력
+- ✅ 자동로그인 체크박스
+- ✅ 이미지 로고 사용
 
 ---
 

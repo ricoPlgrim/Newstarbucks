@@ -3,6 +3,9 @@ import PublishingGuidePage from "./pages/PublishingGuidePage/PublishingGuidePage
 import PublishingUrlPage from "./pages/PublishingUrlPage/PublishingUrlPage";
 import SamplePage from "./pages/SamplePage/SamplePage";
 import AmericanoPage from "./pages/AmericanoPage/AmericanoPage";
+import SearchSamplePage from "./pages/SearchSamplePage/SearchSamplePage";
+import LoginPage from "./pages/LoginPage/LoginPage";
+import ReportPage from "./pages/ReportPage/ReportPage";
 import Footer from "./components/Footer/Footer";
 import "./App.scss";
 
@@ -42,20 +45,33 @@ function App() {
   
   return (
     <BrowserRouter basename={basename}>
-      <div className="app">
-        <AppNav />
-        
-        <Routes>
-          <Route path="/url" element={<PublishingUrlPage />} />
-          <Route path="/guide" element={<PublishingGuidePage />} />
-          <Route path="/sample" element={<SamplePage />} />
-          <Route path="/menu/coffee/americano" element={<AmericanoPage />} />
-          <Route path="/" element={<PublishingUrlPage />} />
-        </Routes>
-
-        <Footer />
-      </div>
+      <AppContent />
     </BrowserRouter>
+  );
+}
+
+function AppContent() {
+  const location = useLocation();
+  const isLoginPage = location.pathname === '/login';
+  const isReportPage = location.pathname === '/report';
+  
+  return (
+    <div className="app">
+      {!isLoginPage && !isReportPage && <AppNav />}
+      
+      <Routes>
+        <Route path="/url" element={<PublishingUrlPage />} />
+        <Route path="/guide" element={<PublishingGuidePage />} />
+        <Route path="/sample" element={<SamplePage />} />
+        <Route path="/search-sample" element={<SearchSamplePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/report" element={<ReportPage />} />
+        <Route path="/menu/coffee/americano" element={<AmericanoPage />} />
+        <Route path="/" element={<PublishingUrlPage />} />
+      </Routes>
+
+      {!isLoginPage && !isReportPage && <Footer />}
+    </div>
   );
 }
 

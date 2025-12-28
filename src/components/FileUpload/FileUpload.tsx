@@ -4,7 +4,6 @@ import Loading from "../Loading/Loading";
 import "./FileUpload.scss";
 
 const MAX_SIZE = 300 * 1024 * 1024; // 300MB
-const MAX_FILES = 3;
 
 type UploadedFile = {
   id: number;
@@ -15,7 +14,33 @@ type UploadedFile = {
   preview: string;
 };
 
-const isImage = (file: File) => file.type.startsWith("image/");
+const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/svg+xml",
+  "image/bmp",
+];
+
+const ALLOWED_IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".bmp"];
+
+const isImage = (file: File): boolean => {
+  // MIME 타입 확인
+  const isValidMimeType = file.type.startsWith("image/") && ALLOWED_IMAGE_TYPES.includes(file.type.toLowerCase());
+  
+  // 파일 확장자 확인 (MIME 타입이 없거나 잘못된 경우 대비)
+  const fileName = file.name.toLowerCase();
+  const hasValidExtension = ALLOWED_IMAGE_EXTENSIONS.some((ext) => fileName.endsWith(ext));
+  
+  // .ico 파일 명시적으로 제외
+  if (fileName.endsWith(".ico")) {
+    return false;
+  }
+  
+  return isValidMimeType || hasValidExtension;
+};
 
 const formatSize = (bytes: number) => {
   if (bytes >= 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
@@ -49,13 +74,6 @@ function FileUpload() {
       return;
     }
 
-    // 최대 개수 체크 (현재 파일 수 + 새로 선택한 파일 수가 MAX_FILES를 초과하는지 확인)
-    const remainingSlots = MAX_FILES - files.length;
-    if (imageFiles.length > remainingSlots) {
-      alert(`최대 ${MAX_FILES}개까지 업로드할 수 있습니다. (현재 ${files.length}개, 추가 가능 ${remainingSlots}개)`);
-      event.target.value = ""; // input 초기화
-      return;
-    }
 
     // 파일 크기 체크 (각 파일이 MAX_SIZE(300MB)를 초과하는지 확인)
     const oversizedFiles = imageFiles.filter((file) => file.size > MAX_SIZE);
@@ -161,45 +179,12 @@ function FileUpload() {
     }
   };
 
-  const canAddMore = files.length < MAX_FILES;
-
   return (
     <div className="file-upload-demo">
-      {canAddMore && (
-        <div className="file-upload-demo__field">
-          <label className="file-upload-demo__label" htmlFor="component-file-input">
-            이미지 첨부 ({files.length}/{MAX_FILES})
-          </label>
-          <input
-            ref={inputRef}
-            id="component-file-input"
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleFileChange}
-          />
-          <p className="file-upload-demo__hint">
-            • 최대 {MAX_FILES}개까지 업로드 가능&nbsp;&nbsp;• 최대 300MB&nbsp;&nbsp;• 이미지 파일만 업로드 가능
-          </p>
-        </div>
-      )}
-
-      {files.length > 0 && (
-        <div className="file-upload-demo__preview">
-          <div className="file-upload-demo__preview-header">
-            <p className="file-upload-demo__preview-title">업로드된 이미지 ({files.length}/{MAX_FILES})</p>
-            {files.length > 0 && (
-              <button
-                type="button"
-                className="file-upload-demo__clear-all"
-                onClick={handleClearAll}
-                aria-label="모든 이미지 삭제"
-              >
-                전체 삭제
-              </button>
-            )}
-          </div>
-          <div className="file-upload-demo__preview-grid">
+      <div className="file-upload-demo__container">
+        {/* 업로드된 이미지 목록 */}
+        {files.length > 0 && (
+          <div className="file-upload-demo__preview-list">
             {files.map((file) => {
               const isLoading = loadingFiles.has(file.id);
               return (
@@ -234,24 +219,60 @@ function FileUpload() {
                       </svg>
                     </button>
                   </div>
-                  <div className="file-upload-demo__preview-info">
-                    <p className="file-upload-demo__preview-name" title={file.name}>
-                      {file.name}
-                    </p>
-                    <p className="file-upload-demo__preview-size">{formatSize(file.size)}</p>
-                  </div>
                 </div>
               );
             })}
-          </div>
-        </div>
-      )}
 
-      {files.length === 0 && (
-        <div className="file-upload-demo__empty">
-          <p className="file-upload-demo__placeholder">선택된 이미지가 없습니다.</p>
-        </div>
-      )}
+            {/* 추가 업로드 버튼 */}
+            <label className="file-upload-demo__upload-area file-upload-demo__upload-area--small" htmlFor="component-file-input">
+              <input
+                ref={inputRef}
+                id="component-file-input"
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleFileChange}
+                className="file-upload-demo__input"
+              />
+              <div className="file-upload-demo__icon">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {/* 카메라 본체 */}
+                  <rect x="8" y="14" width="32" height="24" rx="2" stroke="currentColor" strokeWidth="2"/>
+                  {/* 렌즈 */}
+                  <circle cx="24" cy="26" r="6" stroke="currentColor" strokeWidth="2"/>
+                  {/* 플러스 기호 */}
+                  <path d="M32 10L32 6M30 8L34 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              </div>
+            </label>
+          </div>
+        )}
+
+        {/* 파일이 없을 때 업로드 영역 */}
+        {files.length === 0 && (
+          <label className="file-upload-demo__upload-area" htmlFor="component-file-input">
+            <input
+              ref={inputRef}
+              id="component-file-input"
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleFileChange}
+              className="file-upload-demo__input"
+            />
+            <div className="file-upload-demo__icon">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* 카메라 본체 */}
+                <rect x="8" y="14" width="32" height="24" rx="2" stroke="currentColor" strokeWidth="2"/>
+                {/* 렌즈 */}
+                <circle cx="24" cy="26" r="6" stroke="currentColor" strokeWidth="2"/>
+                {/* 플러스 기호 */}
+                <path d="M32 10L32 6M30 8L34 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </div>
+          </label>
+        )}
+      </div>
     </div>
   );
 }

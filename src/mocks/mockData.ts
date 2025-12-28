@@ -73,6 +73,33 @@ export const mockUrlData = [
     url: "https://example.com/membership/tiers/gold",
     description: "골드 등급 혜택 안내",
   },
+  {
+    id: 6,
+    depth1: "샘플",
+    depth2: "검색",
+    depth3: "",
+    depth4: "",
+    url: "/search-sample",
+    description: "검색 샘플 페이지 (최근 검색어 관리 포함)",
+  },
+  {
+    id: 7,
+    depth1: "인증",
+    depth2: "로그인",
+    depth3: "",
+    depth4: "",
+    url: "/login",
+    description: "로그인 페이지",
+  },
+  {
+    id: 8,
+    depth1: "보고",
+    depth2: "보고작성",
+    depth3: "",
+    depth4: "",
+    url: "/report",
+    description: "보고 작성 페이지 (재해시설 보고)",
+  },
 ];
 
 // 가이드/데모용 추가 목업 데이터 (차후 각 컴포넌트에서 비동기 사용 예정)

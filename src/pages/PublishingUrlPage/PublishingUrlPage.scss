@@ -116,16 +116,60 @@
     &__table-container {
       width: 100%;
       border-radius: 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
   }
 
   .publishing-url-table {
-    min-width: 720px; // 모바일에서 스크롤로 대응
+    min-width: 900px; // 모바일에서 스크롤로 대응
+    table-layout: fixed; // 고정 레이아웃 유지
 
-    thead th,
+    thead th {
+      padding: px-to-rem(12) px-to-rem(8);
+      font-size: 0.7rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      
+      // 각 컬럼별 너비 설정
+      &:nth-child(1) { width: 10%; } // 뎁스1
+      &:nth-child(2) { width: 10%; } // 뎁스2
+      &:nth-child(3) { width: 10%; } // 뎁스3
+      &:nth-child(4) { width: 10%; } // 뎁스4
+      &:nth-child(5) { width: 30%; } // URL 주소
+      &:nth-child(6) { width: 30%; } // 설명
+    }
+
     tbody td {
-      padding: px-to-rem(16) px-to-rem(12);
-      font-size: 0.85rem;
+      padding: px-to-rem(12) px-to-rem(8);
+      font-size: 0.75rem;
+      vertical-align: top;
+      overflow: hidden;
+      
+      // 뎁스 컬럼들은 줄바꿈 허용하지 않음
+      &:nth-child(1),
+      &:nth-child(2),
+      &:nth-child(3),
+      &:nth-child(4) {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      
+      // URL과 설명 컬럼은 줄바꿈 허용
+      &:nth-child(5),
+      &:nth-child(6) {
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: break-word;
+      }
+      
+      a {
+        word-break: break-all;
+        display: inline-block;
+        max-width: 100%;
+        overflow-wrap: break-word;
+      }
     }
   }
 }
