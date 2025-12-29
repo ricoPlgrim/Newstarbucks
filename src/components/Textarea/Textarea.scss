@@ -21,16 +21,16 @@
     transition: all 0.2s ease;
 
     &:focus-within {
-      border-color: var(--color-accent);
-      box-shadow: 0 0 0 px(3) rgba(12, 124, 89, 0.1);
+      border: none;
+      box-shadow: none;
     }
 
     &--error {
       border-color: #ef4444 !important;
 
       &:focus-within {
-        border-color: #ef4444 !important;
-        box-shadow: 0 0 0 px(3) rgba(239, 68, 68, 0.1) !important;
+        border: none !important;
+        box-shadow: none !important;
       }
     }
 
@@ -38,8 +38,8 @@
       border-color: #ef4444 !important;
 
       &:focus-within {
-        border-color: #ef4444 !important;
-        box-shadow: 0 0 0 px(3) rgba(239, 68, 68, 0.1) !important;
+        border: none !important;
+        box-shadow: none !important;
       }
     }
   }

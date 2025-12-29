@@ -171,28 +171,21 @@ export default YourPage;
 }
 ```
 
-### Step 3: App.js에 페이지 등록
+### Step 3: App.tsx에 페이지 등록 (React Router 사용)
 
-**App.js**에 추가:
-```jsx
+**App.tsx**에 추가:
+```tsx
+import { Routes, Route } from "react-router-dom";
 import YourPage from "./pages/YourPage/YourPage";
 
-// currentPage 상태에 추가
-const [currentPage, setCurrentPage] = useState(() => {
-  return sessionStorage.getItem('currentPage') || 'your-page';
-});
-
-// 네비게이션 버튼 추가
-<button
-  className={`app-nav-btn ${currentPage === "your-page" ? "active" : ""}`}
-  onClick={() => handlePageChange("your-page")}
->
-  페이지 이름
-</button>
-
-// 페이지 렌더링
-{currentPage === "your-page" && <YourPage />}
+// Routes 내부에 추가
+<Routes>
+  {/* 기존 라우트들 */}
+  <Route path="/your-page" element={<YourPage />} />
+</Routes>
 ```
+
+**참고**: 이 프로젝트는 React Router를 사용하므로, `App.tsx`에서 라우트를 등록합니다.
 
 ## 🎨 스타일 가이드
 
@@ -301,6 +294,7 @@ const [currentPage, setCurrentPage] = useState(() => {
 - **Toggle** - 토글 스위치
 - **Dropdown** - 드롭다운
 - **DatePicker** - 날짜 선택 (닫기 버튼, 자동 닫기 제거)
+- **DayPicker** - 날짜 선택 컴포넌트 (react-day-picker 기반, 단일/범위 선택 지원)
 - **Table** - 테이블 (가로 스크롤·열 고정 / 세로 스크롤·헤더 고정 3개 컬럼 / 가로·세로 스크롤·헤더&열 고정)
 - **Form** - 폼 요소 (유효성 검사 포함, Button 컴포넌트 사용)
 - **DragDropList** - 드래그앤드랍 리스트
@@ -336,5 +330,5 @@ const [currentPage, setCurrentPage] = useState(() => {
 3. **스타일 일관성**: `px()` 믹스인과 CSS 변수를 사용하세요
 4. **접근성**: 키보드 네비게이션, 스크린 리더 지원을 고려하세요
 5. **TypeScript 사용**: 모든 컴포넌트는 TypeScript로 작성하며, 타입을 명시하세요
-6. **새로운 페이지 예시**: `ReportPage`, `SearchSamplePage`, `LoginPage`를 참고하세요
+6. **새로운 페이지 예시**: `ReportPage`, `SearchSamplePage`, `LoginPage`, `SendCardPage`, `ReceivedCardPage`를 참고하세요
 

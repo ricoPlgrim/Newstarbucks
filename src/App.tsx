@@ -7,6 +7,8 @@ import SearchSamplePage from "./pages/SearchSamplePage/SearchSamplePage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import ReportPage from "./pages/ReportPage/ReportPage";
 import MobileOfficeHomePage from "./pages/MobileOfficeHomePage/MobileOfficeHomePage";
+import SendCardPage from "./pages/SendCardPage/SendCardPage";
+import ReceivedCardPage from "./pages/ReceivedCardPage/ReceivedCardPage";
 import Footer from "./components/Footer/Footer";
 import "./App.scss";
 
@@ -56,10 +58,12 @@ function AppContent() {
   const isLoginPage = location.pathname === '/login';
   const isReportPage = location.pathname === '/report';
   const isMobileOfficeHome = location.pathname === '/mobile-office';
+  const isSendCardPage = location.pathname === '/send-card';
+  const isReceivedCardPage = location.pathname === '/received-card';
   
   return (
     <div className="app">
-      {!isLoginPage && !isReportPage && !isMobileOfficeHome && <AppNav />}
+      {!isLoginPage && !isReportPage && !isMobileOfficeHome && !isSendCardPage && !isReceivedCardPage && <AppNav />}
       
       <Routes>
         <Route path="/url" element={<PublishingUrlPage />} />
@@ -69,11 +73,13 @@ function AppContent() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/report" element={<ReportPage />} />
         <Route path="/mobile-office" element={<MobileOfficeHomePage />} />
+        <Route path="/send-card" element={<SendCardPage />} />
+        <Route path="/received-card" element={<ReceivedCardPage />} />
         <Route path="/menu/coffee/americano" element={<AmericanoPage />} />
         <Route path="/" element={<PublishingUrlPage />} />
       </Routes>
 
-      {!isLoginPage && !isReportPage && !isMobileOfficeHome && <Footer />}
+      {!isLoginPage && !isReportPage && !isMobileOfficeHome && !isSendCardPage && !isReceivedCardPage && <Footer />}
     </div>
   );
 }

@@ -1,0 +1,596 @@
+@use "../../styles/index.scss" as *;
+
+.send-card-page {
+  min-height: 100vh;
+  background-color: #e8f5e9;
+  padding-bottom: px(80);
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
+  box-sizing: border-box;
+  position: relative;
+  left: 0;
+  right: 0;
+
+  &__content {
+    width: 100%;
+    max-width: 100%;
+    padding: px(20);
+    display: flex;
+    flex-direction: column;
+    gap: px(16);
+    box-sizing: border-box;
+    margin: 0;
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  // 수신자 선택 영역
+
+  &__recipient-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: px(12);
+  }
+
+  &__recipient-selected {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    padding: px(12) px(16);
+    border-radius: px(8);
+    gap: px(8);
+  }
+
+  &__recipient-remove {
+    background: none;
+    border: none;
+    padding: px(4);
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  // 일러스트레이션 카드
+  &__illustration-card {
+    padding: 0 !important;
+    overflow: hidden;
+    position: relative;
+    .card__content{
+        padding: 0 !important;
+    }
+  }
+
+  &__illustration {
+    width: 100%;
+    height: px(400);
+    min-height: px(400);
+    position: relative;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__illustration-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__illustration-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__message-button {
+    position: absolute;
+    bottom: px(20);
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.95);
+    border: px(1) solid var(--color-border);
+    padding: px(12) px(24);
+    border-radius: px(8);
+    font-weight: 600;
+  }
+
+  // 미리 작성된 메시지
+  &__default-message {
+    padding: px(16) px(20);
+    text-align: center;
+  }
+
+  &__message-text {
+    font-size: px(14);
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+
+
+  // 카드 썸네일
+  &__card-thumbnails {
+    display: flex;
+    gap: px(12);
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+    background-color: #fff;
+    padding: px(20);
+    
+    &::-webkit-scrollbar {
+      height: px(6);
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--color-border);
+      border-radius: px(3);
+    }
+    
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: var(--color-text-secondary);
+    }
+  }
+
+  &__thumbnail-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__thumbnail {
+    width: px(60);
+    height: px(60);
+    border-radius: px(8);
+    border: px(2) solid transparent;
+    background-color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    padding: 0;
+
+    &:hover {
+      border-color: var(--color-accent);
+    }
+
+    &--selected {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 px(2) rgba(0, 112, 74, 0.2);
+    }
+  }
+
+  &__thumbnail-arrow {
+    position: absolute;
+    top: px(-12);
+    left: 50%;
+    transform: translateX(-50%);
+    width: px(24);
+    height: px(24);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-accent);
+    z-index: 1;
+  }
+
+  &__thumbnail-image {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: px(6);
+  }
+
+  &__thumbnail-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  // 하단 푸터
+  &__footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: px(16) px(20);
+    background-color: #fff;
+    border-top: px(1) solid var(--color-border);
+    z-index: 100;
+  }
+
+  &__send-button {
+    width: 100%;
+  }
+
+  // 발송 옵션 (페이지 내)
+  &__send-options {
+    display: flex;
+    flex-direction: column;
+    gap: px(16);
+    padding: px(20);
+    padding-top: 0;
+    background-color: #fff;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden; // 넘치는 내용 방지
+  }
+
+  &__options-title {
+    background-color: #fff;
+    margin: 0;
+  }
+
+  // 발송 옵션 팝업 내용
+  &__options-content {
+    display: flex;
+    flex-direction: column;
+    gap: px(20);
+  }
+
+  &__options-thumbnails {
+    display: flex;
+    gap: px(8);
+    justify-content: center;
+  }
+
+  &__options-thumbnail {
+    width: px(50);
+    height: px(50);
+    border-radius: px(8);
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  &__options-thumbnail-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__options-title {
+    margin: 0;
+  }
+
+  &__options-radio-group {
+    display: flex;
+    flex-direction: row;
+    gap: px(24);
+  }
+
+  &__scheduled-options {
+    display: flex;
+    gap: px(12);
+    width: 100%;
+    min-width: 0; // flexbox에서 최소 너비 제한 해제
+  }
+
+  &__scheduled-date,
+  &__scheduled-time {
+    flex: 1;
+    min-width: 0; // flexbox에서 최소 너비 제한 해제
+    max-width: 100%; // 최대 너비 제한
+    position: relative; // 팝오버 위치 기준점
+  }
+
+  &__input-wrapper {
+    position: relative;
+    width: 100%;
+
+    // Input 컴포넌트 내부의 wrapper에 relative 포지셔닝
+    .input-field__wrapper {
+      position: relative;
+      width: 100%;
+    }
+  }
+
+  &__scheduled-input {
+    width: 100%;
+    min-width: 0; // flexbox에서 최소 너비 제한 해제
+    max-width: 100%; // 최대 너비 제한
+    box-sizing: border-box; // padding 포함한 너비 계산
+
+    // Input 컴포넌트 내부의 input 요소에 대한 스타일
+    .input-field__input {
+      padding-right: px(40) !important;
+    }
+  }
+
+  &__calendar-button,
+  &__time-button {
+    position: absolute;
+    right: px(8);
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: px(8);
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    z-index: 2; // 캘린더 팝오버보다 낮은 z-index
+    pointer-events: auto; // 클릭 가능하도록
+  }
+
+  &__date-picker-dimmed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    cursor: pointer;
+  }
+
+  &__date-picker-popover {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border: px(1) solid var(--color-border);
+    border-radius: px(12);
+    box-shadow: 0 px(4) px(16) rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    padding: px(16);
+    display: flex;
+    flex-direction: column;
+    gap: px(12);
+    min-width: px(300);
+    max-width: calc(100vw - px(40));
+  }
+
+  &__date-picker-close {
+    align-self: flex-end;
+    margin-top: px(8);
+    width: 100%;
+  }
+
+  &__time-picker-dimmed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    cursor: pointer;
+  }
+
+  &__time-picker-popover {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border: px(1) solid var(--color-border);
+    border-radius: px(12);
+    box-shadow: 0 px(4) px(16) rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    padding: px(16);
+    min-width: px(300);
+    max-width: calc(100vw - px(40));
+    max-height: px(500);
+    overflow-y: auto;
+  }
+
+  &__time-picker-section {
+    margin-bottom: px(16);
+
+    &:last-of-type {
+      margin-bottom: px(12);
+    }
+  }
+
+  &__time-picker-label {
+    margin-bottom: px(8);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  &__time-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: px(6);
+    max-height: px(200);
+    overflow-y: auto;
+    padding: px(4);
+    margin: px(-4);
+  }
+
+  &__time-picker-minutes {
+    display: flex;
+    gap: px(8);
+  }
+
+  &__time-picker-btn {
+    padding: px(8) px(12);
+    background-color: var(--color-bg);
+    border: px(1) solid var(--color-border);
+    border-radius: px(8);
+    cursor: pointer;
+    font-size: px(13);
+    color: var(--color-text);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+
+    &:hover {
+      background-color: rgba(var(--color-accent-rgb), 0.1);
+      border-color: var(--color-accent);
+    }
+
+    &.is-selected {
+      background-color: var(--color-accent);
+      color: #fff;
+      border-color: var(--color-accent);
+    }
+  }
+
+  &__time-picker-actions {
+    display: flex;
+    gap: px(8);
+    margin-top: px(16);
+
+    button {
+      flex: 1;
+    }
+  }
+
+  &__options-footer {
+    margin-top: px(8);
+  }
+
+  &__options-send-button {
+    width: 100%;
+  }
+
+  // 메시지 입력 화면
+  &__message-card {
+    padding: 0 !important;
+    overflow: hidden;
+  }
+
+  &__card-content {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  &__message-illustration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 0;
+    box-sizing: border-box;
+  }
+
+  &__message-illustration-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  &__message-input-section {
+    position: relative;
+    z-index: 1;
+    padding: px(20);
+    padding-top: px(30); 
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background-color: #fff;
+    margin-top: px(100);
+    border-radius: px(12) px(12) 0 0; // 상단 모서리만 둥글게
+    min-height: px(200);
+  }
+
+  &__message-textarea-wrapper {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__message-hint {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: var(--color-text-secondary);
+    pointer-events: none;
+    z-index: 2;
+    opacity: .6;
+    font-size: px(12);
+  }
+
+  &__message-input {
+    width: 100%;
+    flex: 1;
+    padding-bottom: 0;
+    // Textarea wrapper 스타일
+    .textarea-field__wrapper {
+      border: none;
+      padding: 0;
+      background: transparent;
+      position: relative;
+    }
+    
+    // Textarea 내부 스타일 조정
+    .textarea-field__textarea {
+      border: none;
+      background: transparent;
+      padding: 0;
+      min-height: px(120);
+      line-height: px(24);
+      font-size: px(14);
+      color: var(--color-text);
+      resize: none;
+      width: 100%;
+      
+      // 가이드 라인 (5줄)
+      background-image: 
+        repeating-linear-gradient(
+          transparent,
+          transparent px(23),
+          #e0e0e0 px(23),
+          #e0e0e0 px(24)
+        );
+      background-position: 0 px(24);
+      background-size: 100% px(24);
+      
+      &::placeholder {
+        color: transparent;
+      }
+    }
+    
+    // 바이트 카운터 스타일 (중앙 정렬)
+    .textarea-field__byte-counter {
+      position: static;
+      text-align: center;
+      margin-top: px(8);
+      font-size: px(12);
+      color: var(--color-text-secondary);
+      width: 100%;
+      left: auto;
+      bottom: auto;
+    }
+  }
+}
+

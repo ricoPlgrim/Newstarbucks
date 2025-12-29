@@ -35,6 +35,12 @@ src/
 │   ├── LoginPage/               # 로그인 페이지
 │   │   ├── LoginPage.tsx
 │   │   └── LoginPage.scss
+│   ├── SendCardPage/            # 카드 보내기 페이지
+│   │   ├── SendCardPage.tsx
+│   │   └── SendCardPage.scss
+│   ├── ReceivedCardPage/        # 받은 카드 페이지
+│   │   ├── ReceivedCardPage.tsx
+│   │   └── ReceivedCardPage.scss
 │   └── ExamplePage/             # 예시 페이지
 │       ├── ExamplePage.tsx
 │       └── ExamplePage.scss
@@ -343,6 +349,7 @@ export default MyPage;
 - **Toggle** - 토글 스위치
 - **Dropdown** - 드롭다운
 - **DatePicker** - 날짜 선택 (닫기 버튼, 자동 닫기 제거)
+- **DayPicker** - 날짜 선택 컴포넌트 (react-day-picker 기반, 단일/범위 선택 지원, 한국어 로케일 지원)
 - **Table** - 테이블 (가로 스크롤·열 고정 / 세로 스크롤·헤더 고정 3개 컬럼 / 가로·세로 스크롤·헤더&열 고정)
 - **Form** - 폼 요소 (유효성 검사 포함, Button 컴포넌트 사용)
 - **DragDropList** - 드래그앤드랍 리스트

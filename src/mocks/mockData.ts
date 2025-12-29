@@ -109,6 +109,24 @@ export const mockUrlData = [
     url: "/mobile-office",
     description: "모바일 오피스 홈 페이지 (3x3 그리드 메뉴, 공지사항, 날씨/프로모션 카드, 하단 네비게이션 포함)",
   },
+  {
+    id: 10,
+    depth1: "모바일 오피스",
+    depth2: "카드 보내기",
+    depth3: "",
+    depth4: "",
+    url: "/send-card",
+    description: "카드 보내기 페이지 (수신자 선택, 카드 선택, 메시지 입력, 발송 옵션 선택)",
+  },
+  {
+    id: 11,
+    depth1: "모바일 오피스",
+    depth2: "받은 카드",
+    depth3: "",
+    depth4: "",
+    url: "/received-card",
+    description: "받은 카드 페이지 (카드 공개 토글, 이미지 저장 기능 포함)",
+  },
 ];
 
 // 가이드/데모용 추가 목업 데이터 (차후 각 컴포넌트에서 비동기 사용 예정)
