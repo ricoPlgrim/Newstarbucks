@@ -17,6 +17,7 @@
   &--full {
     background: rgba(0, 0, 0, 0.65);
   }
+
 }
 
 .popup {
@@ -45,10 +46,22 @@
     max-width: px(640);
     border-radius: px(20) px(20) 0 0;
     padding-top: px(12);
-    transition: transform 0.2s ease;
+    transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     touch-action: none;
     padding-bottom: px(20);
     gap: px(8);
+    &.custom-bottom-sheet{
+      .popup__handle{
+        display: none;
+      }
+      background: transparent;
+      .popup__body,
+      .popup__actions{
+        background: #fff;
+        border-radius: px(18);
+        padding: 0;
+      }
+    }
   }
 
   &--full {
@@ -113,6 +126,73 @@
     &--center {
       text-align: center;
     }
+  }
+
+  &--sheet &__body {
+    align-items: stretch;
+    text-align: left;
+    padding: 0 px(20) px(16) px(20);
+  }
+
+  &__title {
+    margin: 0;
+    font-weight: 700;
+    color: #111;
+  }
+
+  &__description {
+    margin: 0;
+    color: #666;
+  }
+
+  &__options {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    border-top: px(1) solid var(--color-border);
+    border-bottom: px(1) solid var(--color-border);
+  }
+
+  &__option-item {
+    display: flex;
+    align-items: center;
+    gap: px(12);
+    width: 100%;
+    padding: px(16);
+    background: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-radius: 0;
+
+    &:not(:last-child) {
+      border-bottom: px(1) solid var(--color-border);
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.04);
+    }
+
+    &:active {
+      background: rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  &__option-icon {
+    font-size: px(24);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  &__option-label {
+    font-size: px(16);
+    font-weight: 600;
+    color: #111;
+    flex: 1;
   }
 
   &--full &__body {
@@ -219,13 +299,21 @@
 
 
   &__actions {
+    margin-top: px(8);
+    padding-top: px(8);
+    border-top: px(1) solid var(--color-border);
+
     &--stack {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: px(10);
-      margin-top: px(4);
       width: 100%;
     }
+  }
+
+  &--sheet &__actions {
+    margin-top: px(8);
+    padding: px(16) px(20) px(20) px(20);
   }
 
   &--full &__actions {

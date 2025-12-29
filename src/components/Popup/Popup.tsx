@@ -156,24 +156,36 @@ export function BasicPopup({ open, onClose, icon = "🔒", images = [], title, d
  * 
  * @param {boolean} open - 팝업 열림/닫힘 상태
  * @param {function} onClose - 팝업 닫기 핸들러
- * @param {string} title - 팝업 제목
- * @param {string} description - 팝업 설명
+ * @param {string} title - 팝업 제목 (선택)
+ * @param {string} description - 팝업 설명 (선택)
+ * @param {Array} options - 옵션 리스트 [{ icon, label, onClick }] (선택)
+ * @param {ReactNode} children - 커스텀 콘텐츠 (options가 없을 때 사용) (선택)
+ * @param {string} className - 추가 CSS 클래스 (선택)
  */
-export function BottomSheetPopup({ open, onClose, title, description }) {
+export function BottomSheetPopup({ open, onClose, title, description, options = [], children, className = "" }: {
+  open: boolean;
+  onClose: () => void;
+  title?: string;
+  description?: string;
+  options?: Array<{ icon?: string; label: string; onClick?: () => void }>;
+  children?: ReactNode;
+  className?: string;
+}) {
   // 팝업 요소 참조
   const popupRef = useRef(null);
   // 팝업 높이 상태
   const [popupHeight, setPopupHeight] = useState(0);
   // 드래그 오프셋 상태 (팝업이 아래로 내려간 거리)
-  const [offset, setOffset] = useState(0);
+  // 초기값을 window.innerHeight로 설정하여 열릴 때 애니메이션이 작동하도록 함
+  const [offset, setOffset] = useState(window.innerHeight);
   // 드래그 시작 Y 좌표
   const [startY, setStartY] = useState(null);
   // 닫기 애니메이션 중인지 여부
   const [isClosing, setIsClosing] = useState(false);
   // 최신 offset 값을 ref로 추적 (비동기 상태 업데이트 문제 해결)
-  const offsetRef = useRef(0);
+  const offsetRef = useRef(window.innerHeight);
 
-  // 팝업이 열릴 때 높이 측정
+  // 팝업이 열릴 때 높이 측정 및 애니메이션
   useEffect(() => {
     if (open && popupRef.current) {
       // 레이아웃이 완전히 렌더링된 후 높이 측정
@@ -192,25 +204,34 @@ export function BottomSheetPopup({ open, onClose, title, description }) {
         requestAnimationFrame(measureHeight);
       });
       
-      // 상태 초기화
-      setOffset(0);
-      offsetRef.current = 0;
+      // 열릴 때 애니메이션: 초기에는 화면 밖 아래에 위치
+      // DOM에 이미 존재하므로 즉시 offset 설정 가능
+      const initialOffset = window.innerHeight;
+      setOffset(initialOffset);
+      offsetRef.current = initialOffset;
+      
+      // 다음 프레임에서 위로 올라오는 애니메이션 (닫힐 때와 동일한 타이밍)
+      // requestAnimationFrame을 사용하여 브라우저가 렌더링할 때 애니메이션 시작
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setOffset(0);
+          offsetRef.current = 0;
+        });
+      });
+      
       setStartY(null);
       setIsClosing(false);
-    } else if (!open) {
-      // 팝업이 닫힐 때 상태 초기화
-      setOffset(0);
-      offsetRef.current = 0;
+    } else if (!open && !isClosing) {
+      // 팝업이 완전히 닫힌 후 상태 초기화 (다음 열림을 위해)
+      // offset은 window.innerHeight로 유지하여 다음 열림 시 애니메이션이 작동하도록 함
       setStartY(null);
-      setIsClosing(false);
     }
   }, [open]);
 
-  // 팝업이 닫혀있으면 렌더링하지 않음
-  if (!open) return null;
-
-  // 팝업이 열렸을 때 콘솔 출력 (조건부 return 이후이므로 open이 true일 때만 실행됨)
-  console.log('팝업 열림: BottomSheetPopup', { title, description });
+  // 팝업이 열렸을 때 콘솔 출력
+  if (open) {
+    console.log('팝업 열림: BottomSheetPopup', { title, description });
+  }
 
   // 드래그 임계값 (팝업 높이의 절반)
   const threshold = popupHeight / 2;
@@ -218,15 +239,18 @@ export function BottomSheetPopup({ open, onClose, title, description }) {
   // 닫기 애니메이션 공통 처리
   const closeWithAnimation = () => {
     if (isClosing) return;
-    const height = popupRef.current?.offsetHeight || popupHeight || 0;
+    const height = popupRef.current?.offsetHeight || popupHeight || window.innerHeight;
     setIsClosing(true);
     setOffset(height);
     offsetRef.current = height;
 
-    // transition 시간(0.2s) + 여유
+    // transition 시간(0.25s) + 여유
     setTimeout(() => {
       onClose?.();
-    }, 250);
+      // 닫기 완료 후 offset 초기화 (다음 열림을 위해)
+      setOffset(window.innerHeight);
+      offsetRef.current = window.innerHeight;
+    }, 300);
   };
 
   // 드래그 시작 핸들러 (터치 또는 마우스)
@@ -302,11 +326,27 @@ export function BottomSheetPopup({ open, onClose, title, description }) {
     }
   };
 
+  // 팝업이 완전히 닫혀있고 애니메이션이 끝난 경우에만 DOM에서 제거
+  // offset이 window.innerHeight이고 닫혀있고 닫기 애니메이션도 아닐 때만 제거
+  const shouldRender = open || isClosing || offset !== window.innerHeight;
+
+  if (!shouldRender) {
+    return null;
+  }
+
   return (
-    <div className="popup-overlay popup-overlay--sheet" onClick={closeWithAnimation}>
+    <div 
+      className={`popup-overlay popup-overlay--sheet ${!open && !isClosing ? 'popup-overlay--hidden' : ''}`}
+      onClick={closeWithAnimation}
+      style={{ 
+        opacity: open ? 1 : 0,
+        pointerEvents: open ? 'auto' : 'none',
+        transition: 'opacity 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+      }}
+    >
       <div
         ref={popupRef}
-        className="popup popup--sheet"
+        className={`popup popup--sheet ${className}`.trim()}
         style={{ transform: `translateY(${offset}px)` }}
         onClick={(e) => e.stopPropagation()}
         onMouseDown={onStart}
@@ -320,14 +360,37 @@ export function BottomSheetPopup({ open, onClose, title, description }) {
         {/* 드래그 핸들 (시각적 표시) */}
         <div className="popup__handle" />
         {/* 팝업 본문 영역 */}
-        <div className="popup__body popup__body--center">
-          <Typography variant="h4" size="small">{title}</Typography>
-          <Typography variant="body" size="small" color="muted">{description}</Typography>
+        <div className="popup__body">
+          {title && (
+            <Typography variant="h4" size="small" className="popup__title">{title}</Typography>
+          )}
+          {description && (
+            <Typography variant="body" size="small" color="muted" className="popup__description">{description}</Typography>
+          )}
+          {/* 옵션 리스트 */}
+          {options.length > 0 && (
+            <div className="popup__options">
+              {options.map((option, index) => (
+                <button
+                  key={index}
+                  className="popup__option-item"
+                  onClick={() => {
+                    option.onClick?.();
+                    closeWithAnimation();
+                  }}
+                >
+                  {option.icon && <span className="popup__option-icon">{option.icon}</span>}
+                  <span className="popup__option-label">{option.label}</span>
+                </button>
+              ))}
+            </div>
+          )}
+          {/* 커스텀 children */}
+          {children}
         </div>
-        {/* 액션 버튼 영역 */}
+        {/* 취소 버튼 */}
         <div className="popup__actions popup__actions--stack">
-          <Button variant="ghost" onClick={closeWithAnimation}>Cancel</Button>
-          <Button variant="primary" onClick={closeWithAnimation}>OK</Button>
+          <Button variant="ghost" onClick={closeWithAnimation}>취소</Button>
         </div>
       </div>
     </div>

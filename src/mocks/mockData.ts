@@ -100,6 +100,15 @@ export const mockUrlData = [
     url: "/report",
     description: "보고 작성 페이지 (재해시설 보고)",
   },
+  {
+    id: 9,
+    depth1: "모바일 오피스",
+    depth2: "홈",
+    depth3: "",
+    depth4: "",
+    url: "/mobile-office",
+    description: "모바일 오피스 홈 페이지 (3x3 그리드 메뉴, 공지사항, 날씨/프로모션 카드, 하단 네비게이션 포함)",
+  },
 ];
 
 // 가이드/데모용 추가 목업 데이터 (차후 각 컴포넌트에서 비동기 사용 예정)

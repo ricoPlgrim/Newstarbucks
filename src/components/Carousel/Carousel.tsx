@@ -1,8 +1,9 @@
-import { Navigation, Pagination } from "swiper/modules";
+import { Navigation, Pagination, EffectFade } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import "swiper/css/effect-fade";
 import Image from "../Image/Image";
 import Typography from "../Typography/Typography";
 import "./Carousel.scss";
@@ -28,13 +29,17 @@ const defaultSlides: CarouselSlide[] = [
  * 
  * @param {Array} slides - 슬라이드 데이터 배열 [{ id, title, desc, description, image }]
  * @param {boolean} showOptionsPanel - 옵션 패널 표시 여부 (기본값: false)
+ * @param {boolean} showNavigation - 좌우 네비게이션 버튼 표시 여부 (기본값: true)
+ * @param {string} paginationColor - 페이지네이션 도트 색상 (기본값: 'var(--color-accent)')
  */
 type CarouselProps = {
   slides?: CarouselSlide[];
   showOptionsPanel?: boolean;
+  showNavigation?: boolean;
+  paginationColor?: string;
 };
 
-const Carousel = ({ slides = defaultSlides, showOptionsPanel = false }: CarouselProps) => {
+const Carousel = ({ slides = defaultSlides, showOptionsPanel = false, showNavigation = true, paginationColor = "var(--color-accent)" }: CarouselProps) => {
   // 슬라이드 데이터가 없을 때 처리
   if (!slides || slides.length === 0) {
     return <div className="guide-preview guide-preview--carousel">슬라이드 데이터가 없습니다.</div>;
@@ -49,12 +54,17 @@ const Carousel = ({ slides = defaultSlides, showOptionsPanel = false }: Carousel
       {shouldUseSwiper ? (
         // 스와이퍼 활성화: 2개 이상의 슬라이드가 있을 때
         <Swiper
-          modules={[Navigation, Pagination]}
-          navigation
+          modules={showNavigation ? [Navigation, Pagination, EffectFade] : [Pagination, EffectFade]}
+          navigation={showNavigation}
           pagination={{ clickable: true }}
-          spaceBetween={16}
+          effect="fade"
+          fadeEffect={{ crossFade: true }}
+          spaceBetween={0}
           slidesPerView={1}
           loop
+          style={{
+            "--swiper-pagination-color": paginationColor,
+          } as React.CSSProperties}
         >
           {slides.map((slide, idx) => (
             <SwiperSlide key={slide.id}>
@@ -74,7 +84,7 @@ const Carousel = ({ slides = defaultSlides, showOptionsPanel = false }: Carousel
                 {(slide.title || slide.desc || slide.description) && (
                   <div className="carousel-card__content">
                     {slide.title && (
-                      <Typography variant="h4" size="small">{slide.title}</Typography>
+                      <Typography variant="h5" size="small">{slide.title}</Typography>
                     )}
                     {(slide.desc || slide.description) && (
                       <Typography variant="body" size="small" color="muted">

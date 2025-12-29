@@ -70,6 +70,7 @@ import Button from "../../components/Button/Button";
 import BorderAnimation from "../../components/BorderAnimation/BorderAnimation";
 import ListContainer from "../../components/ListContainer/ListContainer";
 import ScrollTop from "../../components/ScrollTop/ScrollTop";
+import Weather from "../../components/Weather/Weather";
 
 // 코드 블록 컴포넌트 (구문 강조 적용)
 const CodeBlock = ({ code, language = "tsx" }) => {
@@ -88,6 +89,49 @@ const CodeBlock = ({ code, language = "tsx" }) => {
         {code}
       </code>
     </pre>
+  );
+};
+
+const WeatherPreview = () => {
+  // 환경 변수에서 API 키 확인
+  const hasApiKey = !!process.env.REACT_APP_WEATHER_API_KEY;
+  
+  return (
+    <div className="guide-preview guide-preview--weather">
+      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        {/* 목업 데이터 예제 */}
+        <div>
+          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 600, color: "var(--color-text-secondary)" }}>
+            목업 데이터 예제
+          </h4>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px" }}>
+            <Weather city="Seoul" useMock={true} />
+            <Weather city="Busan" useMock={true} />
+            <Weather city="Jeju" useMock={true} />
+          </div>
+        </div>
+
+        {/* 실제 API 예제 */}
+        {hasApiKey ? (
+          <div>
+            <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 600, color: "var(--color-text-secondary)" }}>
+              실제 API 데이터 예제
+            </h4>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px" }}>
+              <Weather city="Seoul" useMock={false} />
+              <Weather city="Busan" useMock={false} />
+              <Weather city="Jeju" useMock={false} />
+            </div>
+          </div>
+        ) : (
+          <div style={{ padding: "16px", background: "var(--color-bg-secondary)", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
+            <p style={{ margin: 0, fontSize: "14px", color: "var(--color-text-secondary)" }}>
+              💡 실제 API를 사용하려면 <code style={{ background: "var(--color-bg)", padding: "2px 6px", borderRadius: "4px" }}>.env</code> 파일에 <code style={{ background: "var(--color-bg)", padding: "2px 6px", borderRadius: "4px" }}>REACT_APP_WEATHER_API_KEY</code>를 설정하고 개발 서버를 재시작하세요.
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 
@@ -7191,6 +7235,38 @@ const go = (nextPage: number) => {
 </div>;`,
     PreviewComponent: PaginationPreview,
   },
+  {
+    id: "weather",
+    label: "날씨",
+    title: "날씨 컴포넌트",
+    description:
+      "실시간 날씨 정보를 표시하는 컴포넌트입니다. OpenWeatherMap API를 사용하여 날씨 데이터를 가져오거나 목업 데이터를 사용할 수 있습니다. 날씨 아이콘, 온도, 날씨 상태를 표시합니다.",
+    code: `import Weather from "./Weather";
+
+// ===== Props 설명 (TypeScript) =====
+// city?: string;              // 도시 이름 (기본값: "Seoul")
+// apiKey?: string;            // OpenWeatherMap API 키
+// useMock?: boolean;          // 목업 데이터 사용 여부 (기본값: true)
+// className?: string;         // 추가 CSS 클래스
+
+// ===== 기본 사용 (목업 데이터) =====
+<Weather />;
+
+// ===== 실제 API 사용 =====
+<Weather 
+  city="Seoul" 
+  apiKey="YOUR_API_KEY" 
+  useMock={false} 
+/>;
+
+// ===== 다른 도시 =====
+<Weather city="Busan" useMock={true} />;
+
+// ===== 스타일 커스터마이징 =====
+<Weather className="custom-weather" />;
+`,
+    PreviewComponent: WeatherPreview,
+  },
 ];
 
 // 1뎁스 그룹 구성 (LNB용) - ㄱ~ㅎ 순서로 정렬
@@ -7223,7 +7299,7 @@ const guideGroups = [
   {
     id: "list-card-group",
     label: "리스트 & 카드",
-    items: ["card", "list", "list-container", "notice"],
+    items: ["card", "list", "list-container", "notice", "weather"],
   },
   {
     id: "media-group",

@@ -51,15 +51,16 @@
     z-index: 10;
 
     .swiper-pagination-bullet {
-      background: var(--color-border);
-      opacity: 1;
+      background: var(--swiper-pagination-color, var(--color-border));
+      opacity: 0.5;
       @include px(width, 8);
       @include px(height, 8);
       margin: 0 px(4);
     }
 
     .swiper-pagination-bullet-active {
-      background: var(--color-accent);
+      background: var(--swiper-pagination-color, var(--color-accent));
+      opacity: 1;
     }
   }
 

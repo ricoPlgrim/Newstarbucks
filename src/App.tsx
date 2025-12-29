@@ -6,6 +6,7 @@ import AmericanoPage from "./pages/AmericanoPage/AmericanoPage";
 import SearchSamplePage from "./pages/SearchSamplePage/SearchSamplePage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import ReportPage from "./pages/ReportPage/ReportPage";
+import MobileOfficeHomePage from "./pages/MobileOfficeHomePage/MobileOfficeHomePage";
 import Footer from "./components/Footer/Footer";
 import "./App.scss";
 
@@ -54,10 +55,11 @@ function AppContent() {
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';
   const isReportPage = location.pathname === '/report';
+  const isMobileOfficeHome = location.pathname === '/mobile-office';
   
   return (
     <div className="app">
-      {!isLoginPage && !isReportPage && <AppNav />}
+      {!isLoginPage && !isReportPage && !isMobileOfficeHome && <AppNav />}
       
       <Routes>
         <Route path="/url" element={<PublishingUrlPage />} />
@@ -66,11 +68,12 @@ function AppContent() {
         <Route path="/search-sample" element={<SearchSamplePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/report" element={<ReportPage />} />
+        <Route path="/mobile-office" element={<MobileOfficeHomePage />} />
         <Route path="/menu/coffee/americano" element={<AmericanoPage />} />
         <Route path="/" element={<PublishingUrlPage />} />
       </Routes>
 
-      {!isLoginPage && !isReportPage && <Footer />}
+      {!isLoginPage && !isReportPage && !isMobileOfficeHome && <Footer />}
     </div>
   );
 }
