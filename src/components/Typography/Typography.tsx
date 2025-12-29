@@ -14,7 +14,7 @@ type TypographyVariant =
 
 type TypographySize = "small" | "medium" | "large";
 type TypographyColor = "default" | "muted" | "accent" | "inherit";
-type TypographyWeight = "normal" | "medium" | "semibold" | "bold";
+type TypographyWeight = "light" | "normal" | "medium" | "semibold" | "bold" | "extrabold" | "black";
 type TypographyAlign = "left" | "center" | "right" | "justify";
 
 type TypographyProps = {
@@ -37,7 +37,7 @@ type TypographyProps = {
  * @param {string} size - 'small' | 'medium' | 'large' (variant에 따라 기본값 다름)
  * @param {string} as - 실제 렌더링할 HTML 태그 (기본값: variant에 따라 자동 결정)
  * @param {string} color - 텍스트 색상 ('default' | 'muted' | 'accent' | 'inherit')
- * @param {string} weight - 폰트 굵기 ('normal' | 'medium' | 'semibold' | 'bold')
+ * @param {string} weight - 폰트 굵기 ('light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold' | 'black')
  * @param {string} align - 텍스트 정렬 ('left' | 'center' | 'right' | 'justify')
  * @param {boolean} truncate - 텍스트 말줄임표 표시 (기본값: false)
  * @param {number} lineClamp - 최대 줄 수 (truncate와 함께 사용)

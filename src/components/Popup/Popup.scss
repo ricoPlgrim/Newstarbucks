@@ -23,7 +23,6 @@
 .popup {
   background: #fff;
   border-radius: px(18);
-  padding: px(20);
   min-width: min(px(360), 92vw);
   max-width: px(420);
   box-shadow: 0 px(16) px(48) rgba(0, 0, 0, 0.28);
@@ -69,7 +68,6 @@
     inset: 0;
     border-radius: 0;
     max-width: none;
-    padding: px(24);
     display: flex;
     flex-direction: column;
     gap: px(12);
@@ -78,8 +76,6 @@
   }
 
   h4 {
-    margin: 0 0 px(6) 0;
-    font-weight: 800;
     color: #111;
   }
 
@@ -89,11 +85,11 @@
   }
 
   &__handle {
-    width: px-to-rem(42);
-    height: px-to-rem(4);
+    width: px(42);
+    height: px(4);
     background: var(--color-border);
-    border-radius: px-to-rem(4);
-    margin: 0 auto px-to-rem(12);
+    border-radius: px(4);
+    margin: 0 auto px(12);
     cursor: grab;
   }
 
@@ -101,14 +97,14 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: px-to-rem(12);
-    margin-bottom: px-to-rem(6);
+    gap: px(12);
+    padding: px(20);
   }
 
   &__close {
     background: none;
     border: none;
-    font-size: px-to-rem(18);
+    font-size: px(18);
     cursor: pointer;
     color: var(--color-text);
     line-height: 1;
@@ -195,6 +191,10 @@
     flex: 1;
   }
 
+  &--full &__header {
+    padding: px(24);
+  }
+
   &--full &__body {
     flex: 1;
     overflow-y: auto;
@@ -206,12 +206,12 @@
     width: 100%;
     aspect-ratio: 4 / 3;
     border: 1px solid #e5e5e5;
-    border-radius: px-to-rem(10);
+    border-radius: px(10);
     display: flex;
     align-items: center;
     justify-content: center;
     background: #fafafa;
-    padding: px-to-rem(12);
+    padding: px(12);
     overflow: hidden;
     position: relative;
   }
@@ -358,11 +358,47 @@
 }
 
 .popup--image-zoom {
-  padding: px(16);
   display: flex;
   flex-direction: column;
-  gap: px(12);
+  gap: 0;
   height: 100%;
+
+  .popup__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    padding: px(12) px(16);
+  }
+
+  .popup__header-title {
+    display: flex;
+    align-items: center;
+    gap: px(8);
+  }
+
+  .popup__image-counter {
+    margin: 0;
+    font-weight: 500;
+  }
+
+  // 헤더 정렬 모드: center
+  .popup__header--center {
+    justify-content: center;
+    text-align: center;
+
+    .popup__header-title {
+      justify-content: center;
+      width: 100%;
+    }
+
+    .popup__close {
+      position: absolute;
+      right: px(8);
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
 
   .popup__zoom-hint {
     margin: 0;
@@ -372,17 +408,144 @@
 
   .popup__image-viewport {
     flex: 1;
-    overflow: auto;
-    border: px(1) solid var(--color-border);
-    border-radius: px(12);
+    overflow: hidden;
     background: var(--color-card);
+    position: relative;
+    min-height: px(300);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: px(12);
-    touch-action: none; // 핀치/터치 제스처 직접 처리
-    position: relative;
-    min-height: px(300);
+    touch-action: pan-x pan-y pinch-zoom;
+    margin: 0;
+    padding: 0;
+    // 줌 시 스크롤 방지
+    overscroll-behavior: contain;
+  }
+
+  .popup__image-swiper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; // Swiper wrapper에 overflow 설정
+    margin: 0;
+    padding: 0;
+
+    .swiper-wrapper {
+      align-items: center;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+
+    .swiper-slide {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      overflow: hidden; // 슬라이드 영역을 넘어가는 콘텐츠는 숨김
+      width: 100%;
+      height: 100%;
+      flex-shrink: 0;
+      position: relative;
+      margin: 0;
+      padding: 0;
+    }
+
+    .popup__image-zoom-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: grab;
+      width: 100%;
+      height: 100%;
+      flex-shrink: 0;
+      touch-action: pan-x pan-y pinch-zoom;
+      will-change: transform; // 성능 최적화
+      // Swiper zoom이 transform을 직접 관리하므로 transition 제거
+      transition: none;
+      // 줌 시 컨테이너를 벗어나지 않도록 제한
+      max-width: 100%;
+      max-height: 100%;
+      overflow: hidden;
+
+      &:active {
+        cursor: grabbing;
+      }
+    }
+
+    // Swiper가 자동으로 추가하는 zoom container 클래스
+    .swiper-zoom-container {
+      transition: none !important;
+    }
+
+    // Swiper 네비게이션 버튼 스타일
+    .swiper-button-next,
+    .swiper-button-prev {
+      color: #fff;
+      background: rgba(114, 123, 134, 0.92);
+      width: px(36);
+      height: px(36);
+      border-radius: 50%;
+      box-shadow: 0 px(1) px(4) rgba(0, 0, 0, 0.18);
+      transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+      top: 50%;
+      transform: translateY(-50%);
+
+      &:hover {
+        background: rgba(114, 123, 134, 1);
+        box-shadow: 0 px(2) px(10) rgba(0, 0, 0, 0.22);
+        transform: translateY(-50%) scale(1.05);
+      }
+
+      &::after {
+        font-size: px(16);
+        font-weight: 800;
+      }
+    }
+
+    // Swiper 페이지네이션 스타일
+    .swiper-pagination {
+      bottom: px(16);
+      left: 50%;
+      transform: translateX(-50%);
+      width: auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border-radius: px(20);
+      padding: px(6) px(12);
+      font-size: px(14);
+      font-weight: 500;
+      box-shadow: 0 px(2) px(8) rgba(0, 0, 0, 0.1);
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+
+      .swiper-pagination-current {
+        color: var(--color-accent);
+      }
+
+      .swiper-pagination-total {
+        color: #111;
+      }
+    }
+
+    // 확대 상태일 때 페이지네이션 및 네비게이션 버튼 숨기기
+    &.is-zoomed {
+      .swiper-pagination {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .swiper-button-next,
+      .swiper-button-prev {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+  }
+
+  .popup__image-slide {
+    width: 100%;
+    height: 100%;
   }
 
   .popup__image-loading {
@@ -392,33 +555,20 @@
     align-items: center;
     justify-content: center;
     background: rgba(255, 255, 255, 0.9);
-    z-index: 1;
+    z-index: 10;
   }
 
   .popup__image-zoom-element {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
-    transition: transform 0.1s ease-out;
+    object-position: center;
     user-select: none;
     -webkit-user-drag: none;
-
-    &.image--landscape {
-      width: 100%;
-      height: auto;
-    }
-
-    &.image--portrait {
-      width: auto;
-      height: 100%;
-    }
-
-    &.image--square {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
+    display: block;
+    // 줌 시 이미지가 컨테이너를 벗어나지 않도록
+    max-width: 100%;
+    max-height: 100%;
   }
 }
 

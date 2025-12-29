@@ -274,6 +274,7 @@ import YourPage from "./pages/YourPage/YourPage";
 - **Toast** - 토스트 알림 (빈 메시지일 때 자동으로 렌더링하지 않음, 조건부 렌더링 강화)
 - **Tooltip** - 툴팁
 - **Popup** - 팝업 (기본: Swiper 캐러셀 지원 / 시트: 드래그로 닫기 / 풀스크린: showHeaderClose, showBottomClose props로 3가지 타입 지원)
+  - **ImageZoomPopup** - 이미지 확대 팝업 (Swiper 기반, 핀치 줌/더블 탭 줌 지원, 확대 시 페이지네이션 및 네비게이션 버튼 자동 숨김, 줌 해제 시 부드러운 위치 복원, 이미지가 컨테이너를 꽉 채우도록 최적화, 배지 스타일 페이지네이션)
 
 ### 미디어
 - **Image** - 이미지 컴포넌트 (에러 처리, 비율 자동 판단, fallback 이미지 지원)
@@ -300,7 +301,7 @@ import YourPage from "./pages/YourPage/YourPage";
 - **DragDropList** - 드래그앤드랍 리스트
 - **ListSync** - 리스트 동기화
 - **Icon** - 아이콘 컴포넌트 (이모지, SVG, 텍스트 지원, 크기/색상 옵션, 모바일/태블릿에서 한 줄 표시)
-- **Typography** - 타이포그래피 컴포넌트 (제목, 본문, 캡션, 오버라인, H1-H6 명확한 크기/간격 차이)
+- **Typography** - 타이포그래피 컴포넌트 (제목, 본문, 캡션, 오버라인, H1-H6 명확한 크기/간격 차이, 7가지 글자 굵기 옵션: light, normal, medium, semibold, bold, extrabold, black)
 - **Color** - 컬러 시스템 컴포넌트 (브랜드 컬러, 상태 컬러, 테마 비교)
 - **Spacing** - 간격 시스템 컴포넌트 (간격 토큰, 사용 예시, 빈 공간 없이 채움)
 - **Layout** - 레이아웃 컴포넌트 (컨테이너 폭, 그리드 시스템, 12컬럼 동일 너비, 화면 넘침 방지)

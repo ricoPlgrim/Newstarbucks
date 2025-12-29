@@ -42,6 +42,8 @@
     text-orientation: mixed;
     box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
     transition: left 0.3s ease, transform 0.3s ease;
+    // 닫을 때 opacity 애니메이션 제거
+    opacity: 1;
 
     &:hover,
     &:focus {
@@ -81,16 +83,23 @@
     border-radius: px-to-rem(8) 0 0 px-to-rem(8);
     box-shadow: -4px 0 16px rgba(0, 0, 0, 0.1);
     opacity: 1;
-    transform: translateX(0);
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    visibility: visible;
+    pointer-events: auto;
   }
 
-  // 닫힐 때 애니메이션 (is-open이 없을 때)
-  &:not(.is-open) {
+  // 열릴 때 애니메이션
+  &.is-open {
     .accessibility-helper__panel {
-      opacity: 0;
-      transform: translateX(100%);
+      transform: translateX(0);
     }
+  }
+
+  // 애니메이션 완료 후 visibility hidden 처리
+  &__panel.is-hidden {
+    visibility: hidden;
+    pointer-events: none;
   }
 
   &__section {

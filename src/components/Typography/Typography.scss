@@ -193,6 +193,10 @@
   }
 
   // ===== 폰트 굵기 =====
+  &--weight-light {
+    font-weight: 300;
+  }
+
   &--weight-normal {
     font-weight: 400;
   }
@@ -207,6 +211,14 @@
 
   &--weight-bold {
     font-weight: 700;
+  }
+
+  &--weight-extrabold {
+    font-weight: 800;
+  }
+
+  &--weight-black {
+    font-weight: 900;
   }
 
   // ===== 텍스트 정렬 =====

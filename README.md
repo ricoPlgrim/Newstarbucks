@@ -275,10 +275,13 @@ export default MyPage;
 - ✅ 큰글씨 모드 선택 (작게/보통/크게/아주 크게)
 - ✅ 접근성 체크리스트 (6개 항목)
 
-#### 위치
+#### 위치 및 동작
 - 오른쪽 중앙에 고정
 - 토글 버튼 클릭 시 패널 슬라이드 인/아웃
 - 큰글씨 모드 제외 (항상 고정 크기)
+- 패널은 항상 DOM에 유지되며, CSS로만 보이기/숨기기 처리
+- 열릴 때와 닫힐 때 toggle 버튼과 panel이 동시에 애니메이션
+- 닫힐 때는 오른쪽으로 슬라이드 아웃한 후 visibility hidden 처리
 
 #### 접근성 체크리스트 항목
 
@@ -294,7 +297,7 @@ export default MyPage;
 프로젝트에 구현된 주요 컴포넌트들입니다. 자세한 사용법은 `PublishingGuidePage`에서 확인할 수 있습니다.
 
 #### 디자인 시스템
-- **Typography** - 타이포그래피 컴포넌트 (h1-h6, body, caption, overline, 다양한 size/weight/color 옵션, H1-H6 명확한 크기/간격 차이)
+- **Typography** - 타이포그래피 컴포넌트 (h1-h6, body, caption, overline, 다양한 size/weight/color 옵션, H1-H6 명확한 크기/간격 차이, 7가지 글자 굵기: light, normal, medium, semibold, bold, extrabold, black)
 - **Color** - 컬러 컴포넌트 (브랜드 컬러, 상태 컬러, 다크모드 지원)
 - **Spacing** - 스페이싱 컴포넌트 (간격 토큰 시각화 및 예제, 빈 공간 없이 채움)
 - **Layout** - 레이아웃 컴포넌트 (컨테이너 폭, 그리드 시스템, 12컬럼 동일 너비, 화면 넘침 방지)
@@ -335,6 +338,7 @@ export default MyPage;
 - **Toast** - 토스트 알림 (빈 메시지일 때 자동으로 렌더링하지 않음, 조건부 렌더링 강화)
 - **Tooltip** - 툴팁 (top, bottom, left, right placement)
 - **Popup** - 팝업 (기본: Swiper 캐러셀 지원, lazy loading / 시트: 드래그로 닫기 / 풀스크린: showHeaderClose, showBottomClose props로 3가지 타입 지원)
+  - **ImageZoomPopup** - 이미지 확대 팝업 (Swiper 기반, 핀치 줌/더블 탭 줌 지원, 확대 시 페이지네이션 및 네비게이션 버튼 자동 숨김, 줌 해제 시 부드러운 위치 복원, 이미지가 컨테이너를 꽉 채우도록 최적화, 배지 스타일 페이지네이션)
 
 #### 미디어
 - **Image** - 이미지 컴포넌트 (에러 처리, 비율 자동 판단, landscape/portrait/square, fallback 이미지 지원)

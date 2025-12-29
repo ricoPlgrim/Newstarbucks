@@ -5258,17 +5258,18 @@ const handleDelete = () => {
     id: "image-zoom",
     label: "이미지 줌 팝업",
     title: "풀스크린 이미지 확대",
-    description: "풀팝업 위에 이미지를 올려두고 핀치/휠로 확대·축소하는 예시입니다.",
+    description: "Swiper를 사용하여 여러 이미지를 스와이프하며 각 이미지를 핀치/더블 탭/휠로 확대·축소하는 예시입니다.",
     code: `import ImageZoomPopup from "./ImageZoomPopup";
 import { useState } from "react";
 
 // ===== Props 설명 =====
-// src: 이미지 URL (필수)
-// alt: 이미지 대체 텍스트 (기본값: "Zoom image")
+// images: 이미지 URL 또는 이미지 URL 배열 (필수, 단일 이미지 또는 여러 이미지 지원)
+// alt: 이미지 대체 텍스트 또는 배열 (기본값: "Zoom image")
+// initialIndex: 초기 표시할 이미지 인덱스 (기본값: 0, 여러 이미지일 때 사용)
 // open: 팝업 열림/닫힘 상태 (boolean, 필수)
 // onClose: 팝업 닫기 핸들러 (function, 필수)
 
-// ===== 기본 사용 =====
+// ===== 기본 사용 (단일 이미지) =====
 const [isOpen, setIsOpen] = useState<boolean>(false);
 
 <button onClick={() => setIsOpen(true)}>
@@ -5276,13 +5277,35 @@ const [isOpen, setIsOpen] = useState<boolean>(false);
 </button>
 
 <ImageZoomPopup
-  src="https://example.com/image.jpg"
+  images="https://example.com/image.jpg"
   alt="확대할 이미지"
   open={isOpen}
   onClose={() => setIsOpen(false)}
 />
 
-// 상태 관리 예제
+// ===== 여러 이미지 사용 =====
+const [isOpen, setIsOpen] = useState<boolean>(false);
+const [currentIndex, setCurrentIndex] = useState<number>(0);
+
+const imageUrls = [
+  "https://example.com/image1.jpg",
+  "https://example.com/image2.jpg",
+  "https://example.com/image3.jpg"
+];
+
+<button onClick={() => setIsOpen(true)}>
+  이미지 갤러리 열기
+</button>
+
+<ImageZoomPopup
+  images={imageUrls}
+  alt={["이미지 1", "이미지 2", "이미지 3"]}
+  initialIndex={currentIndex}
+  open={isOpen}
+  onClose={() => setIsOpen(false)}
+/>
+
+// ===== 상태 관리 예제 =====
 const ImageViewer = () => {
   const [isZoomOpen, setIsZoomOpen] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -5306,7 +5329,7 @@ const ImageViewer = () => {
       />
       
       <ImageZoomPopup
-        src={selectedImage}
+        images={selectedImage || ""}
         alt="확대 이미지"
         open={isZoomOpen}
         onClose={handleClose}
@@ -5316,14 +5339,18 @@ const ImageViewer = () => {
 };`,
     PreviewComponent: () => {
       const [open, setOpen] = useState(false);
+      const sampleImages = [
+        "https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&w=1200",
+        "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&w=1200"
+      ];
       return (
         <div className="guide-preview guide-preview--popup">
           <button className="btn btn--primary btn--sm" onClick={() => setOpen(true)}>
-            이미지 풀팝업 열기
+            이미지 풀팝업 열기 (2개 이미지)
           </button>
           <ImageZoomPopup
-            src="https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&w=1200"
-            alt="샘플 이미지"
+            images={sampleImages}
+            alt={["샘플 이미지 1", "샘플 이미지 2"]}
             open={open}
             onClose={() => setOpen(false)}
           />

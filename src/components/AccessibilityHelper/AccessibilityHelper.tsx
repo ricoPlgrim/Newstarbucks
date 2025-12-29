@@ -20,8 +20,10 @@ const FONT_SCALE_OPTIONS = [
 
 function AccessibilityHelper({ isDarkMode, setIsDarkMode, fontScale, setFontScale }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [shouldRender, setShouldRender] = useState(false);
-  const timeoutRef = useRef(null);
+  const [isPanelVisible, setIsPanelVisible] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
   // TODO: 접근성 체크리스트 기능 구현 예정
   // const [checklist, setChecklist] = useState(ACCESSIBILITY_CHECKLIST);
   // const toggleChecklist = (id) => {
@@ -30,39 +32,35 @@ function AccessibilityHelper({ isDarkMode, setIsDarkMode, fontScale, setFontScal
   //   );
   // };
 
-  // isOpen 상태 변경 시 shouldRender 관리 (애니메이션 완료 후 DOM에서 제거)
+  // isOpen 상태 변경 시 panel visibility 관리
   useEffect(() => {
     if (isOpen) {
-      // 열릴 때: 즉시 렌더링하고 약간의 지연 후 애니메이션 시작
-      setShouldRender(true);
+      // 열릴 때: 즉시 visible
+      setIsPanelVisible(true);
       // 기존 timeout 취소
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
         timeoutRef.current = null;
       }
-      // 다음 프레임에서 애니메이션이 시작되도록 약간의 지연
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          // 애니메이션이 시작되도록 강제
-        });
-      });
-    } else if (shouldRender) {
-      // 닫힐 때: transition 시간(300ms) 후 DOM에서 제거
-      // shouldRender가 true일 때만 timeout 설정 (이미 false면 실행하지 않음)
+    } else {
+      // 닫힐 때: transform 애니메이션 완료 후 visibility hidden
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
       timeoutRef.current = setTimeout(() => {
-        setShouldRender(false);
+        setIsPanelVisible(false);
         timeoutRef.current = null;
       }, 300); // CSS transition 시간과 일치
     }
 
-    // cleanup: 컴포넌트 언마운트 시 timeout 정리
+    // cleanup
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
         timeoutRef.current = null;
       }
     };
-  }, [isOpen, shouldRender]);
+  }, [isOpen]);
 
   const currentFontScaleLabel =
     FONT_SCALE_OPTIONS.find((option) => option.id === fontScale)?.label ?? "보통";
@@ -83,11 +81,11 @@ function AccessibilityHelper({ isDarkMode, setIsDarkMode, fontScale, setFontScal
         <span className="accessibility-helper__label">옵션</span>
       </button>
 
-      {shouldRender && (
-        <div className="accessibility-helper__panel">
+      <div 
+        ref={panelRef}
+        className={`accessibility-helper__panel ${!isPanelVisible ? "is-hidden" : ""}`}
+      >
           <div className="accessibility-helper__section">
-            <h3 className="accessibility-helper__title">접근성 설정</h3>
-            
             <div className="accessibility-helper__control">
               <label className="accessibility-helper__label-text">테마 모드</label>
               <div className="accessibility-helper__toggle-group" role="group">
@@ -132,7 +130,6 @@ function AccessibilityHelper({ isDarkMode, setIsDarkMode, fontScale, setFontScal
             </div>
           </div>
         </div>
-      )}
     </div>
   );
 }
