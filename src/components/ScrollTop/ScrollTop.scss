@@ -7,14 +7,14 @@
   width: px(48);
   height: px(48);
   border-radius: 50%;
-  background-color: #fff;
-  color: #00C896;
-  border: px(2) solid #00C896;
+  background-color: var(--color-card);
+  color: var(--color-brand-primary);
+  border: px(2) solid var(--color-brand-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 200, 150, 0.2);
+  box-shadow: var(--shadow-overlay);
   transition: all 0.3s ease;
   z-index: 1000;
   opacity: 0;
@@ -33,25 +33,25 @@
   }
 
   &:hover {
-    background-color: #00C896;
-    color: #fff;
+    background-color: var(--color-accent-light);
+    color: var(--color-white);
     transform: translateY(px(-4));
-    box-shadow: 0 4px 12px rgba(0, 200, 150, 0.3);
+    box-shadow: var(--shadow-overlay-medium);
   }
 
   &:active {
     transform: translateY(px(-2));
-    box-shadow: 0 2px 6px rgba(0, 200, 150, 0.25);
+    box-shadow: var(--shadow-overlay);
   }
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 px(3) rgba(0, 200, 150, 0.3);
+    box-shadow: 0 0 0 px(3) var(--color-accent-light);
   }
 
   // 모바일 대응
   @media (max-width: 768px) {
-    bottom: px(80);
+    bottom: calc(#{px(90)} + env(safe-area-inset-bottom, 0px));
     right: px(16);
     width: px(44);
     height: px(44);

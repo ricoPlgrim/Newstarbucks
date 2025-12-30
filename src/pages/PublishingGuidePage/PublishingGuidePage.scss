@@ -37,9 +37,9 @@
     max-width: px(440);
     margin: 0 auto;
     padding: px(24);
-    background-color: #f0f0f0;
+    background-color: var(--color-bg-secondary);
     border-radius: px(20);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-overlay-medium);
   }
 
   &__mobile-screen {
@@ -47,12 +47,12 @@
     background-color: var(--color-bg);
     border: 2px solid var(--color-border);
     border-radius: px(12);
-    min-height: px(620); // ???�넉???�이
-    overflow: hidden; // ?�모 ?�역 밖으�????�?�나?�도�?
+    min-height: px(620); 
+    overflow: hidden; 
   }
 
   &__mobile-content {
-    padding: px(110) px(24) px(48); // ?�더 ?�이 + ?�유
+    padding: px(110) px(24) px(48); 
     text-align: center;
 
     h4 {
@@ -81,7 +81,6 @@
   }
 }
 
-// LNB 그룹 ?��???
 .publishing-guide {
   &__lnb {
     display: flex;
@@ -89,7 +88,7 @@
     gap: px(16);
     max-height: calc(100vh - px(120));
     overflow-y: auto;
-    padding-right: px(6); // ?�크�?공간 ?�보
+    padding-right: px(6); 
   }
 
   &__lnb-list {
@@ -133,7 +132,7 @@
     border: none;
     background-color: transparent;
     color: var(--color-text);
-    font-weight: 500; // ?�위 메뉴???�벨보다 가볍게
+    font-weight: 500; 
     font-size: px(14);
     box-shadow: none;
     transition: color 0.2s ease;
@@ -149,7 +148,6 @@
   }
 }
 
-// ?�일 ?�로???�모
 .guide-preview--file {
   .file-upload-demo {
     border: 1px solid var(--color-border);
@@ -242,13 +240,11 @@
   }
 }
 
-// footer component preview
 .guide-preview--footer {
   .footer {
     margin: 0;
   }
 }
-// 간단???�버�?버튼 ?�모 ?��???
 .header-demo {
   &__simple {
     border: 1px solid var(--color-border);
@@ -257,7 +253,7 @@
     max-width: px(400);
     margin: 0 auto;
     position: relative;
-    overflow: hidden; // ?�모 ?�역 밖으�?메뉴가 ?�?�나?��? ?�도�??��?
+    overflow: hidden; 
   }
 
   &__simple-header {
@@ -348,7 +344,7 @@
     height: 100%;
     background-color: var(--color-bg);
     border-right: 1px solid var(--color-border);
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-overlay);
     transition: left 0.3s ease;
     z-index: 10;
 
@@ -411,33 +407,30 @@
     transition: background-color 0.2s ease;
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.1);
+      background-color: var(--color-overlay-light);
     }
   }
 }
 
-// 모바???�더 컴포?�트 ?�버?�이??(?�모??
 .guide-preview--header {
   .header {
     position: relative;
     top: 0;
     border-bottom: 1px solid var(--color-border);
 
-    // ?�모 ?�경?�서 ?�버�?버튼????보이?�록
     &__hamburger {
       z-index: 15;
       position: relative;
     }
 
-    // ?�이??메뉴가 ?�모 컨테?�너�?벗어?�도 보이?�록
     &__aside {
       z-index: 20;
-      box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
+      box-shadow: var(--shadow-overlay-medium);
     }
 
     &__overlay {
       z-index: 19;
-      background-color: rgba(0, 0, 0, 0.6);
+      background-color: var(--color-overlay-darkest);
     }
   }
 }
@@ -562,7 +555,6 @@
     overflow: hidden;
     padding: 0;
 
-    // VS Code 스타일 헤더
     &::before {
       content: "";
       position: absolute;
@@ -575,7 +567,6 @@
       z-index: 1;
     }
 
-    // VS Code 스타일 윈도우 컨트롤 (닫기, 최소화, 최대화 버튼)
     &::after {
       content: "";
       position: absolute;
@@ -589,7 +580,6 @@
       z-index: 2;
     }
 
-    // highlight.js 스타일 오버라이드
     .hljs {
       background: #1e1e1e !important;
       color: #d4d4d4 !important;
@@ -602,7 +592,6 @@
       position: relative;
       z-index: 0;
 
-      // 스크롤바 스타일 (Webkit)
       &::-webkit-scrollbar {
         height: px(12);
       }
@@ -621,7 +610,6 @@
         }
       }
 
-      // VS Code 스타일 구문 강조 색상 오버라이드
       .hljs-keyword,
       .hljs-selector-tag,
       .hljs-literal,
@@ -876,7 +864,7 @@
       top: px(-8);
       right: px(-8);
       background-color: var(--color-accent);
-      color: #fff;
+      color: var(--color-white);
       padding: px(4) px(8);
       border-radius: px(12);
       font-size: 0.75rem;
@@ -888,7 +876,6 @@
   }
 }
 
-// Icon 프리뷰
 .icon-preview {
   &__section {
     display: flex;
@@ -903,7 +890,6 @@
     flex: 1 1 100%;
     min-width: 0;
 
-    // 아이콘 라이브러리 섹션 내부의 그리드
     .guide-preview--icons {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
@@ -1207,7 +1193,7 @@
 
       &[aria-selected="true"] {
         background-color: var(--color-accent);
-        color: #fff;
+        color: var(--color-white);
         border-color: var(--color-accent);
       }
     }
@@ -1589,7 +1575,7 @@
     &:hover {
       background-color: var(--color-accent);
       border-color: var(--color-accent);
-      color: #fff;
+      color: var(--color-white);
     }
   }
 
@@ -1869,7 +1855,7 @@
     &:hover {
       background-color: var(--color-accent);
       border-color: var(--color-accent);
-      color: #fff;
+      color: var(--color-white);
     }
   }
 }
@@ -1886,7 +1872,6 @@
     grid-template-columns: 1fr;
   }
 
-  /* ?�스?�톱 LNB???�기�? 모바???�블릿�? ?��? 버튼 + 모달 ?�용 */
   .publishing-guide__lnb {
     display: none;
   }
@@ -1921,7 +1906,6 @@
   }
 }
 
-/* 모바일 lnb 모달 */
 .publishing-guide__mobile-toggle {
   display: none;
   margin-bottom: px(12);
@@ -1999,7 +1983,6 @@
   gap: px(8);
 }
 
-// 다크모드 지원
 @media (prefers-color-scheme: dark) {
   .publishing-guide__mobile-lnb-modal {
     background-color: var(--color-card);
@@ -2032,7 +2015,6 @@
   100% { opacity: 0; transform: scale(0.8); }
 }
 
-/* 컴포넌트 조합 프리뷰 */
 .guide-preview--slot {
   width: 100%;
 }
@@ -2073,7 +2055,6 @@
   }
 }
 
-// Lottie 애니메이션 프리뷰
 .guide-preview--lottie {
   display: flex;
   flex-direction: column;
@@ -2157,7 +2138,6 @@
   }
 }
 
-// Color 프리뷰
 .guide-preview--color {
   display: flex;
   flex-direction: column;
@@ -2166,7 +2146,6 @@
   flex-wrap:nowrap;
 }
 
-// Spacing 프리뷰
 .guide-preview--spacing {
   display: flex;
   flex-direction: column;
@@ -2176,7 +2155,6 @@
   height: auto;
 }
 
-// Layout 프리뷰
 .guide-preview--layout-spacing {
   display: flex;
   flex-direction: column;
@@ -2187,7 +2165,6 @@
   overflow-x: hidden;
 }
 
-// Typography 프리뷰
 .guide-preview--typography {
   display: flex;
   flex-direction: column;
@@ -2231,7 +2208,6 @@
   border: 1px dashed var(--color-border);
 }
 
-// Carousel Combined Preview
 .guide-preview--carousel-combined {
   display: flex;
   flex-direction: column;
@@ -2290,7 +2266,6 @@
   }
 }
 
-// Carousel Effects Preview
 .guide-preview--carousel-effects {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(px(350), 1fr));
@@ -2410,7 +2385,7 @@
 
       &:hover {
         background-color: var(--color-accent);
-        color: #fff;
+        color: var(--color-white);
       }
 
       &.swiper-button-disabled {
@@ -2480,7 +2455,7 @@
       margin: 0 0 px(6) 0;
       @include px(font-size, 16);
       font-weight: 700;
-      color: #fff;
+      color: var(--color-white);
       word-break: break-word;
       z-index: 1;
     }
@@ -2511,7 +2486,6 @@
   }
 }
 
-// ListContainer 컴포넌트 미리보기
 .guide-preview--list-container {
   .list-container-demo {
     display: flex;

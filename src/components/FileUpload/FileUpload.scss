@@ -26,7 +26,7 @@
   display: block;
   min-height: px(200);
   border-radius: px(8);
-  background-color: #f5f5f5;
+  background-color: var(--color-bg-secondary);
   border: none;
   cursor: pointer;
   position: relative;
@@ -35,7 +35,7 @@
   flex-shrink: 0;
 
   &:hover {
-    background-color: #eeeeee;
+    background-color: var(--color-bg-gray-light);
   }
 
   // 파일이 없을 때는 전체 너비
@@ -63,7 +63,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #666666;
+  color: var(--color-gray-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -92,16 +92,16 @@
   }
 
   &::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--color-bg-gray-lighter);
     border-radius: px(4);
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #888;
+    background: var(--color-gray-medium);
     border-radius: px(4);
 
     &:hover {
-      background: #555;
+      background: var(--color-gray-dark);
     }
   }
 }
@@ -118,7 +118,7 @@
 
   &:hover {
     transform: scale(1.02);
-    box-shadow: 0 px(4) px(12) rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-overlay-medium);
   }
 }
 
@@ -168,8 +168,8 @@
   height: px(24);
   border: none;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.6);
-  color: #fff;
+  background: var(--color-overlay-darkest);
+  color: var(--color-white);
   cursor: pointer;
   display: flex;
   align-items: center;

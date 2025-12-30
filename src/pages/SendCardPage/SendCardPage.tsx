@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { DayPicker } from "react-day-picker";
 import { ko } from "date-fns/locale/ko";
 import "react-day-picker/dist/style.css";
-import Header from "../../components/Header/Header";
+import CommonLayout from "../../components/CommonLayout/CommonLayout";
 import Button from "../../components/Button/Button";
 import Card from "../../components/Card/Card";
 import Typography from "../../components/Typography/Typography";
@@ -284,15 +284,15 @@ const SendCardPage = () => {
   // 메시지 입력 화면
   if (showMessageInput) {
     return (
-      <div className="send-card-page">
-        <Header
-          variant="sub"
-          categoryName="누구에게 보낼까요?"
-          onBack={() => setShowMessageInput(false)}
-          showUtilities={false}
-          sticky={true}
-        />
-        <div className="send-card-page__content">
+      <CommonLayout
+        headerVariant="sub"
+        headerCategoryName="누구에게 보낼까요?"
+        headerOnBack={() => setShowMessageInput(false)}
+        headerShowUtilities={false}
+        headerSticky={true}
+      >
+        <div className="send-card-page">
+          <div className="send-card-page__content">
           {/* 수신자 선택 영역 */}
           <div className="send-card-page__recipient-section">
             <div className="send-card-page__recipient-header">
@@ -580,22 +580,22 @@ const SendCardPage = () => {
             보내기
           </Button>
         </div>
-      </div>
+        </div>
+      </CommonLayout>
     );
   }
 
   // 메인 화면
   return (
-    <div className="send-card-page">
-      <Header 
-      variant="sub"
-       categoryName="카드 보내기" 
-       onBack={handleBack} 
-       showUtilities={false} 
-       sticky={true}
-    />
-
-      <div className="send-card-page__content">
+    <CommonLayout
+      headerVariant="sub"
+      headerCategoryName="카드 보내기"
+      headerOnBack={handleBack}
+      headerShowUtilities={false}
+      headerSticky={true}
+    >
+      <div className="send-card-page">
+        <div className="send-card-page__content">
         {/* 수신자 선택 영역 */}
         <div className="send-card-page__recipient-section">
           <div className="send-card-page__recipient-header">
@@ -868,7 +868,8 @@ const SendCardPage = () => {
           보내기
         </Button>
       </div>
-    </div>
+      </div>
+    </CommonLayout>
   );
 };
 

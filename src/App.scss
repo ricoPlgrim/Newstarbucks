@@ -1,9 +1,5 @@
-// 전역 스타일 (변수, 믹스인, 유틸리티, base)
-// CSS 변수는 한 번만 정의되어야 함
 @use "./styles/variables" as *;
-// 전역 reset 및 기본 스타일
 @use "./styles/base" as *;
-// 믹스인, 유틸리티는 컴포넌트에서도 사용 가능하도록 forward
 @use "./styles/index.scss" as *;
 
 .app-shell {
@@ -115,7 +111,7 @@
 
   &.is-active {
     background-color: var(--color-accent);
-    color: #fff;
+    color: var(--color-white);
     border-color: transparent;
   }
 }

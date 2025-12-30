@@ -2,7 +2,7 @@
 
 .received-card-page {
   min-height: 100vh;
-  background-color: #fce4ec;
+  background-color: var(--color-pink-light);
 
   &__content {
     padding-bottom: px(80);
@@ -13,7 +13,7 @@
   }
 
   &__sender-info {
-    background-color: #f5f5f5;
+    background-color: var(--color-bg-secondary);
     padding: px(12) px(16);
     border-radius: px(8);
     display: flex;
@@ -46,6 +46,10 @@
     border-radius: px(12);
     padding: px(20) 0;
     margin-bottom: px(24);
+    position: relative;
+    overflow: visible; // html2canvas 캡처를 위해
+    width: 100%;
+    box-sizing: border-box;
   }
 
   &__card {
@@ -75,7 +79,7 @@
     bottom: px(40);
     left: 50%;
     transform: translateX(-50%);
-    background-color: #fff;
+    background-color: var(--color-card);
     padding: px(12) px(16);
     border-radius: px(8);
     width: calc(100% - px(32));
@@ -118,7 +122,7 @@
   }
 
   &__public-toggle {
-    background-color: #fff; 
+    background-color: var(--color-card); 
     padding: px(16) px(20);
     display: flex;
     justify-content: space-between;
@@ -142,11 +146,15 @@
 
   // 편지지 UI (카드 공개 시)
   &__letter {
-    background-color: #fff;
+    background-color: var(--color-card);
     border-radius: px(12);
     padding: 0;
-    box-shadow: 0 px(2) px(8) rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-overlay);
     position: relative;
+    overflow: visible; // html2canvas 캡처를 위해
+    width: 100%;
+    box-sizing: border-box;
+    min-height: px(200); // 최소 높이 보장
     
     // 편지지 패턴 효과 (선택사항)
     &::before {
@@ -160,26 +168,29 @@
         to bottom,
         transparent,
         transparent px(20),
-        rgba(0, 0, 0, 0.05) px(20),
-        rgba(0, 0, 0, 0.05) px(21)
+        var(--color-overlay-light) px(20),
+        var(--color-overlay-light) px(21)
       );
+      z-index: 0; // html2canvas 캡처를 위해
     }
   }
 
   &__letter-header {
     margin-bottom: px(24);
     width: 100%;
-    background-color: #d4f4e0; // 연한 민트 그린 배경
+    background-color: var(--color-mint-light); // 연한 민트 그린 배경
     border-radius: px(12) px(12) 0 0; // 상단만 둥근 모서리
     overflow: hidden;
-    max-height: px(100);
-    overflow: hidden;
+    max-height: px(200);
+    min-height: px(80);
+    box-sizing: border-box;
     
     img {
       width: 100%;
       height: auto;
       object-fit: contain;
       display: block;
+      max-height: px(200);
     }
   }
 
@@ -194,11 +205,14 @@
     padding-bottom: px(28);
     border-bottom: px(1) solid var(--color-border);
     position: relative;
+    z-index: 1; // 패턴 위에 표시
+    width: 100%;
+    box-sizing: border-box;
   }
 
   &__letter-line {
     padding: px(6) 0;
-    border-bottom: px(1) solid rgba(0, 0, 0, 0.1);
+    border-bottom: px(1) solid var(--color-overlay-light);
     text-align: center;
   }
 
@@ -222,7 +236,7 @@
   &__download-button {
     width: px(32);
     height: px(32);
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: var(--color-overlay-light);
     border: none;
     border-radius: px(6);
     display: flex;
@@ -238,14 +252,14 @@
     svg {
       width: px(20);
       height: px(20);
-      color: rgba(0, 0, 0, 0.6);
+      color: var(--color-text-lighter);
     }
     
     &:hover {
-      background-color: rgba(0, 0, 0, 0.1);
+      background-color: var(--color-overlay-light);
       
       svg {
-        color: rgba(0, 0, 0, 0.8);
+        color: var(--color-text-dark);
       }
     }
     
@@ -261,7 +275,7 @@
     left: 0;
     right: 0;
     padding: px(16) px(20);
-    background-color: #fff;
+    background-color: var(--color-card);
     z-index: 100;
   }
 

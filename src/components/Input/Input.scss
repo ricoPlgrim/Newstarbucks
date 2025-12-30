@@ -28,20 +28,20 @@
     }
 
     &--error {
-      border-color: #ef4444;
+      border-color: var(--color-error);
 
       &:focus-within {
-        border-color: #ef4444;
-        box-shadow: 0 0 0 px(3) rgba(239, 68, 68, 0.1);
+        border-color: var(--color-error);
+        box-shadow: 0 0 0 px(3) var(--color-error-bg);
       }
     }
 
     &--success {
-      border-color: #22c55e;
+      border-color: var(--color-success);
 
       &:focus-within {
-        border-color: #22c55e;
-        box-shadow: 0 0 0 px(3) rgba(34, 197, 94, 0.1);
+        border-color: var(--color-success);
+        box-shadow: 0 0 0 px(3) var(--color-success-bg);
       }
     }
   }
@@ -132,7 +132,7 @@
 
     &:hover {
       color: var(--color-text);
-      background: rgba(0, 0, 0, 0.05);
+      background: var(--color-overlay-light);
     }
 
     &--password {
@@ -148,11 +148,11 @@
       padding: 0;
 
       &.input-field__icon--error {
-        color: #ef4444;
+        color: var(--color-error);
       }
 
       &.input-field__icon--success {
-        color: #22c55e;
+        color: var(--color-success);
       }
     }
   }

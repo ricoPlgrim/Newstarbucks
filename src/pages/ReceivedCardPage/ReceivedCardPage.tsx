@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 // @ts-ignore
 import html2canvas from "html2canvas";
-import Header from "../../components/Header/Header";
+import CommonLayout from "../../components/CommonLayout/CommonLayout";
 import Button from "../../components/Button/Button";
 import Typography from "../../components/Typography/Typography";
 import Toggle from "../../components/Toggle/Toggle";
@@ -66,14 +66,88 @@ const ReceivedCardPage = () => {
     }
 
     try {
-      // 편지지 또는 카드 영역만 캡처
+      // 스크롤 위치 저장 및 초기화
+      const originalScrollX = window.scrollX;
+      const originalScrollY = window.scrollY;
+      window.scrollTo(0, 0);
+
+      // 이미지 로딩 대기
+      const images = targetRef.current.querySelectorAll('img');
+      const imagePromises = Array.from(images).map((img) => {
+        if (img.complete) {
+          return Promise.resolve();
+        }
+        return new Promise<void>((resolve, reject) => {
+          img.onload = () => resolve();
+          img.onerror = () => resolve(); // 에러가 나도 계속 진행
+          // 타임아웃 설정 (5초)
+          setTimeout(() => resolve(), 5000);
+        });
+      });
+      await Promise.all(imagePromises);
+
+      // 렌더링 완료를 위한 짧은 대기
+      await new Promise((resolve) => setTimeout(resolve, 200));
+
+      // 요소의 실제 크기 계산
+      const rect = targetRef.current.getBoundingClientRect();
+      const elementWidth = Math.ceil(targetRef.current.offsetWidth || rect.width);
+      const elementHeight = Math.ceil(targetRef.current.scrollHeight || targetRef.current.offsetHeight || rect.height);
+
+      // 모바일에서도 정확한 캡처를 위한 설정
       const canvas = await html2canvas(targetRef.current, {
         backgroundColor: '#fce4ec',
-        scale: 2, // 고해상도
+        scale: Math.min(window.devicePixelRatio || 2, 3), // 디바이스 픽셀 비율 사용, 최대 3배
         logging: false,
         useCORS: true,
-        allowTaint: true,
+        allowTaint: false,
+        removeContainer: false,
+        width: elementWidth,
+        height: elementHeight,
+        x: 0,
+        y: 0,
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: elementWidth,
+        windowHeight: elementHeight,
+        ignoreElements: (element) => {
+          // 다운로드 버튼은 제외
+          return element.classList?.contains('received-card-page__download-button') || false;
+        },
+        onclone: (clonedDoc) => {
+          // 클론된 문서에서 편지지 스타일 보정
+          const clonedLetter = clonedDoc.body.querySelector('.received-card-page__letter');
+          const clonedCardContainer = clonedDoc.body.querySelector('.received-card-page__card-container');
+          const clonedElement = clonedLetter || clonedCardContainer;
+          
+          if (clonedElement) {
+            const htmlElement = clonedElement as HTMLElement;
+            // 모바일에서도 정확한 크기와 배경 유지
+            htmlElement.style.width = `${elementWidth}px`;
+            htmlElement.style.height = 'auto';
+            htmlElement.style.maxWidth = 'none';
+            htmlElement.style.boxSizing = 'border-box';
+            htmlElement.style.backgroundColor = htmlElement.style.backgroundColor || '#fff';
+            
+            // 편지지인 경우 배경색 명시
+            if (clonedLetter) {
+              htmlElement.style.backgroundColor = '#fff';
+              htmlElement.style.borderRadius = '12px';
+            }
+          }
+          
+          // 배경색이 제대로 적용되도록 body 스타일 설정
+          const clonedBody = clonedDoc.body;
+          if (clonedBody) {
+            clonedBody.style.backgroundColor = '#fce4ec';
+            clonedBody.style.margin = '0';
+            clonedBody.style.padding = '0';
+          }
+        },
       } as any);
+
+      // 스크롤 위치 복원
+      window.scrollTo(originalScrollX, originalScrollY);
 
       // Canvas를 Blob으로 변환
       canvas.toBlob((blob) => {
@@ -117,16 +191,15 @@ const ReceivedCardPage = () => {
   };
 
   return (
-    <div className="received-card-page">
-      <Header
-        variant="sub"
-        categoryName="받은 카드"
-        onBack={() => navigate(-1)}
-        showUtilities={false}
-        sticky={true}
-      />
-      
-      <div className="received-card-page__content">
+    <CommonLayout
+      headerVariant="sub"
+      headerCategoryName="받은 카드"
+      headerOnBack={() => navigate(-1)}
+      headerShowUtilities={false}
+      headerSticky={true}
+    >
+      <div className="received-card-page">
+        <div className="received-card-page__content">
         <div className="received-card-page__content-inner">
           {/* 발신자 정보 */}
           <div className="received-card-page__sender-info">
@@ -276,8 +349,9 @@ const ReceivedCardPage = () => {
             답장하기
           </Button>
         </div>
+        </div>
       </div>
-    </div>
+    </CommonLayout>
   );
 };
 

@@ -1,15 +1,21 @@
 @use "../../styles/index.scss" as *;
 
 .bottom-dock {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   width: 100%;
-  position: relative;
   display: flex;
   gap: px(8);
   padding: px(10) px(12);
-  border-radius: px(14);
-  background: rgba(12, 124, 89, 0.08);
-  border: 1px solid rgba(12, 124, 89, 0.2);
-  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.12);
+  padding-bottom: calc(#{px(10)} + env(safe-area-inset-bottom, 0px));
+  background: var(--color-card);
+  z-index: 1000;
+  // 모바일 주소창 고려
+  @supports (padding: max(0px)) {
+    padding-bottom: max(#{px(10)}, env(safe-area-inset-bottom));
+  }
 
   &__item {
     flex: 1;
@@ -35,9 +41,9 @@
 
     &.is-active {
       background: var(--color-accent);
-      color: #fff;
+      color: var(--color-white);
       border-color: var(--color-accent);
-      box-shadow: 0 6px 18px rgba(12, 124, 89, 0.25);
+      box-shadow: var(--shadow-overlay-medium);
     }
   }
 

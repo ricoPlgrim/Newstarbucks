@@ -26,7 +26,7 @@
     }
 
     &--error {
-      border-color: #ef4444 !important;
+      border-color: var(--color-error) !important;
 
       &:focus-within {
         border: none !important;
@@ -35,7 +35,7 @@
     }
 
     &--byte-limit {
-      border-color: #ef4444 !important;
+      border-color: var(--color-error) !important;
 
       &:focus-within {
         border: none !important;
@@ -121,7 +121,7 @@
     margin: 0;
 
     &--error {
-      color: #ef4444;
+      color: var(--color-error);
     }
   }
 
@@ -134,7 +134,7 @@
     line-height: 1.4;
 
     &--exceeded {
-      color: #ef4444;
+      color: var(--color-error);
       font-weight: 600;
     }
   }

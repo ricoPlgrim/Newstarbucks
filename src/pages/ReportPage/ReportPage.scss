@@ -69,7 +69,7 @@
     display: inline-block;
     padding: px(4) px(12);
     background-color: var(--color-accent);
-    color: #fff;
+    color: var(--color-white);
     border-radius: px(16);
     font-size: px(13);
     font-weight: 500;
@@ -202,7 +202,7 @@
     background-color: var(--color-bg);
     border: px(1) solid var(--color-border);
     border-radius: px(12);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-overlay-medium);
     padding: px(16);
     min-width: px(300);
     max-width: calc(100vw - px(40));
@@ -221,7 +221,7 @@
     background-color: var(--color-bg);
     border: px(1) solid var(--color-border);
     border-radius: px(12);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-overlay-medium);
     padding: px(16);
     min-width: px(280);
     max-width: calc(100vw - px(40));
@@ -276,7 +276,7 @@
 
     &.is-selected {
       background-color: var(--color-accent);
-      color: #fff;
+      color: var(--color-white);
       border-color: var(--color-accent);
     }
   }

@@ -76,8 +76,8 @@
     right: px(4);
     width: px(18);
     height: px(18);
-    background-color: #ff4444;
-    color: #fff;
+    background-color: var(--color-red-light);
+    color: var(--color-white);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -88,7 +88,7 @@
 
   &__welcome-banner {
     padding: px(16) px(20);
-    background-color: #e8f5e9;
+    background-color: var(--color-green-light);
     color: var(--color-text);
   }
 
@@ -96,7 +96,7 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: px(1);
-    background-color: #00704a;
+    background-color: var(--color-accent-dark);
     padding: px(1);
     margin: px(20);
     border-radius: px(12);
@@ -110,7 +110,7 @@
     justify-content: flex-start;
     gap: px(8);
     padding: px(16) px(8);
-    background-color: #00704a;
+    background-color: var(--color-accent-dark);
     border: none;
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -150,7 +150,7 @@
     position: relative;
     padding: px(16);
     border-radius: px(12);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-overlay);
     text-align: center;
   }
 
@@ -170,7 +170,7 @@
     border: none;
     padding: px(4);
     cursor: pointer;
-    color: #000;
+    color: var(--color-text-dark);
     width: px(24);
     height: px(24);
     display: flex;
@@ -180,7 +180,7 @@
   }
 
   &__notice-title {
-    color: #00704a;
+    color: var(--color-accent-dark);
     font-size: px(14);
     font-weight: 600;
     margin: 0;
@@ -189,7 +189,7 @@
 
   &__notice-content {
     margin-bottom: px(12);
-    color: #000;
+    color: var(--color-text-dark);
     font-size: px(13);
     line-height: 1.5;
     text-align: center;
@@ -199,7 +199,7 @@
     background: none;
     border: none;
     padding: 0;
-    color: #000;
+    color: var(--color-text-dark);
     font-size: px(13);
     cursor: pointer;
     text-decoration: underline;
@@ -291,7 +291,7 @@
 
   &__promo-card {
     padding: 0 !important;
-    background: #d32f2f;
+    background: var(--color-red-dark);
     border: none;
     height: 100%;
     overflow: hidden;
@@ -340,13 +340,13 @@
       flex-direction: column;
       justify-content: flex-end;
       padding: 0;
-      color: #fff;
+      color: var(--color-white);
       border: none;
       border-radius: 0;
       box-shadow: none;
       box-sizing: border-box;
       margin: 0;
-      background: #d32f2f;
+      background: var(--color-red-dark);
       position: relative;
     }
 
@@ -446,10 +446,10 @@
     }
 
     &--active {
-      color: #00704a;
+      color: var(--color-accent-dark);
 
       .mobile-office-home__nav-icon-wrapper {
-        background-color: rgba(0, 112, 74, 0.1);
+        background-color: var(--color-brand-primary-light);
         border-radius: px(8);
         padding: px(4);
       }

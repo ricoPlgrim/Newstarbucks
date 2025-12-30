@@ -2,7 +2,9 @@
 
 .publishing-url-page {
   width: 100%;
+  max-width: 100%;
   padding: 0;
+  overflow-x: hidden; // 부모에서 오버플로우 방지
 
   &__header {
     margin-bottom: 0;
@@ -18,27 +20,30 @@
 
   &__table-container {
     width: 100% !important;
+    max-width: 100% !important;
     padding: 0 !important;
     background-color: var(--color-card);
     border: 1px solid var(--color-border);
     overflow-x: auto;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    position: relative;
   }
 }
 
 .publishing-url-table {
   width: 100%;
   min-width: 840px; // 가로 스크롤을 위한 최소 너비 확보
+  max-width: 100%; // PC에서 화면을 넘지 않도록
   border-collapse: collapse;
   table-layout: fixed; // 테이블 레이아웃 고정으로 일관성 유지
 
   thead {
     background-color: var(--color-accent);
-    color: #fff;
+    color: var(--color-white);
 
     th {
-      padding: px-to-rem(20) px-to-rem(16);
+      padding: px(20) px(16);
       text-align: left;
       font-weight: 600;
       font-size: 0.95rem;
@@ -61,20 +66,51 @@
     }
 
     td {
-      padding: px-to-rem(20) px-to-rem(16);
+      padding: px(20) px(16);
       vertical-align: middle;
-      white-space: nowrap; // 뎁스 열 줄바꿈 방지
+      overflow: hidden;
+      text-overflow: ellipsis;
+      
+      // 뎁스 컬럼들 (1-4)
+      &:nth-child(1),
+      &:nth-child(2),
+      &:nth-child(3),
+      &:nth-child(4) {
+        white-space: nowrap;
+        max-width: px(150);
+      }
+      
+      // URL 컬럼 (5)
+      &:nth-child(5) {
+        white-space: nowrap;
+        max-width: px(300);
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      
+      // 설명 컬럼 (6)
+      &:nth-child(6) {
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        max-width: px(400);
+      }
       
       &:first-child {
         font-weight: 600;
         color: var(--color-accent);
-        min-width: 120px; // 뎁스1 컬럼 최소 너비 확장
+        min-width: px(100);
       }
 
       a {
         color: var(--color-accent);
         text-decoration: none;
         font-weight: 500;
+        display: inline-block;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
 
         &:hover {
           text-decoration: underline;
@@ -126,7 +162,7 @@
     table-layout: fixed; // 고정 레이아웃 유지
 
     thead th {
-      padding: px-to-rem(12) px-to-rem(8);
+      padding: px(12) px(8);
       font-size: 0.7rem;
       white-space: nowrap;
       overflow: hidden;
@@ -142,7 +178,7 @@
     }
 
     tbody td {
-      padding: px-to-rem(12) px-to-rem(8);
+      padding: px(12) px(8);
       font-size: 0.75rem;
       vertical-align: top;
       overflow: hidden;
@@ -174,13 +210,19 @@
   }
 }
 
-// 테블릿 이상에서 thead 고정
+// PC (769px 이상)
 @media (min-width: 769px) {
-  .publishing-url-page__table-container {
-    position: relative;
+  .publishing-url-page {
+    &__table-container {
+      position: relative;
+      max-width: 100%;
+    }
   }
 
   .publishing-url-table {
+    min-width: 840px;
+    max-width: 100%;
+    
     thead {
       position: sticky;
       top: 0;
@@ -191,6 +233,21 @@
         top: 0;
         z-index: 3;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+    
+    tbody {
+      td {
+        // PC에서도 적절한 너비 제한
+        &:nth-child(1) { max-width: px(120); }
+        &:nth-child(2) { max-width: px(120); }
+        &:nth-child(3) { max-width: px(120); }
+        &:nth-child(4) { max-width: px(120); }
+        &:nth-child(5) { max-width: px(350); }
+        &:nth-child(6) { max-width: px(450); }
       }
     }
   }

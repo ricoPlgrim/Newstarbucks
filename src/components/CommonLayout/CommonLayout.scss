@@ -1,0 +1,15 @@
+@use "../../styles/index.scss" as *;
+
+.common-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &__content {
+    flex: 1;
+    width: 100%;
+    min-height: 0; // flexbox 오버플로우 방지
+  }
+}
+

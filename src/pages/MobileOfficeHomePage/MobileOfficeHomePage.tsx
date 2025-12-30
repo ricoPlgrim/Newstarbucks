@@ -1,5 +1,6 @@
 import { useState } from "react";
 import React from "react";
+import CommonLayout from "../../components/CommonLayout/CommonLayout";
 import Button from "../../components/Button/Button";
 import Card from "../../components/Card/Card";
 import Badge from "../../components/Badge/Badge";
@@ -70,10 +71,9 @@ const MobileOfficeHomePage = () => {
     },
   ];
 
-  return (
-    <div className="mobile-office-home">
-      {/* 커스텀 헤더 (MOBILE OFFICE + 알림) */}
-      <div className="mobile-office-home__custom-header">
+  // 커스텀 헤더 컴포넌트
+  const customHeader = (
+    <div className="mobile-office-home__custom-header">
         {/* 햄버거 메뉴 */}
         <button
           className="mobile-office-home__hamburger"
@@ -126,9 +126,31 @@ const MobileOfficeHomePage = () => {
             <span className="mobile-office-home__notification-badge">{notificationCount}</span>
           )}
         </button>
-      </div>
+    </div>
+  );
 
-      {/* 환영 배너 */}
+  // 하단 네비게이션 아이템
+  const bottomDockItems = [
+    { key: "maintenance", label: "유지보수", icon: "🔧" },
+    { key: "home", label: "홈", icon: "🏠" },
+    { key: "green-apron", label: "그린에이프런", icon: "👔" },
+  ];
+
+  const handleBottomDockChange = (key: string) => {
+    console.log(`하단 네비게이션 클릭: ${key}`);
+    // 여기에 라우팅 로직 추가 가능
+  };
+
+  return (
+    <CommonLayout
+      customHeader={customHeader}
+      showBottomDock={true}
+      bottomDockItems={bottomDockItems}
+      bottomDockOnChange={handleBottomDockChange}
+      bottomDockDefaultActive="home"
+    >
+      <div className="mobile-office-home">
+        {/* 환영 배너 */}
       <div className="mobile-office-home__welcome-banner">
         <Typography variant="body" size="medium" weight="medium" align="center">
           [숭례문타워점]셀리님 안녕하세요! 😊💚
@@ -222,24 +244,6 @@ const MobileOfficeHomePage = () => {
         </div>
       </div>
 
-      {/* 하단 네비게이션 */}
-      <nav className="mobile-office-home__bottom-nav">
-        <button className="mobile-office-home__nav-item">
-          <Icon name="maintenance" size="medium">🔧</Icon>
-          <Typography variant="caption" size="small">유지보수</Typography>
-        </button>
-        <button className="mobile-office-home__nav-item mobile-office-home__nav-item--active">
-          <div className="mobile-office-home__nav-icon-wrapper">
-            <Icon name="home" size="medium">🏠</Icon>
-          </div>
-          <Typography variant="caption" size="small">홈</Typography>
-        </button>
-        <button className="mobile-office-home__nav-item">
-          <Icon name="green-apron" size="medium">👔</Icon>
-          <Typography variant="caption" size="small">그린에이프런</Typography>
-        </button>
-      </nav>
-
       {/* 바텀 팝업 */}
       <BottomSheetPopup
         open={isBottomPopupOpen}
@@ -258,7 +262,8 @@ const MobileOfficeHomePage = () => {
           },
         ]}
       />
-    </div>
+      </div>
+    </CommonLayout>
   );
 };
 

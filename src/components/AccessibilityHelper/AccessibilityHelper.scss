@@ -32,7 +32,7 @@
     gap: px-to-rem(4);
     padding: px-to-rem(12);
     background: var(--color-accent);
-    color: #ffffff;
+    color: var(--color-white);
     border: none;
     border-radius: px-to-rem(8) 0 0 px-to-rem(8);
     cursor: pointer;
@@ -40,7 +40,7 @@
     font-weight: 600;
     writing-mode: vertical-rl;
     text-orientation: mixed;
-    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-overlay);
     transition: left 0.3s ease, transform 0.3s ease;
     // 닫을 때 opacity 애니메이션 제거
     opacity: 1;
@@ -49,7 +49,7 @@
     &:focus {
       background: var(--color-accent);
       filter: brightness(0.9);
-      outline: 2px solid #ffffff;
+      outline: 2px solid var(--color-white);
       outline-offset: -2px;
     }
 
@@ -81,7 +81,7 @@
     border-top: 1px solid var(--color-border);
     border-bottom: 1px solid var(--color-border);
     border-radius: px-to-rem(8) 0 0 px-to-rem(8);
-    box-shadow: -4px 0 16px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-overlay-large);
     opacity: 1;
     transform: translateX(100%);
     transition: transform 0.3s ease;
@@ -158,7 +158,7 @@
 
     &.is-active {
       background: var(--color-accent);
-      color: #ffffff;
+      color: var(--color-white);
       border-color: var(--color-accent);
     }
   }

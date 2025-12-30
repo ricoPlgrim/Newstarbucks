@@ -3,7 +3,7 @@
 .popup-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: var(--color-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,18 +15,18 @@
   }
 
   &--full {
-    background: rgba(0, 0, 0, 0.65);
+    background: var(--color-overlay-dark);
   }
 
 }
 
 .popup {
-  background: #fff;
+  background: var(--color-card);
   border-radius: px(18);
   min-width: min(px(360), 92vw);
   max-width: px(420);
-  box-shadow: 0 px(16) px(48) rgba(0, 0, 0, 0.28);
-  color: #111;
+  box-shadow: var(--shadow-overlay-dark);
+  color: var(--color-text-dark);
   line-height: 1.5;
   display: flex;
   flex-direction: column;
@@ -56,7 +56,7 @@
       background: transparent;
       .popup__body,
       .popup__actions{
-        background: #fff;
+        background: var(--color-card);
         border-radius: px(18);
         padding: 0;
       }
@@ -76,12 +76,12 @@
   }
 
   h4 {
-    color: #111;
+    color: var(--color-text-dark);
   }
 
   p {
     margin: 0;
-    color: #444;
+    color: var(--color-text-light);
   }
 
   &__handle {
@@ -111,7 +111,7 @@
   }
 
   &__body {
-    color: #111;
+    color: var(--color-text-dark);
     line-height: 1.6;
     display: flex;
     flex-direction: column;
@@ -133,12 +133,12 @@
   &__title {
     margin: 0;
     font-weight: 700;
-    color: #111;
+    color: var(--color-text-dark);
   }
 
   &__description {
     margin: 0;
-    color: #666;
+    color: var(--color-text-lighter);
   }
 
   &__options {
@@ -170,11 +170,11 @@
     }
 
     &:hover {
-      background: rgba(0, 0, 0, 0.04);
+      background: var(--color-overlay-lighter);
     }
 
     &:active {
-      background: rgba(0, 0, 0, 0.08);
+      background: var(--color-overlay-light);
     }
   }
 
@@ -187,7 +187,7 @@
   &__option-label {
     font-size: px(16);
     font-weight: 600;
-    color: #111;
+    color: var(--color-text-dark);
     flex: 1;
   }
 
@@ -271,7 +271,7 @@
     cursor: pointer;
     transition: all 0.2s ease;
     color: var(--color-text);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-overlay-medium);
 
     &:hover {
       background: var(--color-accent);
@@ -332,15 +332,15 @@
     font-weight: 700;
     font-size: px(14);
     cursor: pointer;
-    border: px(1) solid #dcdcdc;
-    background: #f9f9f9;
+    border: px(1) solid var(--color-gray-border-light);
+    background: var(--color-bg-gray-darkest);
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
     width: 100%;
 
     &--primary {
       color: var(--color-accent);
       border-color: var(--color-accent);
-      background: #fff;
+      background: var(--color-card);
 
       &:hover {
         background: rgba(12, 124, 89, 0.08);
@@ -348,7 +348,7 @@
     }
 
     &--ghost {
-      color: #111;
+      color: var(--color-text-dark);
 
       &:hover {
         background: rgba(0, 0, 0, 0.05);
@@ -511,7 +511,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: #fff;
+      background: var(--color-card);
       border-radius: px(20);
       padding: px(6) px(12);
       font-size: px(14);
@@ -524,7 +524,7 @@
       }
 
       .swiper-pagination-total {
-        color: #111;
+        color: var(--color-text-dark);
       }
     }
 

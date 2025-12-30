@@ -3,12 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { DayPicker } from "react-day-picker";
 import { ko } from "date-fns/locale/ko";
 import "react-day-picker/dist/style.css";
-import Header from "../../components/Header/Header";
+import CommonLayout from "../../components/CommonLayout/CommonLayout";
 import FileUpload from "../../components/FileUpload/FileUpload";
 import Button from "../../components/Button/Button";
 import Textarea from "../../components/Textarea/Textarea";
 import Checkbox from "../../components/Checkbox/Checkbox";
-import ScrollTop from "../../components/ScrollTop/ScrollTop";
 import Typography from "../../components/Typography/Typography";
 import "./ReportPage.scss";
 
@@ -194,16 +193,16 @@ const ReportPage = () => {
   };
 
   return (
-    <div className="report-page">
-      <Header
-        variant="sub"
-        categoryName="보고작성"
-        onBack={() => navigate(-1)}
-        onCartClick={() => {}}
-        onUtilityClick={() => {}}
-        showUtilities={false}
-        sticky={true}
-      />
+    <CommonLayout
+      headerVariant="sub"
+      headerCategoryName="보고작성"
+      headerOnBack={() => navigate(-1)}
+      headerOnCartClick={() => {}}
+      headerOnUtilityClick={() => {}}
+      headerShowUtilities={false}
+      headerSticky={true}
+    >
+      <div className="report-page">
 
       <form className="report-page__form" onSubmit={handleSubmit}>
         {/* 카테고리 */}
@@ -590,9 +589,8 @@ const ReportPage = () => {
           보고하기
         </Button>
       </div>
-
-      <ScrollTop />
-    </div>
+      </div>
+    </CommonLayout>
   );
 };
 
