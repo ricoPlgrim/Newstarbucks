@@ -12,9 +12,17 @@
   padding-bottom: calc(#{px(10)} + env(safe-area-inset-bottom, 0px));
   background: var(--color-card);
   z-index: 1000;
-  // 모바일 주소창 고려
   @supports (padding: max(0px)) {
     padding-bottom: max(#{px(10)}, env(safe-area-inset-bottom));
+  }
+
+  &--relative {
+    position: relative !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100%;
+    z-index: auto !important;
   }
 
   &__item {

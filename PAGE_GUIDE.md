@@ -428,8 +428,9 @@ export default MyPage;
 - **Header** - 모바일 헤더 (메인 헤더: 햄버거 메뉴 / 서브 헤더: 뒤로가기, 카테고리명, 유틸리티 버튼, `sticky` prop으로 sticky 위치 지정 가능)
 - **Footer** - 푸터
 - **PageTemplate** - 페이지 템플릿 (다크모드, 폰트 스케일 지원)
+- **CommonLayout** - 공통 레이아웃 컴포넌트 (Header, Footer, BottomDock, ScrollTop 통합 관리, 다양한 props로 커스터마이징 가능)
 - **ListContainer** - 리스트 컨테이너 (section/article 태그 기반)
-- **ScrollTop** - 스크롤 탑 버튼 (스크롤 시 나타나는 상단 이동 버튼, `showAfter`, `smooth` props 지원)
+- **ScrollTop** - 스크롤 탑 버튼 (스크롤 시 나타나는 상단 이동 버튼, `showAfter`, `smooth` props 지원, CommonLayout에서 통합 관리)
 
 ### 입력 컴포넌트
 - **Input** - 텍스트 입력 (text, password, number, tel, email, 자동 하이픈 포맷팅)
@@ -439,7 +440,7 @@ export default MyPage;
 - **SearchField** - 검색 필드 (검색 아이콘, 클리어 버튼)
 
 ### 선택 컴포넌트
-- **Checkbox** - 체크박스 (단일/그룹)
+- **Checkbox** - 체크박스 (단일/그룹, 전체 선택 기능 지원, `showSelectAll`, `selectAllLabel` props, indeterminate 상태 지원)
 - **Radio** - 라디오 버튼 (단일/그룹)
 
 ### 리스트 & 카드
@@ -450,10 +451,10 @@ export default MyPage;
 - **DataList** - API 데이터 리스트 컴포넌트 (목업 API를 통해 데이터를 가져와서 리스트 형태로 표시, 로딩/에러/빈 상태 자동 처리, Card/List/Table 등 다양한 렌더링 유형 지원)
 
 ### 네비게이션
-- **Tabs** - 탭 인터페이스 (default, scroll, swiper 타입, showContent prop으로 탭 UI만 표시 가능)
+- **Tabs** - 탭 인터페이스 (default, scroll, swiper 타입, showContent prop으로 탭 UI만 표시 가능, iOS 스타일 스크롤바 지원)
 - **Pagination** - 페이지네이션
 - **Accordion** - 아코디언 (exclusive, independent 타입)
-- **BottomDock** - 하단 돗바
+- **BottomDock** - 하단 내비게이션
 
 ### 피드백
 - **Toast** - 토스트 알림 (빈 메시지일 때 자동으로 렌더링하지 않음, 조건부 렌더링 강화)

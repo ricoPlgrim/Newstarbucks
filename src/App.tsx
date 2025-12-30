@@ -10,7 +10,6 @@ import MobileOfficeHomePage from "./pages/MobileOfficeHomePage/MobileOfficeHomeP
 import SendCardPage from "./pages/SendCardPage/SendCardPage";
 import ReceivedCardPage from "./pages/ReceivedCardPage/ReceivedCardPage";
 import Footer from "./components/Footer/Footer";
-import ScrollTop from "./components/ScrollTop/ScrollTop";
 import "./App.scss";
 
 function AppNav() {
@@ -81,9 +80,6 @@ function AppContent() {
       </Routes>
 
       {!isLoginPage && !isReportPage && !isMobileOfficeHome && !isSendCardPage && !isReceivedCardPage && <Footer />}
-      
-      {/* 전역 ScrollTop 버튼 - 모든 페이지에서 표시 */}
-      <ScrollTop showAfter={100} smooth={true} />
     </div>
   );
 }

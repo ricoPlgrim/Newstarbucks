@@ -4,7 +4,26 @@
   width: 100%;
   max-width: 100%;
   padding: 0;
-  overflow-x: hidden; // 부모에서 오버플로우 방지
+  overflow-x: hidden;
+
+  .bottom-dock,
+  nav.bottom-dock {
+    position: relative !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100%;
+    z-index: auto !important;
+  }
+
+  .bottom-dock--relative {
+    position: relative !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100%;
+    z-index: auto !important;
+  }
 
   &__header {
     margin-bottom: 0;

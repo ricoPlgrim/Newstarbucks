@@ -69,6 +69,12 @@
   --shadow-overlay-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
   --shadow-overlay-large: 0 4px 16px rgba(0, 0, 0, 0.15);
   --shadow-overlay-dark: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+  // 스크롤바 (iOS 스타일)
+  --color-scrollbar-track: transparent;
+  --color-scrollbar-thumb: rgba(0, 0, 0, 0.4);
+  --color-scrollbar-thumb-hover: rgba(0, 0, 0, 0.5);
+  --color-scrollbar-thumb-active: rgba(0, 0, 0, 0.6);
 }
 
 :root[data-theme="dark"] {
@@ -141,6 +147,12 @@
   --shadow-overlay-medium: 0 4px 12px rgba(0, 0, 0, 0.4);
   --shadow-overlay-large: 0 4px 16px rgba(0, 0, 0, 0.4);
   --shadow-overlay-dark: 0 4px 12px rgba(0, 0, 0, 0.5);
+
+  // 스크롤바 (다크모드, iOS 스타일)
+  --color-scrollbar-track: transparent;
+  --color-scrollbar-thumb: rgba(255, 255, 255, 0.4);
+  --color-scrollbar-thumb-hover: rgba(255, 255, 255, 0.5);
+  --color-scrollbar-thumb-active: rgba(255, 255, 255, 0.6);
 }
 
 :root[data-font-scale="small"] {

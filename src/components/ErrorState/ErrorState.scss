@@ -9,15 +9,12 @@
   padding: px(60) px(20);
   min-height: px(300);
   background-color: var(--color-card);
-  border: px(1) solid var(--color-border);
   border-radius: px(12);
 
   &__icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: px(100);
-    height: px(100);
     margin-bottom: px(20);
     font-size: px(64);
     line-height: 1;

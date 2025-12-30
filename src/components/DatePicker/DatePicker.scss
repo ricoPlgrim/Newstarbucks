@@ -244,4 +244,56 @@
 .rdp-day_button{
   border: none !important;
   border-radius: 0 !important;
-} 
+}
+
+.date-picker__popover--time,
+.date-picker__popover--datetime {
+  max-height: px(500);
+  overflow-y: auto;
+}
+
+.date-picker__time-section {
+  margin-bottom: px(16);
+
+  &:last-of-type {
+    margin-bottom: px(12);
+  }
+}
+
+.date-picker__time-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: px(6);
+  max-height: px(200);
+  overflow-y: auto;
+  padding: px(4);
+  margin: px(-4);
+}
+
+.date-picker__time-minutes {
+  display: flex;
+  gap: px(8);
+}
+
+.date-picker__time-btn {
+  padding: px(8) px(12);
+  background-color: var(--color-bg);
+  border: px(1) solid var(--color-border);
+  border-radius: px(8);
+  cursor: pointer;
+  font-size: px(13);
+  color: var(--color-text);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background-color: rgba(var(--color-accent-rgb), 0.1);
+    border-color: var(--color-accent);
+  }
+
+  &.is-selected {
+    background-color: var(--color-accent);
+    color: var(--color-white);
+    border-color: var(--color-accent);
+  }
+}

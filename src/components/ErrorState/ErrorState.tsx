@@ -71,7 +71,7 @@ const ErrorState = ({
   return (
     <div className={`error-state error-state--${type} ${className}`}>
       <div className="error-state__icon">{displayIcon}</div>
-      <Typography variant="h3" size="small" className="error-state__title">
+      <Typography variant="h5" size="small" className="error-state__title">
         {displayTitle}
       </Typography>
       {displayMessage && (

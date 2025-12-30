@@ -25,6 +25,8 @@
 - 🎨 **CSS 변수 시스템**: 60개 이상의 색상 변수로 테마 관리 (직접 색상 코드 사용 금지)
 - ♿ **접근성 도우미**: 오른쪽 고정 패널로 실시간 접근성 체크
 - 📱 **모바일 최적화**: 반응형 디자인 및 모바일 우선 설계
+- 🎨 **iOS 스타일 스크롤바**: 전역 및 Tabs 컴포넌트에 iOS 스타일 스크롤바 적용
+- 🏗️ **CommonLayout**: Header, Footer, BottomDock, ScrollTop을 통합 관리하는 공통 레이아웃 컴포넌트
 
 ### 🛠 기술 스택
 
@@ -35,6 +37,7 @@
 - **React Router**: 페이지 라우팅
 - **react-day-picker**: 날짜 선택 컴포넌트
 - **html2canvas**: HTML을 Canvas로 변환하여 이미지 저장
+- **Swiper.js**: 캐러셀 및 슬라이더 기능
 
 ---
 
@@ -92,7 +95,7 @@ Newstarbucks/
 │   │   ├── Accordion/                # 아코디언 컴포넌트
 │   │   ├── Badge/                    # 뱃지 컴포넌트
 │   │   ├── BorderAnimation/          # 보더 애니메이션 컴포넌트
-│   │   ├── BottomDock/               # 하단 돗바 컴포넌트
+│   │   ├── BottomDock/               # 하단 내비게이션 컴포넌트
 │   │   ├── Button/                   # 버튼 컴포넌트
 │   │   ├── Card/                     # 카드 컴포넌트
 │   │   ├── Carousel/                 # 캐러셀 컴포넌트
@@ -111,6 +114,7 @@ Newstarbucks/
 │   │   ├── Icon/                     # 아이콘 컴포넌트
 │   │   ├── Image/                    # 이미지 컴포넌트
 │   │   ├── Input/                    # 입력 컴포넌트
+│   │   ├── CommonLayout/             # 공통 레이아웃 컴포넌트 (Header, Footer, BottomDock, ScrollTop 통합)
 │   │   ├── ScrollTop/                # 스크롤 탑 버튼 컴포넌트
 │   │   ├── Layout/                   # 레이아웃 컴포넌트 (디자인 시스템)
 │   │   ├── List/                     # 리스트 컴포넌트
@@ -188,6 +192,20 @@ Newstarbucks/
 }
 ```
 
+### 🎨 iOS 스타일 스크롤바
+
+전역 및 Tabs 컴포넌트에 iOS 스타일 스크롤바가 적용되어 있습니다.
+
+#### 특징
+- **7px 두께**: iOS와 유사한 얇은 스크롤바
+- **투명한 트랙**: 오버레이 방식의 스크롤바
+- **반투명 썸**: 기본 opacity 0.4, 호버 0.6, 액티브 0.8
+- **부드러운 전환**: 0.15s 전환 효과
+
+#### 적용 범위
+- 전역 스크롤바 (`*::-webkit-scrollbar`)
+- Tabs 컴포넌트의 scroll 타입 스크롤바
+
 ### 📏 큰글씨 모드
 
 #### 4단계 크기 옵션
@@ -229,6 +247,66 @@ Newstarbucks/
 ---
 
 ## 컴포넌트 가이드
+
+### CommonLayout
+
+공통 레이아웃을 제공하는 컴포넌트입니다. Header, Footer, BottomDock, ScrollTop을 통합 관리할 수 있습니다.
+
+#### 기능
+- ✅ Header 통합 관리 (메인/서브 헤더, 다양한 props 지원)
+- ✅ Footer 통합 관리 (표시 여부, 네비게이션, 정보, SNS, 로고)
+- ✅ BottomDock 통합 관리 (표시 여부, 아이템, 위치 설정)
+- ✅ ScrollTop 통합 관리 (표시 여부, 표시 기준 픽셀, 부드러운 스크롤)
+- ✅ 커스텀 헤더 지원
+
+#### 사용법
+
+```tsx
+import CommonLayout from "../../components/CommonLayout/CommonLayout";
+
+const MyPage = () => {
+  return (
+    <CommonLayout
+      headerVariant="sub"
+      headerCategoryName="카테고리명"
+      headerOnBack={() => console.log("뒤로가기")}
+      showFooter={true}
+      showBottomDock={true}
+      bottomDockItems={[
+        { key: "home", label: "홈", icon: "🏠" },
+        { key: "search", label: "검색", icon: "🔍" },
+      ]}
+      bottomDockOnChange={(key) => console.log(key)}
+      showScrollTop={true}
+      scrollTopShowAfter={100}
+      scrollTopSmooth={true}
+    >
+      <div>페이지 내용</div>
+    </CommonLayout>
+  );
+};
+
+export default MyPage;
+```
+
+#### 주요 Props
+
+| Prop | Type | Default | 설명 |
+|------|------|---------|------|
+| `children` | `ReactNode` | - | 레이아웃 내부에 표시할 컨텐츠 |
+| `headerVariant` | `"main" \| "sub"` | `"sub"` | 헤더 타입 |
+| `headerCategoryName` | `string` | - | 서브 헤더에 표시할 카테고리명 |
+| `headerOnBack` | `() => void` | - | 뒤로가기 버튼 클릭 시 실행할 함수 |
+| `headerShowUtilities` | `boolean` | `false` | 헤더 유틸리티 버튼 표시 여부 |
+| `headerSticky` | `boolean` | `true` | 헤더 고정 여부 |
+| `showFooter` | `boolean` | `false` | 푸터 표시 여부 |
+| `showBottomDock` | `boolean` | `false` | 하단 도크 표시 여부 |
+| `bottomDockItems` | `Array<{key, label, icon}>` | - | 하단 도크 아이템 배열 |
+| `bottomDockPosition` | `"fixed" \| "relative"` | `"fixed"` | 하단 도크 위치 |
+| `showScrollTop` | `boolean` | `false` | 스크롤 탑 버튼 표시 여부 |
+| `scrollTopShowAfter` | `number` | `100` | 스크롤 탑 버튼이 나타날 스크롤 픽셀 값 |
+| `scrollTopSmooth` | `boolean` | `true` | 스크롤 탑 버튼 부드러운 스크롤 사용 여부 |
+| `customHeader` | `ReactNode` | - | 커스텀 헤더 컴포넌트 |
 
 ### PageTemplate
 
@@ -309,7 +387,8 @@ export default MyPage;
 - **Footer** - 푸터
 - **PageTemplate** - 페이지 템플릿 (다크모드, 폰트 스케일 지원)
 - **ListContainer** - 리스트 컨테이너 (section/article 태그 기반, 제목/설명, bordered/divided 옵션)
-- **ScrollTop** - 스크롤 탑 버튼 (스크롤 시 나타나는 상단 이동 버튼, `showAfter`, `smooth` props 지원)
+- **CommonLayout** - 공통 레이아웃 컴포넌트 (Header, Footer, BottomDock, ScrollTop 통합 관리, 다양한 props로 커스터마이징 가능)
+- **ScrollTop** - 스크롤 탑 버튼 (스크롤 시 나타나는 상단 이동 버튼, `showAfter`, `smooth` props 지원, CommonLayout에서 통합 관리)
 
 #### 입력 컴포넌트
 - **Input** - 텍스트 입력 (text, password, number, tel, email, validation states, help text, clear button, 자동 하이픈 포맷팅)
@@ -319,7 +398,7 @@ export default MyPage;
 - **SearchField** - 검색 필드 (검색 아이콘, 클리어 버튼)
 
 #### 선택 컴포넌트
-- **Checkbox** - 체크박스 (단일/그룹 사용)
+- **Checkbox** - 체크박스 (단일/그룹 사용, 전체 선택 기능 지원, `showSelectAll`, `selectAllLabel` props, indeterminate 상태 지원)
 - **Radio** - 라디오 버튼 (단일/그룹 사용)
 
 #### 리스트 & 카드
@@ -333,7 +412,7 @@ export default MyPage;
 - **Tabs** - 탭 인터페이스 (default, scroll, swiper 타입, 가운데 정렬, showContent prop으로 탭 UI만 표시 가능)
 - **Pagination** - 페이지네이션
 - **Accordion** - 아코디언 (exclusive, independent 타입)
-- **BottomDock** - 하단 돗바
+- **BottomDock** - 하단 내비게이션
 
 #### 피드백
 - **Toast** - 토스트 알림 (빈 메시지일 때 자동으로 렌더링하지 않음, 조건부 렌더링 강화)

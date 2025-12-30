@@ -9,6 +9,7 @@ import Form from "../../components/Form/Form";
 import Tabs from "../../components/Tabs/Tabs";
 import Table from "../../components/Table/Table";
 import DatePicker from "../../components/DatePicker/DatePicker";
+import type { DateRange } from "react-day-picker";
 import Tooltip from "../../components/Tooltip/Tooltip";
 import DragDropList from "../../components/DragDropList/DragDropList";
 import Carousel from "../../components/Carousel/Carousel";
@@ -55,7 +56,7 @@ import Input from "../../components/Input/Input";
 import DataList from "../../components/DataList/DataList";
 import Card from "../../components/Card/Card";
 import Select from "../../components/Select/Select";
-import Checkbox, { CheckboxGroup } from "../../components/Checkbox/Checkbox";
+import Checkbox, { CheckboxGroup, type CheckboxOption } from "../../components/Checkbox/Checkbox";
 import Radio, { RadioGroup } from "../../components/Radio/Radio";
 import Textarea from "../../components/Textarea/Textarea";
 import List, { ListItem } from "../../components/List/List";
@@ -92,44 +93,162 @@ const CodeBlock = ({ code, language = "tsx" }) => {
   );
 };
 
+/**
+ * Weather 컴포넌트 미리보기
+ * 
+ * Weather 컴포넌트의 다양한 사용 예제를 보여주는 프리뷰 컴포넌트입니다.
+ * 목업 데이터와 실제 API 데이터를 모두 시연하며, 다양한 레이아웃과 사용 사례를 제공합니다.
+ * 
+ * @component
+ * @returns {JSX.Element} Weather 컴포넌트 예제 모음
+ */
 const WeatherPreview = () => {
-  // 환경 변수에서 API 키 확인
+  /**
+   * 환경 변수에서 API 키 확인
+   * 
+   * REACT_APP_WEATHER_API_KEY가 설정되어 있으면 실제 API를 사용할 수 있습니다.
+   * 없으면 목업 데이터만 표시하고 API 사용 안내를 보여줍니다.
+   */
   const hasApiKey = !!process.env.REACT_APP_WEATHER_API_KEY;
   
   return (
     <div className="guide-preview guide-preview--weather">
-      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-        {/* 목업 데이터 예제 */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
+        {/* 기본 사용 예제 */}
         <div>
-          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 600, color: "var(--color-text-secondary)" }}>
-            목업 데이터 예제
+          <h4 style={{ marginBottom: "16px", fontSize: "16px", fontWeight: 700, color: "var(--color-text)" }}>
+            기본 사용 (목업 데이터)
           </h4>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px" }}>
-            <Weather city="Seoul" useMock={true} />
-            <Weather city="Busan" useMock={true} />
-            <Weather city="Jeju" useMock={true} />
+          <p style={{ marginBottom: "16px", fontSize: "14px", color: "var(--color-text-secondary)", lineHeight: "1.6" }}>
+            city, apiKey, useMock을 지정하지 않으면 기본값으로 목업 데이터를 사용합니다.
+            목업 데이터는 항상 동일한 날씨 정보(20°C, 일부 맑음)를 표시합니다.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px", width: "100%", maxWidth: "100%", overflowX: "hidden" }}>
+            <Weather />
           </div>
         </div>
 
         {/* 실제 API 예제 */}
         {hasApiKey ? (
           <div>
-            <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 600, color: "var(--color-text-secondary)" }}>
+            <h4 style={{ marginBottom: "16px", fontSize: "16px", fontWeight: 700, color: "var(--color-text)" }}>
               실제 API 데이터 예제
             </h4>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px" }}>
-              <Weather city="Seoul" useMock={false} />
-              <Weather city="Busan" useMock={false} />
-              <Weather city="Jeju" useMock={false} />
+            <p style={{ marginBottom: "16px", fontSize: "14px", color: "var(--color-text-secondary)", lineHeight: "1.6" }}>
+              OpenWeatherMap API를 사용하여 실제 날씨 데이터를 가져옵니다.
+              각 도시의 현재 날씨 정보가 실시간으로 표시됩니다.
+              API 호출 중에는 로딩 상태가 표시되고, 실패 시 에러 메시지가 표시됩니다.
+            </p>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: "16px", alignItems: "flex-start", flexWrap: "wrap", width: "100%", maxWidth: "100%" }}>
+              <div style={{ width: "300px", flex: "0 0 300px", maxWidth: "100%" }}>
+                <Weather city="Seoul" useMock={false} />
+              </div>
+              <div style={{ width: "300px", flex: "0 0 300px", maxWidth: "100%", padding: "12px", background: "var(--color-bg-secondary)", borderRadius: "8px", border: "1px solid var(--color-border)", display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+                <p style={{ margin: 0, fontSize: "14px", color: "var(--color-text)", lineHeight: "1.6", fontWeight: 600 }}>
+                  현재 도시: 서울로 세팅함
+                </p>
+                <p style={{ margin: "8px 0 0 0", fontSize: "13px", color: "var(--color-text-secondary)", lineHeight: "1.6" }}>
+                  ✅ 실제 API가 연결되어 있습니다. 서울의 현재 날씨 정보를 확인할 수 있습니다.
+                </p>
+              </div>
+            </div>
+            <div style={{ marginTop: "32px" }}>
+              <h4 style={{ marginBottom: "16px", fontSize: "16px", fontWeight: 700, color: "var(--color-text)" }}>
+                GPS 위치 기반 날씨 조회 예제
+              </h4>
+              <p style={{ marginBottom: "16px", fontSize: "14px", color: "var(--color-text-secondary)", lineHeight: "1.6" }}>
+                GPS 신호를 사용하여 현재 위치의 날씨 정보를 가져옵니다.
+                브라우저에서 위치 권한을 요청하며, 허용 시 현재 위치의 날씨 정보가 표시됩니다.
+              </p>
+              <div style={{ width: "300px", maxWidth: "100%" }}>
+                <Weather useGPS={true} useMock={false} />
+              </div>
             </div>
           </div>
         ) : (
-          <div style={{ padding: "16px", background: "var(--color-bg-secondary)", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
-            <p style={{ margin: 0, fontSize: "14px", color: "var(--color-text-secondary)" }}>
-              💡 실제 API를 사용하려면 <code style={{ background: "var(--color-bg)", padding: "2px 6px", borderRadius: "4px" }}>.env</code> 파일에 <code style={{ background: "var(--color-bg)", padding: "2px 6px", borderRadius: "4px" }}>REACT_APP_WEATHER_API_KEY</code>를 설정하고 개발 서버를 재시작하세요.
-            </p>
+          <div>
+            <h4 style={{ marginBottom: "16px", fontSize: "16px", fontWeight: 700, color: "var(--color-text)" }}>
+              실제 API 데이터 예제
+            </h4>
+            <div style={{ padding: "20px", background: "var(--color-bg-secondary)", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
+              <p style={{ margin: "0 0 12px 0", fontSize: "14px", color: "var(--color-text)", fontWeight: 600 }}>
+                💡 실제 API를 사용하려면
+              </p>
+              <ol style={{ margin: "0 0 12px 0", paddingLeft: "20px", fontSize: "14px", color: "var(--color-text-secondary)", lineHeight: "1.8" }}>
+                <li>
+                  <code style={{ background: "var(--color-bg)", padding: "2px 6px", borderRadius: "4px", fontSize: "13px" }}>.env</code> 파일을 프로젝트 루트에 생성합니다.
+                </li>
+                <li>
+                  <code style={{ background: "var(--color-bg)", padding: "2px 6px", borderRadius: "4px", fontSize: "13px" }}>REACT_APP_WEATHER_API_KEY=your-api-key-here</code>를 추가합니다.
+                </li>
+                <li>
+                  OpenWeatherMap에서 API 키를 발급받으세요:{" "}
+                  <a 
+                    href="https://openweathermap.org/api" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    style={{ color: "var(--color-accent)", textDecoration: "underline" }}
+                  >
+                    https://openweathermap.org/api
+                  </a>
+                </li>
+                <li>개발 서버를 재시작합니다.</li>
+              </ol>
+              <p style={{ margin: 0, fontSize: "13px", color: "var(--color-text-secondary)", lineHeight: "1.6" }}>
+                ⚠️ 브라우저에서 직접 API를 호출할 경우 CORS 정책에 의해 차단될 수 있습니다.
+                이 경우 프록시 서버를 사용하거나 백엔드 API를 통해 호출해야 합니다.
+              </p>
+            </div>
           </div>
         )}
+
+        {/* 커스텀 클래스명 예제 */}
+        <div>
+          <h4 style={{ marginBottom: "16px", fontSize: "16px", fontWeight: 700, color: "var(--color-text)" }}>
+            커스텀 클래스명 적용
+          </h4>
+          <p style={{ marginBottom: "16px", fontSize: "14px", color: "var(--color-text-secondary)", lineHeight: "1.6" }}>
+            className prop을 사용하여 추가 스타일을 적용할 수 있습니다.
+            CSS에서 .custom-weather 클래스를 정의하여 날씨 카드의 스타일을 커스터마이징할 수 있습니다.
+          </p>
+          <div style={{ maxWidth: "300px" }}>
+            <Weather city="Seoul" useMock={true} className="custom-weather" />
+          </div>
+        </div>
+
+        {/* 로딩 상태 예제 */}
+        <div>
+          <h4 style={{ marginBottom: "16px", fontSize: "16px", fontWeight: 700, color: "var(--color-text)" }}>
+            로딩 상태
+          </h4>
+          <p style={{ marginBottom: "16px", fontSize: "14px", color: "var(--color-text-secondary)", lineHeight: "1.6" }}>
+            날씨 정보를 불러오는 동안 Loading 컴포넌트가 표시됩니다.
+            아래 예제는 로딩 상태를 계속 표시하는 예시입니다.
+          </p>
+          <div style={{ maxWidth: "300px" }}>
+            <Card variant="content" className="weather">
+              <div className="weather__loading">
+                <Loading size={32} label="날씨 정보를 불러오는 중..." />
+              </div>
+            </Card>
+          </div>
+        </div>
+
+        {/* 에러 상태 안내 */}
+        <div>
+          <h4 style={{ marginBottom: "16px", fontSize: "16px", fontWeight: 700, color: "var(--color-text)" }}>
+            에러 상태
+          </h4>
+          <p style={{ marginBottom: "16px", fontSize: "14px", color: "var(--color-text-secondary)", lineHeight: "1.6" }}>
+            API 호출이 실패하거나 네트워크 오류가 발생하면 ErrorState 컴포넌트가 표시됩니다.
+            에러 메시지는 "api 호출 안됌"으로 표시되며, 목업 데이터로 자동 폴백하지 않습니다.
+          </p>
+          <div style={{ maxWidth: "300px" }}>
+            <Card variant="content" className="weather">
+              <ErrorState message="api 호출 안됌" />
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -634,7 +753,7 @@ const BottomDockPreview = () => {
 
   return (
     <div className="guide-preview guide-preview--dock">
-      <BottomDock items={items} defaultActive={last} onChange={(key) => setLast(key)} />
+      <BottomDock items={items} defaultActive={last} onChange={(key) => setLast(key)} position="relative" />
       <div className="dock-status">
         마지막 클릭: <strong>{last}</strong>
       </div>
@@ -1615,12 +1734,13 @@ const HeaderPreview = () => {
                 onBack={handleBack}
                 onCartClick={handleCartClick}
                 onUtilityClick={handleUtilityClick}
+                showMoreButton={false}
               />
               <div className="header-demo__mobile-content">
                 <h4>서브 헤더 데모</h4>
                 <p>좌측: 뒤로가기 버튼</p>
                 <p>가운데: 카테고리 이름 (음료)</p>
-                <p>우측: 장바구니, 검색, 더보기 버튼</p>
+                <p>우측: 장바구니, 검색 버튼</p>
               </div>
             </div>
           </div>
@@ -2063,8 +2183,7 @@ const SelectPreview = () => {
 
 const CheckboxPreview = () => {
   const [checked1, setChecked1] = useState(false);
-  const [checked2, setChecked2] = useState(true);
-  const [groupOptions, setGroupOptions] = useState([
+  const [groupOptions, setGroupOptions] = useState<CheckboxOption[]>([
     { value: "opt1", label: "옵션 1", checked: false },
     { value: "opt2", label: "옵션 2", checked: true },
     { value: "opt3", label: "옵션 3", checked: false, disabled: true },
@@ -2074,22 +2193,19 @@ const CheckboxPreview = () => {
     <div className="guide-preview guide-preview--checkbox">
       <div style={{ display: "flex", flexDirection: "column", gap: "24px", maxWidth: "500px" }}>
         <div>
-          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>단일</h4>
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <Checkbox label="약관에 동의합니다" checked={checked1} onChange={(e) => setChecked1(e.target.checked)} />
-            <Checkbox label="이미 체크됨" checked={checked2} onChange={(e) => setChecked2(e.target.checked)} />
-            <Checkbox label="비활성화" disabled />
-            <Checkbox label="비활성화 체크됨" checked disabled />
-          </div>
+          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>단일 선택</h4>
+          <Checkbox label="약관에 동의합니다" checked={checked1} onChange={(e) => setChecked1(e.target.checked)} />
         </div>
 
         <div>
-          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>그룹</h4>
+          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>전체 선택 포함</h4>
           <CheckboxGroup
             label="관심사 선택"
-            name="interests"
+            name="interests-with-select-all"
             options={groupOptions}
             onChange={(e, updatedOptions) => setGroupOptions(updatedOptions)}
+            showSelectAll={true}
+            selectAllLabel="전체 선택"
           />
         </div>
       </div>
@@ -3707,7 +3823,7 @@ const [selected, setSelected] = useState("");
     title: "Checkbox 컴포넌트",
     description:
       "단일 체크박스와 그룹 체크박스를 지원합니다. disabled, checked 상태를 포함하며, CheckboxGroup으로 여러 옵션을 관리할 수 있습니다. 그룹 사용 시 onChange 핸들러는 업데이트된 options 배열을 반환합니다.",
-    code: `import Checkbox, { CheckboxGroup } from "./Checkbox";
+    code: `import Checkbox, { CheckboxGroup, type CheckboxOption } from "./Checkbox";
 import { useState } from "react";
 import type { ChangeEvent } from "react";
 
@@ -3752,6 +3868,16 @@ const handleGroupChange = (
   name="interests"
   options={options}
   onChange={handleGroupChange}
+/>;
+
+// 전체 선택 기능 포함
+<CheckboxGroup
+  label="관심사 선택 (전체 선택)"
+  name="interests-with-select-all"
+  options={options}
+  onChange={handleGroupChange}
+  showSelectAll={true}
+  selectAllLabel="전체 선택"
 />;
 
 // 상태 관리 예제
@@ -4474,10 +4600,10 @@ ctx?.showToast("success", "작업 완료!");
   },
   {
     id: "dock",
-    label: "돗바",
-    title: "하단 돗바 내비게이션",
+    label: "하단 내비게이션",
+    title: "하단  내비게이션",
     description:
-      "모바일 하단 고정형 돗바 UI. 아이콘/라벨 목록을 props로 받아 활성 상태를 표시하며 onChange로 선택 값을 전달합니다.",
+      "모바일 하단 고정형 내비게이션 UI. 아이콘/라벨 목록을 props로 받아 활성 상태를 표시하며 onChange로 선택 값을 전달합니다.",
     code: `import BottomDock from "./BottomDock";
 import { useState } from "react";
 
@@ -5362,115 +5488,88 @@ const ImageViewer = () => {
     id: "datepicker",
     label: "데이터피커",
     title: "데이터 피커",
-    description: "간단한 캘린더 UI로 날짜를 선택합니다. (센터 팝업 기반)",
+    description: "날짜, 시간, 또는 날짜+시간을 선택할 수 있는 컴포넌트입니다. 타입에 따라 캘린더 아이콘(📅) 또는 시계 아이콘(🕐)이 표시됩니다.",
     code: `import DatePicker from "./DatePicker";
 import { useState } from "react";
 import type { DateRange } from "react-day-picker";
 
-// 단일 날짜 선택
-const [selected, setSelected] = useState<Date | undefined>(undefined);
+// ===== Props 설명 (TypeScript) =====
+// type?: "date" | "time" | "range";     // 선택 타입 (기본값: "date")
+// value?: Date | DateRange;              // 초기값 (date/time: Date, range: DateRange)
+// onChange?: (date: Date | DateRange | undefined) => void;  // 변경 핸들러
+// placeholder?: string;                  // 플레이스홀더
+// className?: string;                    // 추가 CSS 클래스명
 
-const handleSingleSelect = (date: Date | undefined): void => {
-  setSelected(date);
-};
-
-<DatePicker
-  mode="single"
-  selected={selected}
-  onSelect={handleSingleSelect}
-/>;
-
-// 날짜 범위 선택
-const [range, setRange] = useState<DateRange | undefined>(undefined);
-
-const handleRangeSelect = (selectedRange: DateRange | undefined): void => {
-  setRange(selectedRange);
-};
+// ===== 날짜 선택 (type="date") =====
+const [dateValue, setDateValue] = useState<Date | undefined>(undefined);
 
 <DatePicker
-  mode="range"
-  selected={range}
-  onSelect={handleRangeSelect}
+  type="date"
+  value={dateValue}
+  onChange={setDateValue}
+  placeholder="날짜를 선택해주세요"
 />;
 
-// 멀티 캘린더 (2개월) 범위 선택
-const [multiRange, setMultiRange] = useState<DateRange | undefined>(undefined);
-
-const handleMultiRangeSelect = (selectedRange: DateRange | undefined): void => {
-  setMultiRange(selectedRange);
-};
+// ===== 시간 선택 (type="time") =====
+const [timeValue, setTimeValue] = useState<Date | undefined>(undefined);
 
 <DatePicker
-  mode="range"
-  selected={multiRange}
-  onSelect={handleMultiRangeSelect}
-  numberOfMonths={2}
-  pagedNavigation={true}
+  type="time"
+  value={timeValue}
+  onChange={setTimeValue}
+  placeholder="시간을 선택해주세요"
 />;
 
-// 상태 관리 예제
+// ===== 날짜 다중 선택 (type="range") =====
+const [rangeValue, setRangeValue] = useState<DateRange | undefined>(undefined);
+
+<DatePicker
+  type="range"
+  value={rangeValue}
+  onChange={setRangeValue}
+  placeholder="날짜 범위를 선택해주세요"
+/>;
+
+// ===== 상태 관리 예제 =====
 const DatePickerExample = () => {
-  const [checkIn, setCheckIn] = useState<Date | undefined>(undefined);
-  const [checkOut, setCheckOut] = useState<Date | undefined>(undefined);
-  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
-
-  const handleCheckInSelect = (date: Date | undefined): void => {
-    setCheckIn(date);
-  };
-
-  const handleCheckOutSelect = (date: Date | undefined): void => {
-    setCheckOut(date);
-  };
-
-  const handleRangeSelect = (range: DateRange | undefined): void => {
-    setDateRange(range);
-    if (range?.from) {
-      setCheckIn(range.from);
-    }
-    if (range?.to) {
-      setCheckOut(range.to);
-    }
-  };
-
-  const formatDate = (date: Date | undefined): string => {
-    if (!date) return "";
-    return date.toLocaleDateString("ko-KR", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-  };
+  const [dateValue, setDateValue] = useState<Date | undefined>(undefined);
+  const [timeValue, setTimeValue] = useState<Date | undefined>(undefined);
+  const [rangeValue, setRangeValue] = useState<DateRange | undefined>(undefined);
 
   return (
     <div>
       <div>
-        <label>체크인</label>
+        <label>날짜 선택</label>
         <DatePicker
-          mode="single"
-          selected={checkIn}
-          onSelect={handleCheckInSelect}
+          type="date"
+          value={dateValue}
+          onChange={setDateValue}
         />
-        <span>{formatDate(checkIn)}</span>
+        {dateValue && (
+          <span>선택된 날짜: {dateValue.toLocaleDateString("ko-KR")}</span>
+        )}
       </div>
       <div>
-        <label>체크아웃</label>
+        <label>시간 선택</label>
         <DatePicker
-          mode="single"
-          selected={checkOut}
-          onSelect={handleCheckOutSelect}
+          type="time"
+          value={timeValue}
+          onChange={setTimeValue}
         />
-        <span>{formatDate(checkOut)}</span>
+        {timeValue && (
+          <span>선택된 시간: {timeValue.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })}</span>
+        )}
       </div>
       <div>
-        <label>기간 선택</label>
+        <label>날짜 다중 선택</label>
         <DatePicker
-          mode="range"
-          selected={dateRange}
-          onSelect={handleRangeSelect}
+          type="range"
+          value={rangeValue}
+          onChange={setRangeValue}
         />
-        {dateRange?.from && dateRange?.to && (
+        {rangeValue?.from && rangeValue?.to && (
           <span>
-            {formatDate(dateRange.from)} ~ {formatDate(dateRange.to)}
+            선택된 기간: {rangeValue.from.toLocaleDateString("ko-KR")} ~ {rangeValue.to.toLocaleDateString("ko-KR")}
           </span>
         )}
       </div>
@@ -5478,7 +5577,7 @@ const DatePickerExample = () => {
   );
 };
 
-// 날짜 유효성 검사 예제
+// ===== 날짜 유효성 검사 예제 =====
 const DatePickerWithValidation = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [error, setError] = useState<string>("");
@@ -5506,9 +5605,9 @@ const DatePickerWithValidation = () => {
   return (
     <div>
       <DatePicker
-        mode="single"
-        selected={selectedDate}
-        onSelect={handleSelect}
+        type="date"
+        value={selectedDate}
+        onChange={handleSelect}
       />
       {error && <div style={{ color: "red" }}>{error}</div>}
       {selectedDate && (
@@ -5516,8 +5615,113 @@ const DatePickerWithValidation = () => {
       )}
     </div>
   );
+};
+
+// ===== 폼과 함께 사용 예제 =====
+const FormWithDatePicker = () => {
+  const [formData, setFormData] = useState({
+    checkIn: undefined as Date | undefined,
+    checkOut: undefined as Date | undefined,
+    stayPeriod: undefined as DateRange | undefined,
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("예약 정보:", formData);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>체크인 날짜</label>
+        <DatePicker
+          type="date"
+          value={formData.checkIn}
+          onChange={(date) => setFormData({ ...formData, checkIn: date })}
+        />
+      </div>
+      <div>
+        <label>체크아웃 날짜</label>
+        <DatePicker
+          type="date"
+          value={formData.checkOut}
+          onChange={(date) => setFormData({ ...formData, checkOut: date })}
+        />
+      </div>
+      <div>
+        <label>숙박 기간 (다중 선택)</label>
+        <DatePicker
+          type="range"
+          value={formData.stayPeriod}
+          onChange={(range) => setFormData({ ...formData, stayPeriod: range })}
+        />
+      </div>
+      <button type="submit">예약하기</button>
+    </form>
+  );
 };`,
-    PreviewComponent: DatePicker,
+    PreviewComponent: () => {
+      const [dateValue, setDateValue] = useState<Date | undefined>(undefined);
+      const [timeValue, setTimeValue] = useState<Date | undefined>(undefined);
+      const [rangeValue, setRangeValue] = useState<DateRange | undefined>(undefined);
+
+      return (
+        <div className="guide-preview guide-preview--datepicker">
+          <div style={{ display: "flex", flexDirection: "column", gap: "24px", maxWidth: "500px" }}>
+            <div>
+              <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700, color: "var(--color-text)" }}>
+                날짜 선택 (type="date")
+              </h4>
+              <DatePicker
+                type="date"
+                value={dateValue}
+                onChange={(date) => setDateValue(date as Date | undefined)}
+                placeholder="날짜를 선택해주세요"
+              />
+              {dateValue && (
+                <p style={{ marginTop: "8px", fontSize: "13px", color: "var(--color-text-secondary)" }}>
+                  선택된 날짜: {dateValue.toLocaleDateString("ko-KR")}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700, color: "var(--color-text)" }}>
+                시간 선택 (type="time")
+              </h4>
+              <DatePicker
+                type="time"
+                value={timeValue}
+                onChange={(time) => setTimeValue(time as Date | undefined)}
+                placeholder="시간을 선택해주세요"
+              />
+              {timeValue && (
+                <p style={{ marginTop: "8px", fontSize: "13px", color: "var(--color-text-secondary)" }}>
+                  선택된 시간: {timeValue.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700, color: "var(--color-text)" }}>
+                날짜 다중 선택 (type="range")
+              </h4>
+              <DatePicker
+                type="range"
+                value={rangeValue}
+                onChange={(range) => setRangeValue(range as DateRange | undefined)}
+                placeholder="날짜 범위를 선택해주세요"
+              />
+              {rangeValue?.from && rangeValue?.to && (
+                <p style={{ marginTop: "8px", fontSize: "13px", color: "var(--color-text-secondary)" }}>
+                  선택된 기간: {rangeValue.from.toLocaleDateString("ko-KR")} ~ {rangeValue.to.toLocaleDateString("ko-KR")}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    },
   },
   {
     id: "tooltip",
@@ -6202,17 +6406,130 @@ const FullScreenLoading = () => {
     description:
       "여러 항목을 접었다 펼칠 수 있는 아코디언 컴포넌트입니다. Exclusive 타입(하나만 열림)과 Independent 타입(독립적으로 열림) 두 가지 모드를 지원합니다.",
     code: `import Accordion from "./Accordion";
+import { ReactNode } from "react";
 
-type AccordionItem = { id: string; label: string; content: string };
+// 타입 정의
+type AccordionItem = {
+  id: string | number;
+  label: string;
+  content: string | ReactNode;
+};
 
-const items: AccordionItem[] = [
-  { id: "1", label: "에피타이저", content: "에피타이저 메뉴입니다." },
-  { id: "2", label: "메인 음식", content: "메인 음식 메뉴입니다." },
-  { id: "3", label: "디저트", content: "디저트 메뉴입니다." },
+// 기본 사용법 - Exclusive 타입 (하나만 열림)
+const basicItems: AccordionItem[] = [
+  { 
+    id: "1", 
+    label: "에피타이저", 
+    content: "에피타이저 메뉴입니다. 다양한 전채 요리를 제공합니다." 
+  },
+  { 
+    id: "2", 
+    label: "메인 음식", 
+    content: "메인 음식 메뉴입니다. 풍부한 맛의 메인 요리를 제공합니다." 
+  },
+  { 
+    id: "3", 
+    label: "디저트", 
+    content: "디저트 메뉴입니다. 달콤한 디저트를 제공합니다." 
+  },
 ];
 
-<Accordion items={items} type="exclusive" defaultOpenFirst />;
-`,
+<Accordion items={basicItems} type="exclusive" />;
+
+// Independent 타입 (독립적으로 열림, 여러 개 동시에 열 수 있음)
+const independentItems: AccordionItem[] = [
+  { id: "4", label: "음료", content: "음료 메뉴입니다." },
+  { id: "5", label: "셀러드", content: "셀러드 메뉴입니다." },
+  { id: "6", label: "일식", content: "일식 메뉴입니다." },
+];
+
+<Accordion items={independentItems} type="independent" />;
+
+// 첫 번째 아이템 기본 열림
+<Accordion 
+  items={basicItems} 
+  type="exclusive" 
+  defaultOpenFirst={true} 
+/>;
+
+// content에 ReactNode 사용 (복잡한 구조)
+const complexItems: AccordionItem[] = [
+  {
+    id: "7",
+    label: "상세 정보",
+    content: (
+      <div>
+        <h4>제목</h4>
+        <p>설명 텍스트입니다.</p>
+        <ul>
+          <li>항목 1</li>
+          <li>항목 2</li>
+          <li>항목 3</li>
+        </ul>
+      </div>
+    ),
+  },
+  {
+    id: "8",
+    label: "추가 정보",
+    content: (
+      <div>
+        <p>추가 정보 내용입니다.</p>
+        <button onClick={() => alert("클릭")}>버튼</button>
+      </div>
+    ),
+  },
+];
+
+<Accordion items={complexItems} type="independent" />;
+
+// className으로 스타일 커스터마이징
+<Accordion 
+  items={basicItems} 
+  type="exclusive" 
+  className="custom-accordion" 
+/>;
+
+// 실제 사용 예제
+const MenuAccordion = () => {
+  const menuItems: AccordionItem[] = [
+    {
+      id: "appetizer",
+      label: "에피타이저",
+      content: "새우튀김, 양념치킨, 감자튀김 등",
+    },
+    {
+      id: "main",
+      label: "메인 요리",
+      content: "스테이크, 파스타, 피자 등",
+    },
+    {
+      id: "dessert",
+      label: "디저트",
+      content: "케이크, 아이스크림, 커피 등",
+    },
+  ];
+
+  return (
+    <Accordion 
+      items={menuItems} 
+      type="exclusive" 
+      defaultOpenFirst={true}
+    />
+  );
+};
+
+// Props 설명:
+// - items: AccordionItem[] (필수) - 아코디언 아이템 배열
+//   - id: string | number - 각 아이템의 고유 식별자
+//   - label: string - 헤더에 표시될 텍스트
+//   - content: string | ReactNode - 펼쳐질 때 표시될 내용
+// - type: "exclusive" | "independent" (선택, 기본값: "exclusive")
+//   - "exclusive": 하나만 열림 (다른 항목 열면 이전 항목 자동 닫힘)
+//   - "independent": 독립적으로 열림 (여러 개 동시에 열 수 있음)
+// - defaultOpenFirst: boolean (선택, 기본값: false)
+//   - true: 첫 번째 아이템이 기본적으로 열려있음
+// - className: string (선택) - 추가 CSS 클래스명`,
     PreviewComponent: AccordionPreview,
   },
 
@@ -7271,26 +7588,174 @@ const go = (nextPage: number) => {
     code: `import Weather from "./Weather";
 
 // ===== Props 설명 (TypeScript) =====
-// city?: string;              // 도시 이름 (기본값: "Seoul")
-// apiKey?: string;            // OpenWeatherMap API 키
+// city?: string;              // 날씨 정보를 조회할 도시 이름 (기본값: "Seoul")
+// apiKey?: string;            // OpenWeatherMap API 키 (환경 변수 REACT_APP_WEATHER_API_KEY가 없을 경우 사용)
 // useMock?: boolean;          // 목업 데이터 사용 여부 (기본값: true)
-// className?: string;         // 추가 CSS 클래스
+// useGPS?: boolean;           // GPS 위치 기반 날씨 조회 여부 (기본값: false)
+// className?: string;         // 추가 CSS 클래스명
 
 // ===== 기본 사용 (목업 데이터) =====
+// city, apiKey, useMock을 지정하지 않으면 기본값으로 목업 데이터를 사용합니다.
 <Weather />;
 
+// ===== 특정 도시 지정 (목업 데이터) =====
+// useMock을 명시하지 않으면 기본값 true로 목업 데이터를 사용합니다.
+<Weather city="Busan" />;
+<Weather city="Jeju" />;
+<Weather city="Incheon" />;
+
+// ===== 목업 데이터 명시적 사용 =====
+<Weather city="Busan" useMock={true} />;
+
 // ===== 실제 API 사용 =====
+// OpenWeatherMap API를 사용하려면 useMock={false}를 설정하고 API 키를 제공해야 합니다.
+// 방법 1: apiKey prop으로 직접 전달
 <Weather 
   city="Seoul" 
-  apiKey="YOUR_API_KEY" 
+  apiKey="your-api-key-here" 
   useMock={false} 
 />;
 
-// ===== 다른 도시 =====
-<Weather city="Busan" useMock={true} />;
+// 방법 2: 환경 변수 사용 (권장)
+// .env 파일에 REACT_APP_WEATHER_API_KEY=your-api-key-here 추가
+// 개발 서버 재시작 필요
+<Weather city="Seoul" useMock={false} />;
+<Weather city="Busan" useMock={false} />;
 
-// ===== 스타일 커스터마이징 =====
+// ===== GPS 위치 기반 날씨 조회 =====
+// useGPS={true}를 설정하면 현재 위치의 GPS 신호를 사용하여 날씨 정보를 가져옵니다.
+// 브라우저에서 위치 권한을 요청하며, 허용 시 현재 위치의 날씨 정보가 표시됩니다.
+// useMock={false}와 함께 사용해야 실제 API를 통해 GPS 위치의 날씨를 가져옵니다.
+<Weather useGPS={true} useMock={false} />;
+
+// ===== 추가 클래스명 적용 =====
 <Weather className="custom-weather" />;
+<Weather city="Seoul" className="weather-card" useMock={true} />;
+
+// ===== 여러 도시 날씨 표시 =====
+const WeatherDashboard = () => {
+  const cities = ["Seoul", "Busan", "Jeju", "Incheon"];
+  
+  return (
+    <div className="weather-dashboard">
+      {cities.map((city) => (
+        <Weather 
+          key={city} 
+          city={city} 
+          useMock={true}
+          className="weather-item"
+        />
+      ))}
+    </div>
+  );
+};
+
+// ===== 조건부 API 사용 =====
+// 환경 변수에 API 키가 있으면 실제 API 사용, 없으면 목업 사용
+const WeatherWithFallback = () => {
+  const hasApiKey = !!process.env.REACT_APP_WEATHER_API_KEY;
+  
+  return (
+    <Weather 
+      city="Seoul" 
+      useMock={!hasApiKey}
+    />
+  );
+};
+
+// ===== 상태 관리와 함께 사용 =====
+import { useState } from "react";
+
+const WeatherSelector = () => {
+  const [selectedCity, setSelectedCity] = useState<string>("Seoul");
+  const [useApi, setUseApi] = useState<boolean>(false);
+  
+  return (
+    <div>
+      <select 
+        value={selectedCity} 
+        onChange={(e) => setSelectedCity(e.target.value)}
+      >
+        <option value="Seoul">서울</option>
+        <option value="Busan">부산</option>
+        <option value="Jeju">제주</option>
+      </select>
+      
+      <label>
+        <input 
+          type="checkbox" 
+          checked={useApi} 
+          onChange={(e) => setUseApi(e.target.checked)}
+        />
+        실제 API 사용
+      </label>
+      
+      <Weather 
+        city={selectedCity} 
+        useMock={!useApi}
+      />
+    </div>
+  );
+};
+
+// ===== 컴포넌트 구조 =====
+// Weather
+// └── Card (variant="content")
+//     ├── 로딩 상태: Loading 컴포넌트
+//     ├── 에러 상태: ErrorState 컴포넌트
+//     └── 날씨 정보
+//         ├── weather__top
+//         │   ├── weather__icon (이모지 아이콘)
+//         │   └── weather__temp (온도)
+//         └── weather__text (날씨 상태 설명)
+
+// ===== 상태 관리 =====
+// 컴포넌트 내부에서 다음 상태를 관리합니다:
+// - weather: 현재 날씨 데이터 (WeatherData | null)
+// - loading: 로딩 상태 (boolean)
+// - error: 에러 메시지 (string | null)
+
+// ===== API 호출 =====
+// OpenWeatherMap API를 사용합니다:
+// - 엔드포인트: https://api.openweathermap.org/data/2.5/weather
+// - 파라미터:
+//   - q: 도시 이름
+//   - appid: API 키
+//   - units: metric (섭씨 온도)
+//   - lang: kr (한국어 응답)
+
+// ===== 에러 처리 =====
+// - API 호출 실패 시 ErrorState 컴포넌트로 에러 메시지 표시
+// - 목업 데이터로 자동 폴백하지 않음 (에러 상태 유지)
+// - 에러 메시지는 "api 호출 안됌"으로 표시
+
+// ===== 주의사항 =====
+// 1. API 키 필요: 실제 날씨 데이터를 사용하려면 OpenWeatherMap API 키가 필요합니다.
+//    - API 키 발급: https://openweathermap.org/api
+// 2. CORS 정책: 브라우저에서 직접 API를 호출할 경우 CORS 정책에 의해 차단될 수 있습니다.
+//    이 경우 프록시 서버를 사용하거나 백엔드 API를 통해 호출해야 합니다.
+// 3. 목업 모드: 개발 중에는 useMock={true}를 사용하여 API 호출 없이 테스트할 수 있습니다.
+// 4. 로딩 시간: 목업 데이터도 500ms의 로딩 시간을 시뮬레이션합니다.
+// 5. 에러 상태: API 호출 실패 시 목업 데이터로 폴백하지 않고 에러 상태를 유지합니다.
+// 6. 환경 변수: .env 파일에 REACT_APP_WEATHER_API_KEY를 설정한 후 개발 서버를 재시작해야 합니다.
+// 7. 날씨 아이콘: 날씨 상태에 따라 자동으로 이모지 아이콘이 매핑됩니다.
+//    - 맑음/clear → ☀️
+//    - 구름/cloud → ☁️
+//    - 비/rain → 🌧️
+//    - 눈/snow → ❄️
+//    - 안개/fog → 🌫️
+//    - 기본값 → ☁️☀️
+
+// ===== 의존성 컴포넌트 =====
+// - Typography: 날씨 정보 텍스트 표시
+// - Card: 날씨 정보를 담는 카드 컨테이너
+// - Loading: 로딩 상태 표시
+// - ErrorState: 에러 상태 표시
+
+// ===== 접근성 =====
+// - Card 컴포넌트를 통해 시맨틱한 구조 제공
+// - Typography 컴포넌트를 통해 적절한 텍스트 스타일링
+// - 로딩 및 에러 상태에 대한 명확한 피드백 제공
 `,
     PreviewComponent: WeatherPreview,
   },

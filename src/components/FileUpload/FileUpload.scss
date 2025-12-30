@@ -24,6 +24,7 @@
 
 .file-upload-demo__upload-area {
   display: block;
+  width: px(120);
   min-height: px(200);
   border-radius: px(8);
   background-color: var(--color-bg-secondary);
@@ -36,11 +37,6 @@
 
   &:hover {
     background-color: var(--color-bg-gray-light);
-  }
-
-  // 파일이 없을 때는 전체 너비
-  .file-upload-demo__container > &:not(.file-upload-demo__upload-area--small) {
-    width: 100%;
   }
 
   &--small {

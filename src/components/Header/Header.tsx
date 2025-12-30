@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import Typography from "../Typography/Typography";
+import Icon from "../Icon/Icon";
 import "./Header.scss";
 
 type HeaderVariant = "main" | "sub";
@@ -14,6 +15,11 @@ type HeaderProps = {
   onUtilityClick?: (key: string) => void;
   sticky?: boolean; // sticky 활성화 여부 (기본값: false)
   showUtilities?: boolean; // 서브 헤더에서 유틸리티 버튼 표시 여부 (기본값: true)
+  showMoreButton?: boolean; // 더보기 버튼 표시 여부 (기본값: true)
+  // 메인 헤더 전용 props
+  notificationCount?: number; // 알림 개수
+  onLogoClick?: () => void; // 로고 클릭 핸들러
+  onNotificationClick?: () => void; // 알림 클릭 핸들러
 };
 
 // GNB 메뉴 데이터 (3뎁스 구조) - 컴포넌트 외부로 이동하여 모든 함수에서 사용 가능하도록
@@ -88,7 +94,12 @@ function Header({
   onCartClick = () => {},
   onUtilityClick,
   sticky = false,
-  showUtilities = true // 서브 헤더에서 유틸리티 버튼 표시 여부
+  showUtilities = true, // 서브 헤더에서 유틸리티 버튼 표시 여부
+  showMoreButton = true, // 더보기 버튼 표시 여부
+  // 메인 헤더 전용 props
+  notificationCount = 0,
+  onLogoClick,
+  onNotificationClick
 }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [expandedItems, setExpandedItems] = useState({});
@@ -492,17 +503,19 @@ function Header({
               </button>
 
               {/* 더보기 버튼 */}
-              <button
-                className="header__utility-btn"
-                onClick={() => onUtilityClick && onUtilityClick("more")}
-                aria-label="더보기"
-              >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  <circle cx="12" cy="12" r="1" fill="currentColor"/>
-                  <circle cx="19" cy="12" r="1" fill="currentColor"/>
-                  <circle cx="5" cy="12" r="1" fill="currentColor"/>
-                </svg>
-              </button>
+              {showMoreButton && (
+                <button
+                  className="header__utility-btn"
+                  onClick={() => onUtilityClick && onUtilityClick("more")}
+                  aria-label="더보기"
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="12" cy="12" r="1" fill="currentColor"/>
+                    <circle cx="19" cy="12" r="1" fill="currentColor"/>
+                    <circle cx="5" cy="12" r="1" fill="currentColor"/>
+                  </svg>
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -514,21 +527,62 @@ function Header({
   return (
     <header className={`header${sticky ? " header--sticky" : ""}`}>
       <div className="header__inner">
-        {/* 로고 */}
-        <div className="header__logo">
-          <Typography variant="h1" size="small">스타벅스</Typography>
-        </div>
-
-        {/* 햄버거 버튼 */}
+        {/* 햄버거 메뉴 */}
         <button
           className={`header__hamburger ${isMenuOpen ? "is-active" : ""}`}
           onClick={toggleMenu}
           aria-label="메뉴 열기"
           aria-expanded={isMenuOpen}
         >
-          <span className="header__hamburger-line"></span>
-          <span className="header__hamburger-line"></span>
-          <span className="header__hamburger-line"></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        {/* 로고 섹션 */}
+        <button
+          className="header__logo-section"
+          onClick={onLogoClick}
+          aria-label="MOBILE OFFICE 메뉴 열기"
+        >
+          <div className="header__logo">스타벅스</div>
+          <div className="header__title">
+            <Typography variant="h4" size="medium" weight="bold">
+              MOBILE OFFICE
+            </Typography>
+            <Icon name="chevron-down" size="small">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </Icon>
+          </div>
+        </button>
+
+        {/* 알림 버튼 */}
+        <button
+          className="header__notification"
+          onClick={onNotificationClick}
+          aria-label={`알림 ${notificationCount}개`}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M13.73 21a2 2 0 0 1-3.46 0"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          {notificationCount > 0 && (
+            <span className="header__notification-badge">{notificationCount}</span>
+          )}
         </button>
       </div>
 

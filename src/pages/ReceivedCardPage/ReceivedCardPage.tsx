@@ -149,31 +149,190 @@ const ReceivedCardPage = () => {
       // 스크롤 위치 복원
       window.scrollTo(originalScrollX, originalScrollY);
 
-      // Canvas를 Blob으로 변환
-      canvas.toBlob((blob) => {
-        if (!blob) {
+      // Canvas를 Data URL로 변환
+      const dataUrl = canvas.toDataURL("image/png", 1.0);
+      
+      // 인앱 브라우저 감지 (카카오톡, 네이버, 라인 등)
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isInAppBrowser = 
+        userAgent.includes('kakaotalk') ||
+        userAgent.includes('naver') ||
+        userAgent.includes('line') ||
+        userAgent.includes('instagram') ||
+        userAgent.includes('fban') || // Facebook
+        userAgent.includes('fbav') || // Facebook
+        /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent) ||
+        /Android.*(wv|\.0\.0\.0)/i.test(navigator.userAgent) ||
+        ((window.navigator as any).standalone === true) ||
+        (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+      
+      if (isInAppBrowser) {
+        // Data URL이 너무 길면 새 창에서 열기 실패할 수 있으므로 blob URL 사용
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            // Blob 생성 실패 시 Data URL 직접 사용
+            const newWindow = window.open();
+            if (newWindow) {
+              newWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                  <head>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>카드 이미지</title>
+                    <style>
+                      * { margin: 0; padding: 0; box-sizing: border-box; }
+                      body {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                        background: #f5f5f5;
+                        padding: 20px;
+                      }
+                      img {
+                        max-width: 100%;
+                        height: auto;
+                        border-radius: 12px;
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                        margin-bottom: 20px;
+                      }
+                      .instructions {
+                        background: rgba(0, 0, 0, 0.8);
+                        color: white;
+                        padding: 12px 20px;
+                        border-radius: 8px;
+                        font-size: 14px;
+                        text-align: center;
+                        max-width: 90%;
+                      }
+                    </style>
+                  </head>
+                  <body>
+                    <img src="${dataUrl}" alt="카드 이미지" />
+                    <div class="instructions">이미지를 길게 눌러 저장하세요</div>
+                  </body>
+                </html>
+              `);
+              newWindow.document.close();
+            }
+            if (downloadButton) {
+              downloadButton.style.display = originalDisplay || '';
+            }
+            return;
+          }
+
+          // Blob URL 생성
+          const blobUrl = URL.createObjectURL(blob);
+          const newWindow = window.open(blobUrl, '_blank');
+          
+          if (newWindow) {
+            // 새 창이 열린 경우: HTML로 감싸서 표시
+            newWindow.document.write(`
+              <!DOCTYPE html>
+              <html>
+                <head>
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>카드 이미지</title>
+                  <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    body {
+                      display: flex;
+                      flex-direction: column;
+                      justify-content: center;
+                      align-items: center;
+                      min-height: 100vh;
+                      background: #f5f5f5;
+                      padding: 20px;
+                    }
+                    img {
+                      max-width: 100%;
+                      height: auto;
+                      border-radius: 12px;
+                      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                      margin-bottom: 20px;
+                    }
+                    .instructions {
+                      background: rgba(0, 0, 0, 0.8);
+                      color: white;
+                      padding: 12px 20px;
+                      border-radius: 8px;
+                      font-size: 14px;
+                      text-align: center;
+                      max-width: 90%;
+                    }
+                  </style>
+                </head>
+                <body>
+                  <img src="${blobUrl}" alt="카드 이미지" />
+                  <div class="instructions">이미지를 길게 눌러 저장하세요</div>
+                </body>
+              </html>
+            `);
+            newWindow.document.close();
+            
+            // 창이 닫힐 때 URL 해제
+            newWindow.addEventListener('beforeunload', () => {
+              URL.revokeObjectURL(blobUrl);
+            });
+          } else {
+            // 팝업이 차단된 경우: 현재 페이지에서 이미지 표시
+            alert("팝업이 차단되었습니다. 이미지를 저장하려면 팝업을 허용해주세요.\n\n또는 아래 링크를 길게 눌러 저장하세요.");
+            // 대안: 링크 생성하여 표시
+            const link = document.createElement("a");
+            link.href = blobUrl;
+            link.download = `card-${cardData.sender.date}.png`;
+            link.textContent = "이미지 저장 (길게 눌러 저장)";
+            link.style.display = "block";
+            link.style.padding = "12px";
+            link.style.margin = "10px";
+            link.style.background = "#007AFF";
+            link.style.color = "white";
+            link.style.textAlign = "center";
+            link.style.borderRadius = "8px";
+            link.style.textDecoration = "none";
+            document.body.appendChild(link);
+            
+            // 5초 후 링크 제거
+            setTimeout(() => {
+              if (link.parentNode) {
+                link.parentNode.removeChild(link);
+              }
+              URL.revokeObjectURL(blobUrl);
+            }, 5000);
+          }
+          
+          if (downloadButton) {
+            downloadButton.style.display = originalDisplay || '';
+          }
+        }, "image/png");
+      } else {
+        // 일반 브라우저: 일반 다운로드 방식
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            // 다운로드 버튼 다시 보이기
+            if (downloadButton) {
+              downloadButton.style.display = originalDisplay || '';
+            }
+            return;
+          }
+
+          // 다운로드 링크 생성
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `card-${cardData.sender.date}.png`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+          
           // 다운로드 버튼 다시 보이기
           if (downloadButton) {
             downloadButton.style.display = originalDisplay || '';
           }
-          return;
-        }
-
-        // 다운로드 링크 생성
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `card-${cardData.sender.date}.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        
-        // 다운로드 버튼 다시 보이기
-        if (downloadButton) {
-          downloadButton.style.display = originalDisplay || '';
-        }
-      }, "image/png");
+        }, "image/png");
+      }
     } catch (error) {
       console.error("이미지 저장 실패:", error);
       alert("이미지 저장에 실패했습니다.");

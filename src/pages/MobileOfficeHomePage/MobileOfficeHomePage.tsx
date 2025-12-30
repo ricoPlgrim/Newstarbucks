@@ -1,6 +1,7 @@
 import { useState } from "react";
 import React from "react";
 import CommonLayout from "../../components/CommonLayout/CommonLayout";
+import Header from "../../components/Header/Header";
 import Button from "../../components/Button/Button";
 import Card from "../../components/Card/Card";
 import Badge from "../../components/Badge/Badge";
@@ -48,7 +49,7 @@ const MobileOfficeHomePage = () => {
   // 공지사항 데이터
   const noticeData = {
     title: "[공지]유지보수 시스템 점검안내",
-    content: "9월 25일 AM 6:00 ~ AM 9:00 서비스 업그레이드 예정",
+    content: "9월 25일 AM 6:00 ~ AM 9:00<br /> 서비스 업그레이드 예정",
     hideText: "오늘 하루 보지않기",
   };
 
@@ -71,64 +72,6 @@ const MobileOfficeHomePage = () => {
     },
   ];
 
-  // 커스텀 헤더 컴포넌트
-  const customHeader = (
-    <div className="mobile-office-home__custom-header">
-        {/* 햄버거 메뉴 */}
-        <button
-          className="mobile-office-home__hamburger"
-          onClick={() => console.log("메뉴 열기")}
-          aria-label="메뉴 열기"
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-        <button
-          className="mobile-office-home__logo-section"
-          onClick={() => setIsBottomPopupOpen(true)}
-          aria-label="MOBILE OFFICE 메뉴 열기"
-        >
-          <div className="mobile-office-home__logo">스타벅스</div>
-          <div className="mobile-office-home__title">
-            <Typography variant="h4" size="medium" weight="bold">
-              MOBILE OFFICE
-            </Typography>
-            <Icon name="chevron-down" size="small">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </Icon>
-          </div>
-        </button>
-        <button
-          className="mobile-office-home__notification"
-          onClick={() => console.log("알림 클릭")}
-          aria-label={`알림 ${notificationCount}개`}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M13.73 21a2 2 0 0 1-3.46 0"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          {notificationCount > 0 && (
-            <span className="mobile-office-home__notification-badge">{notificationCount}</span>
-          )}
-        </button>
-    </div>
-  );
-
   // 하단 네비게이션 아이템
   const bottomDockItems = [
     { key: "maintenance", label: "유지보수", icon: "🔧" },
@@ -143,7 +86,15 @@ const MobileOfficeHomePage = () => {
 
   return (
     <CommonLayout
-      customHeader={customHeader}
+      customHeader={
+        <Header
+          variant="main"
+          sticky={true}
+          notificationCount={notificationCount}
+          onLogoClick={() => setIsBottomPopupOpen(true)}
+          onNotificationClick={() => console.log("알림 클릭")}
+        />
+      }
       showBottomDock={true}
       bottomDockItems={bottomDockItems}
       bottomDockOnChange={handleBottomDockChange}

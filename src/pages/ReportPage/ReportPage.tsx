@@ -1,14 +1,12 @@
-import { useState, ChangeEvent, FormEvent, useRef, useEffect } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { DayPicker } from "react-day-picker";
-import { ko } from "date-fns/locale/ko";
-import "react-day-picker/dist/style.css";
 import CommonLayout from "../../components/CommonLayout/CommonLayout";
 import FileUpload from "../../components/FileUpload/FileUpload";
 import Button from "../../components/Button/Button";
 import Textarea from "../../components/Textarea/Textarea";
 import Checkbox from "../../components/Checkbox/Checkbox";
 import Typography from "../../components/Typography/Typography";
+import DatePicker from "../../components/DatePicker/DatePicker";
 import "./ReportPage.scss";
 
 type EmergencyMeasure = "대피" | "소방 출동";
@@ -32,31 +30,6 @@ const ReportPage = () => {
     connectMaintenance: false,
   });
 
-  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
-  const [isTimePickerOpen, setIsTimePickerOpen] = useState(false);
-  const [selectedHour, setSelectedHour] = useState<number | null>(null);
-  const [selectedMinute, setSelectedMinute] = useState<number | null>(null);
-  const datePickerRef = useRef<HTMLDivElement>(null);
-  const timePickerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (datePickerRef.current && !datePickerRef.current.contains(e.target as Node)) {
-        setIsDatePickerOpen(false);
-      }
-      if (timePickerRef.current && !timePickerRef.current.contains(e.target as Node)) {
-        setIsTimePickerOpen(false);
-      }
-    };
-
-    if (isDatePickerOpen || isTimePickerOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isDatePickerOpen, isTimePickerOpen]);
 
   const handleEmergencyMeasureToggle = (measure: EmergencyMeasure) => {
     setFormData((prev) => ({
@@ -161,35 +134,17 @@ const ReportPage = () => {
   };
 
   const handleDateSelect = (date: Date | undefined) => {
-    if (date) {
-      setFormData((prev) => ({
-        ...prev,
-        occurrenceDate: date,
-      }));
-      setIsDatePickerOpen(false);
-    }
+    setFormData((prev) => ({
+      ...prev,
+      occurrenceDate: date || null,
+    }));
   };
 
-  const handleHourSelect = (hour: number) => {
-    setSelectedHour(hour);
-  };
-
-  const handleMinuteSelect = (minute: number) => {
-    setSelectedMinute(minute);
-  };
-
-  const handleTimeConfirm = () => {
-    if (selectedHour !== null && selectedMinute !== null) {
-      const timeDate = new Date();
-      timeDate.setHours(selectedHour, selectedMinute, 0, 0);
-      setFormData((prev) => ({
-        ...prev,
-        occurrenceTime: timeDate,
-      }));
-      setIsTimePickerOpen(false);
-      setSelectedHour(null);
-      setSelectedMinute(null);
-    }
+  const handleTimeSelect = (date: Date | undefined) => {
+    setFormData((prev) => ({
+      ...prev,
+      occurrenceTime: date || null,
+    }));
   };
 
   return (
@@ -276,102 +231,20 @@ const ReportPage = () => {
             발생시간
           </Typography>
           <div className="report-page__time-group">
-            <div className="report-page__time-wrapper" ref={datePickerRef}>
-              <div className="report-page__time-input" onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}>
-                <Typography variant="body" size="medium" style={{ whiteSpace: "nowrap", flex: 1, minWidth: 0 }}>
-                  {formatDate(formData.occurrenceDate) || "날짜를 선택해주세요."}
-                </Typography>
-                <span className="report-page__time-icon">▼</span>
-              </div>
-              {isDatePickerOpen && (
-                <div className="report-page__date-picker-popover">
-                  <DayPicker
-                    mode="single"
-                    selected={formData.occurrenceDate || undefined}
-                    onSelect={handleDateSelect}
-                    locale={ko}
-                    weekStartsOn={0}
-                    showOutsideDays
-                    fixedWeeks
-                  />
-                  <Button
-                    variant="ghost"
-                    size="small"
-                    onClick={() => setIsDatePickerOpen(false)}
-                    className="report-page__date-picker-close"
-                  >
-                    닫기
-                  </Button>
-                </div>
-              )}
-            </div>
-            <div className="report-page__time-wrapper" ref={timePickerRef}>
-              <div className="report-page__time-input" onClick={() => setIsTimePickerOpen(!isTimePickerOpen)}>
-                <Typography variant="body" size="medium" style={{ whiteSpace: "nowrap", flex: 1, minWidth: 0 }}>
-                  {formatTime(formData.occurrenceTime) || "HH시 MM분"}
-                </Typography>
-                <span className="report-page__time-icon">▼</span>
-              </div>
-              {isTimePickerOpen && (
-                <div className="report-page__time-picker-popover">
-                  <div className="report-page__time-picker-section">
-                    <Typography variant="body" size="small" className="report-page__time-picker-label">
-                      시간
-                    </Typography>
-                    <div className="report-page__time-picker-grid">
-                      {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
-                        <button
-                          key={hour}
-                          type="button"
-                          className={`report-page__time-picker-btn ${selectedHour === hour ? "is-selected" : ""}`}
-                          onClick={() => handleHourSelect(hour)}
-                        >
-                          {hour < 12 ? `오전 ${hour === 0 ? 12 : hour}시` : `오후 ${hour === 12 ? 12 : hour - 12}시`}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="report-page__time-picker-section">
-                    <Typography variant="body" size="small" className="report-page__time-picker-label">
-                      분
-                    </Typography>
-                    <div className="report-page__time-picker-minutes">
-                      {[0, 15, 30, 45].map((minute) => (
-                        <button
-                          key={minute}
-                          type="button"
-                          className={`report-page__time-picker-btn ${selectedMinute === minute ? "is-selected" : ""}`}
-                          onClick={() => handleMinuteSelect(minute)}
-                        >
-                          {minute.toString().padStart(2, "0")}분
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="report-page__time-picker-actions">
-                    <Button
-                      variant="primary"
-                      size="small"
-                      onClick={handleTimeConfirm}
-                      disabled={selectedHour === null || selectedMinute === null}
-                    >
-                      확인
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="small"
-                      onClick={() => {
-                        setIsTimePickerOpen(false);
-                        setSelectedHour(null);
-                        setSelectedMinute(null);
-                      }}
-                    >
-                      닫기
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
+            <DatePicker
+              type="date"
+              value={formData.occurrenceDate || undefined}
+              onChange={handleDateSelect}
+              placeholder="날짜를 선택해주세요"
+              className="report-page__date-picker"
+            />
+            <DatePicker
+              type="time"
+              value={formData.occurrenceTime || undefined}
+              onChange={handleTimeSelect}
+              placeholder="시간을 선택해주세요"
+              className="report-page__time-picker"
+            />
           </div>
         </div>
 

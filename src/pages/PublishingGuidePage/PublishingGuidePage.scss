@@ -707,10 +707,9 @@
     @include px(font-size, 12);
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--color-muted);
-    margin: 0 0 px(12) 0;
-    padding: 0 px(20);
-    font-weight: 600;
+    color: var(--color-accent);
+    margin-bottom: px(20);
+    font-weight: 700;
     position: relative;
     z-index: 3;
   }
@@ -2503,6 +2502,82 @@
       @include px(font-size, 18);
       font-weight: 700;
       color: var(--color-text);
+    }
+  }
+}
+
+.guide-preview--weather {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  gap: px(32);
+  overflow-x: hidden;
+
+  h4 {
+    margin: 0 0 px(16) 0;
+    @include px(font-size, 16);
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  p {
+    margin: 0 0 px(16) 0;
+    @include px(font-size, 14);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    word-break: break-word;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  code {
+    background: var(--color-bg);
+    padding: px(2) px(6);
+    border-radius: px(4);
+    @include px(font-size, 13);
+    font-family: "Courier New", monospace;
+    word-break: break-word;
+  }
+
+  ol {
+    margin: 0 0 px(12) 0;
+    padding-left: px(20);
+    @include px(font-size, 14);
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+  }
+
+  a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    word-break: break-word;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  > div {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  [style*="grid"] {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  [style*="flex"][style*="overflow"] {
+    max-width: 100%;
+  }
+
+  .weather {
+    .weather__temp {
+      margin: 0 !important;
     }
   }
 }

@@ -1,5 +1,6 @@
 import "./Typography.scss";
 import type { CSSProperties, ReactNode, ElementType } from "react";
+import { Fragment } from "react";
 
 type TypographyVariant =
   | "h1"
@@ -94,9 +95,32 @@ const Typography = ({
     .filter(Boolean)
     .join(" ");
 
+  // children이 문자열이고 <br> 태그를 포함하는 경우 처리
+  const processChildren = (children: ReactNode): ReactNode => {
+    if (typeof children === "string") {
+      // <br> 또는 <br/> 태그를 실제 줄바꿈으로 변환
+      const parts = children.split(/(<br\s*\/?>)/gi);
+      return parts.map((part, index) => {
+        if (/<br\s*\/?>/gi.test(part)) {
+          return <br key={index} />;
+        }
+        return <Fragment key={index}>{part}</Fragment>;
+      });
+    }
+    if (Array.isArray(children)) {
+      return children.map((child, index) => {
+        if (typeof child === "string") {
+          return processChildren(child);
+        }
+        return <Fragment key={index}>{child}</Fragment>;
+      });
+    }
+    return children;
+  };
+
   return (
     <Component className={classes} style={style}>
-      {children}
+      {processChildren(children)}
     </Component>
   );
 };

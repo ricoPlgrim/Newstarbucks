@@ -16,8 +16,9 @@ const defaultItems = [
  * @param {Array} items - 내비게이션 아이템 배열 [{ key, label, icon }] (기본값: defaultItems)
  * @param {function} onChange - 아이템 선택 핸들러 (선택된 key를 인자로 받음)
  * @param {string} defaultActive - 기본 활성화된 아이템 key (기본값: "home")
+ * @param {string} position - 위치 타입 'fixed' | 'relative' (기본값: 'fixed')
  */
-function BottomDock({ items = defaultItems, onChange, defaultActive = "home" }) {
+function BottomDock({ items = defaultItems, onChange, defaultActive = "home", position = "fixed" }) {
   // 현재 활성화된 아이템 key 상태
   const [active, setActive] = useState(defaultActive);
 
@@ -29,7 +30,7 @@ function BottomDock({ items = defaultItems, onChange, defaultActive = "home" }) 
   };
 
   return (
-    <nav className="bottom-dock" aria-label="하단 내비게이션">
+    <nav className={`bottom-dock ${position === "relative" ? "bottom-dock--relative" : ""}`} aria-label="하단 내비게이션">
       {items.map((item) => (
         <button
           key={item.key}
