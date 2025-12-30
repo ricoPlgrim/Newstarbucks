@@ -206,15 +206,63 @@ import YourPage from "./pages/YourPage/YourPage";
 }
 ```
 
-### CSS 변수 사용
+### CSS 변수 사용 (직접 색상 코드 사용 금지)
+
+**중요**: 프로젝트 전체에서 직접 색상 코드(`#fff`, `#000`, `rgba(...)` 등)를 사용하지 않고, 항상 `_variables.scss`에 정의된 CSS 변수를 사용합니다.
 
 ```scss
 .your-element {
+  // ✅ 좋은 예: CSS 변수 사용
   color: var(--color-text);
-  background-color: var(--color-bg);
+  background-color: var(--color-card);
   border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-overlay);
+}
+
+// ❌ 나쁜 예: 직접 색상 코드 사용
+.your-element {
+  color: #111;                // 직접 색상 코드 사용 지양
+  background-color: #fff;     // 직접 색상 코드 사용 지양
+  border: 1px solid #e5e5e5; // 직접 색상 코드 사용 지양
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); // 직접 색상 코드 사용 지양
 }
 ```
+
+#### 주요 색상 변수
+
+```scss
+// 기본 색상
+--color-bg          // 배경색
+--color-card        // 카드 배경색
+--color-text        // 텍스트 색상
+--color-muted       // 보조 텍스트 색상
+--color-accent      // 강조 색상
+--color-border      // 테두리 색상
+
+// 상태 컬러
+--color-success     // 성공 색상
+--color-error       // 에러 색상
+--color-warning     // 경고 색상
+--color-info        // 정보 색상
+
+// 배경 색상
+--color-bg-secondary    // 보조 배경색
+--color-bg-tertiary     // 3차 배경색
+--color-bg-gray         // 회색 배경
+
+// 오버레이
+--color-overlay         // 오버레이 배경
+--color-overlay-dark    // 진한 오버레이
+--color-overlay-light   // 연한 오버레이
+
+// 그림자
+--shadow-overlay        // 오버레이 그림자
+--shadow-overlay-medium // 중간 오버레이 그림자
+--shadow-overlay-large  // 큰 오버레이 그림자
+--shadow-soft           // 부드러운 그림자
+```
+
+자세한 변수 목록은 `src/styles/_variables.scss` 파일을 참고하세요.
 
 ### 반응형 디자인
 
@@ -322,14 +370,16 @@ import YourPage from "./pages/YourPage/YourPage";
 - [ ] 에러 상태 처리
 - [ ] 반응형 디자인 적용
 - [ ] 접근성 고려 (aria-label, semantic HTML)
-- [ ] 다크모드 대응 (CSS 변수 사용)
+- [ ] 다크모드 대응 (CSS 변수 사용, 직접 색상 코드 사용 금지)
+- [ ] 직접 색상 코드(`#fff`, `#000`, `rgba(...)` 등) 대신 CSS 변수 사용
 
 ## 💡 팁
 
 1. **기존 페이지 참고**: `SamplePage` 또는 `PublishingGuidePage`를 참고하세요
 2. **컴포넌트 재사용**: 기존 컴포넌트를 최대한 활용하세요
 3. **스타일 일관성**: `px()` 믹스인과 CSS 변수를 사용하세요
-4. **접근성**: 키보드 네비게이션, 스크린 리더 지원을 고려하세요
-5. **TypeScript 사용**: 모든 컴포넌트는 TypeScript로 작성하며, 타입을 명시하세요
-6. **새로운 페이지 예시**: `ReportPage`, `SearchSamplePage`, `LoginPage`, `SendCardPage`, `ReceivedCardPage`를 참고하세요
+4. **색상 변수 사용**: 직접 색상 코드(`#fff`, `#000`, `rgba(...)` 등)를 사용하지 말고, 항상 `_variables.scss`에 정의된 CSS 변수를 사용하세요. 이를 통해 다크모드 지원과 테마 관리가 자동으로 처리됩니다.
+5. **접근성**: 키보드 네비게이션, 스크린 리더 지원을 고려하세요
+6. **TypeScript 사용**: 모든 컴포넌트는 TypeScript로 작성하며, 타입을 명시하세요
+7. **새로운 페이지 예시**: `ReportPage`, `SearchSamplePage`, `LoginPage`, `SendCardPage`, `ReceivedCardPage`를 참고하세요
 

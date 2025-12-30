@@ -22,6 +22,7 @@
 - 🌓 **다크모드**: 시스템 설정 자동 감지 및 수동 전환, localStorage 저장
 - 📏 **큰글씨 모드**: 작게/보통/크게/아주 크게 4단계 제공
 - 🎨 **SCSS 믹스인**: 피그마 수치값을 그대로 사용하여 자동 rem 변환
+- 🎨 **CSS 변수 시스템**: 60개 이상의 색상 변수로 테마 관리 (직접 색상 코드 사용 금지)
 - ♿ **접근성 도우미**: 오른쪽 고정 패널로 실시간 접근성 체크
 - 📱 **모바일 최적화**: 반응형 디자인 및 모바일 우선 설계
 
@@ -473,7 +474,7 @@ export default MyPage;
 
 ### CSS 변수
 
-#### 색상 변수
+#### 기본 색상 변수
 
 ```scss
 --color-bg          // 배경색
@@ -484,6 +485,90 @@ export default MyPage;
 --color-border      // 테두리 색상
 ```
 
+#### 상태 컬러 변수
+
+```scss
+--color-success     // 성공 색상
+--color-success-bg  // 성공 배경색
+--color-warning     // 경고 색상
+--color-warning-bg  // 경고 배경색
+--color-error       // 에러 색상
+--color-error-bg    // 에러 배경색
+--color-info        // 정보 색상
+--color-info-bg     // 정보 배경색
+```
+
+#### 브랜드 컬러 변수
+
+```scss
+--color-brand-primary        // 브랜드 기본 색상
+--color-brand-primary-light // 브랜드 연한 색상
+--color-brand-primary-dark  // 브랜드 진한 색상
+```
+
+#### 기본 색상 변수 (흰색, 검은색, 텍스트)
+
+```scss
+--color-white       // 흰색 (#ffffff)
+--color-black       // 검은색 (#000000)
+--color-text-dark   // 진한 텍스트 (#111111)
+--color-text-light  // 연한 텍스트 (#444444)
+--color-text-lighter // 더 연한 텍스트 (#666666)
+```
+
+#### 배경 색상 변수
+
+```scss
+--color-bg-secondary    // 보조 배경색 (#f5f5f5)
+--color-bg-tertiary    // 3차 배경색 (#fafafa)
+--color-bg-light       // 연한 배경색 (#f8f9fb)
+--color-bg-lighter     // 더 연한 배경색 (#eef2f7)
+--color-bg-gray        // 회색 배경 (#e0e0e0)
+--color-bg-gray-light  // 연한 회색 배경 (#eeeeee)
+--color-bg-gray-lighter // 더 연한 회색 배경 (#f1f1f1)
+--color-bg-gray-dark   // 진한 회색 배경 (#e5e5e5)
+--color-bg-gray-darker // 더 진한 회색 배경 (#dcdcdc)
+--color-bg-gray-darkest // 가장 진한 회색 배경 (#f9f9f9)
+```
+
+#### 오버레이 변수
+
+```scss
+--color-overlay         // 오버레이 배경 (rgba(0, 0, 0, 0.45))
+--color-overlay-dark    // 진한 오버레이 (rgba(0, 0, 0, 0.65))
+--color-overlay-light   // 연한 오버레이 (rgba(0, 0, 0, 0.05))
+--color-overlay-lighter // 더 연한 오버레이 (rgba(0, 0, 0, 0.02))
+--color-overlay-darkest // 가장 진한 오버레이 (rgba(0, 0, 0, 0.6))
+--color-overlay-gradient // 그라데이션 오버레이 (rgba(0, 0, 0, 0.7))
+```
+
+#### 특수 색상 변수
+
+```scss
+--color-accent-light   // 연한 강조 색상 (#00c896)
+--color-accent-dark    // 진한 강조 색상 (#00704a)
+--color-pink-light     // 연한 핑크 (#fce4ec)
+--color-mint-light     // 연한 민트 (#d4f4e0)
+--color-green-light    // 연한 초록 (#e8f5e9)
+--color-red-light      // 연한 빨강 (#ff4444)
+--color-red-dark       // 진한 빨강 (#d32f2f)
+--color-gray-medium    // 중간 회색 (#888888)
+--color-gray-dark      // 진한 회색 (#555555)
+--color-gray-text      // 회색 텍스트 (#666666)
+--color-gray-border    // 회색 테두리 (#e5e5e5)
+--color-gray-border-light // 연한 회색 테두리 (#dcdcdc)
+```
+
+#### 그림자 변수
+
+```scss
+--shadow-overlay        // 오버레이 그림자 (0 2px 8px rgba(0, 0, 0, 0.1))
+--shadow-overlay-medium // 중간 오버레이 그림자 (0 4px 12px rgba(0, 0, 0, 0.15))
+--shadow-overlay-large  // 큰 오버레이 그림자 (0 4px 16px rgba(0, 0, 0, 0.15))
+--shadow-overlay-dark    // 진한 오버레이 그림자 (0 4px 12px rgba(0, 0, 0, 0.3))
+--shadow-soft           // 부드러운 그림자 (0 12px 32px rgba(27, 27, 31, 0.08))
+```
+
 #### 다크모드 색상
 
 다크모드에서는 위 색상 변수들이 자동으로 변경됩니다:
@@ -491,13 +576,35 @@ export default MyPage;
 - 카드 배경: `#1a1c1f`
 - 텍스트: `#f8f8fa`
 - 보조 텍스트: `#a5a7ac`
+- 모든 배경, 오버레이, 그림자 변수도 다크모드에 맞게 자동 조정
 
 #### 기타 변수
 
 ```scss
 --font-scale        // 폰트 스케일 (큰글씨 모드)
---shadow-soft       // 부드러운 그림자
 ```
+
+#### 색상 변수 사용 가이드
+
+**✅ 권장 사항:**
+```scss
+.my-element {
+  background: var(--color-card);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+```
+
+**❌ 지양 사항:**
+```scss
+.my-element {
+  background: #fff;           // 직접 색상 코드 사용 지양
+  color: #111;                // 직접 색상 코드 사용 지양
+  border: 1px solid #e5e5e5;  // 직접 색상 코드 사용 지양
+}
+```
+
+직접 색상 코드(`#fff`, `#000`, `rgba(...)` 등)를 사용하지 말고, 항상 CSS 변수를 사용하세요. 이렇게 하면 다크모드 지원과 테마 관리가 자동으로 처리됩니다.
 
 ### 큰글씨 모드 적용 방법
 
@@ -593,14 +700,20 @@ export default MyPage;
    font-size: 1rem;  // 직접 계산하지 말 것
    ```
 
-2. **CSS 변수 활용**
+2. **CSS 변수 활용 (직접 색상 코드 사용 금지)**
    ```scss
    // ✅ 좋은 예
    color: var(--color-text);
+   background: var(--color-card);
+   border: 1px solid var(--color-border);
    
    // ❌ 나쁜 예
-   color: #1b1b1f;  // 하드코딩 지양
+   color: #1b1b1f;           // 직접 색상 코드 사용 지양
+   background: #fff;          // 직접 색상 코드 사용 지양
+   border: 1px solid #e5e5e5; // 직접 색상 코드 사용 지양
    ```
+   
+   **중요**: 프로젝트 전체에서 직접 색상 코드(`#fff`, `#000`, `rgba(...)` 등)를 사용하지 않고, 항상 `_variables.scss`에 정의된 CSS 변수를 사용합니다. 이를 통해 다크모드 지원과 테마 관리가 자동으로 처리됩니다.
 
 3. **큰글씨 모드 고려**
    - 메인 컨텐츠는 자동으로 적용됨
