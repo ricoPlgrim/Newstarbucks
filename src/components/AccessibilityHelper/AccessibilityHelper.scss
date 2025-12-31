@@ -6,14 +6,18 @@
   right: 0;
   z-index: 1000;
   transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: px(8);
   font-size: 1rem; /* 큰글씨 모드 제외 */
   will-change: transform;
 
   &__toggle {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
     min-width: px(60);
     width: auto;
     height: px(60);
@@ -33,7 +37,6 @@
     box-shadow: var(--shadow-overlay);
     opacity: 1;
     z-index: 2;
-    transition: transform 0.3s ease;
 
     &:hover,
     &:focus {
@@ -51,7 +54,6 @@
 
   &__icon {
     font-size: px(10);
-    transition: transform 0.3s;
     writing-mode: initial;
     text-orientation: initial;
     display: flex;
@@ -88,24 +90,27 @@
     box-shadow: var(--shadow-overlay-large);
     opacity: 1;
     transform: translateX(100%);
-    transition: transform 0.3s ease;
     visibility: visible;
     pointer-events: auto;
+    cursor: auto;
   }
 
   // 열릴 때
   &.is-open {
     .accessibility-helper__panel {
       transform: translateX(0);
-    }
-    .accessibility-helper__toggle {
-      transform: translateY(-50%) translateX(px(-320));
+      display: block;
+      visibility: visible;
+      pointer-events: auto;
     }
   }
 
   // 닫힐 때 즉시 hidden 처리
   &__panel.is-hidden {
     transform: translateX(100%);
+    display: none;
+    visibility: hidden;
+    pointer-events: none;
   }
 
   &__section {

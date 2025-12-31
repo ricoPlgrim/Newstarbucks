@@ -22,7 +22,6 @@ function AccessibilityHelper({ isDarkMode, setIsDarkMode, fontScale, setFontScal
   const [isOpen, setIsOpen] = useState(false);
   const [isPanelVisible, setIsPanelVisible] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   // TODO: 접근성 체크리스트 기능 구현 예정
   // const [checklist, setChecklist] = useState(ACCESSIBILITY_CHECKLIST);
@@ -32,34 +31,9 @@ function AccessibilityHelper({ isDarkMode, setIsDarkMode, fontScale, setFontScal
   //   );
   // };
 
-  // isOpen 상태 변경 시 panel visibility 관리
+  // isOpen 상태 변경 시 즉시 panel 표시/숨김
   useEffect(() => {
-    if (isOpen) {
-      // 열릴 때: 즉시 visible
-      setIsPanelVisible(true);
-      // 기존 timeout 취소
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
-    } else {
-      // 닫힐 때: transform 애니메이션 완료 후 visibility hidden
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      timeoutRef.current = setTimeout(() => {
-        setIsPanelVisible(false);
-        timeoutRef.current = null;
-      }, 300); // CSS transition 시간과 일치
-    }
-
-    // cleanup
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
-    };
+    setIsPanelVisible(isOpen);
   }, [isOpen]);
 
   const currentFontScaleLabel =

@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/Newstarbucks/static/css/main.e51ee0de.css",
-    "main.js": "/Newstarbucks/static/js/main.442af6a2.js",
+    "main.css": "/Newstarbucks/static/css/main.dbc10e69.css",
+    "main.js": "/Newstarbucks/static/js/main.24182768.js",
     "static/js/453.40633bcc.chunk.js": "/Newstarbucks/static/js/453.40633bcc.chunk.js",
     "static/media/NotoSansKR-Light.woff2": "/Newstarbucks/static/media/NotoSansKR-Light.9a90b22f426eeec471f9.woff2",
     "static/media/NotoSansKR-Regular.woff2": "/Newstarbucks/static/media/NotoSansKR-Regular.cd67fb501d6f966c42af.woff2",
@@ -29,12 +29,12 @@
     "static/media/Pretendard-Light.woff2": "/Newstarbucks/static/media/Pretendard-Light.1fc5521353ec20635e8e.woff2",
     "static/media/christmas-promo-1.jpg": "/Newstarbucks/static/media/christmas-promo-1.ecbd3aab45c72e6104f9.jpg",
     "index.html": "/Newstarbucks/index.html",
-    "main.e51ee0de.css.map": "/Newstarbucks/static/css/main.e51ee0de.css.map",
-    "main.442af6a2.js.map": "/Newstarbucks/static/js/main.442af6a2.js.map",
+    "main.dbc10e69.css.map": "/Newstarbucks/static/css/main.dbc10e69.css.map",
+    "main.24182768.js.map": "/Newstarbucks/static/js/main.24182768.js.map",
     "453.40633bcc.chunk.js.map": "/Newstarbucks/static/js/453.40633bcc.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.e51ee0de.css",
-    "static/js/main.442af6a2.js"
+    "static/css/main.dbc10e69.css",
+    "static/js/main.24182768.js"
   ]
 }
