@@ -555,6 +555,11 @@
     overflow: hidden;
     padding: 0;
 
+    &-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
     &::before {
       content: "";
       position: absolute;
@@ -637,7 +642,7 @@
       .hljs-variable,
       .hljs-template-variable,
       .hljs-attribute {
-        color: #9cdcfe !important; // 변수 (밝은 파란색)
+        color: #ffeb3b !important; // 변수 (밝은 노란색)
       }
 
       .hljs-number,
@@ -682,6 +687,55 @@
       .hljs-selector-class {
         color: #d7ba7d !important; // 선택자 (황금색)
       }
+    }
+  }
+
+  &__copy-button {
+    position: absolute;
+    top: px(6);
+    right: px(12);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: px(5);
+    padding: px(5) px(10);
+    background: transparent;
+    border: none;
+    border-radius: px(4);
+    color: #ffeb3b;
+    font-size: px(11);
+    font-weight: 500;
+    font-family: "Consolas", "Monaco", "Courier New", monospace;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    opacity: 0.9;
+
+    &:hover {
+      opacity: 1;
+      color: #fff176;
+      background: rgba(255, 235, 59, 0.15);
+    }
+
+    &:active {
+      opacity: 0.95;
+    }
+
+    svg {
+      width: px(14);
+      height: px(14);
+      flex-shrink: 0;
+      stroke: currentColor;
+    }
+
+    span {
+      line-height: 1;
+      color: currentColor;
+    }
+
+    &:focus-visible {
+      outline: 1px solid #ffeb3b;
+      outline-offset: 2px;
+      opacity: 1;
     }
   }
 

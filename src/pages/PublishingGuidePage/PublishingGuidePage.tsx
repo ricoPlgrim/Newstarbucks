@@ -79,6 +79,7 @@ import AccessibilityHelper from "../../components/AccessibilityHelper/Accessibil
 // 코드 블록 컴포넌트 (구문 강조 적용)
 const CodeBlock = ({ code, language = "tsx" }) => {
   const codeRef = useRef(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (codeRef.current) {
@@ -87,12 +88,84 @@ const CodeBlock = ({ code, language = "tsx" }) => {
     }
   }, [code]);
 
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    } catch (err) {
+      console.error("복사 실패:", err);
+      // Fallback: 텍스트 영역을 사용한 복사
+      const textArea = document.createElement("textarea");
+      textArea.value = code;
+      textArea.style.position = "fixed";
+      textArea.style.opacity = "0";
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand("copy");
+        setCopied(true);
+        setTimeout(() => {
+          setCopied(false);
+        }, 2000);
+      } catch (fallbackErr) {
+        console.error("Fallback 복사 실패:", fallbackErr);
+      }
+      document.body.removeChild(textArea);
+    }
+  };
+
   return (
-    <pre className="guide-section__code-pre">
-      <code ref={codeRef} className={`language-${language}`}>
-        {code}
-      </code>
-    </pre>
+    <div className="guide-section__code-wrapper">
+      <button
+        className="guide-section__copy-button"
+        onClick={handleCopy}
+        aria-label={copied ? "Copied" : "Copy code"}
+        title={copied ? "Copied!" : "Copy code"}
+      >
+        {copied ? (
+          <>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M13.3333 4L6 11.3333L2.66667 8"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <span>Copied</span>
+          </>
+        ) : (
+          <>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M5.33333 2.66667H11.3333C12.0697 2.66667 12.6667 3.26362 12.6667 4V10.6667"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M10.6667 5.33333H3.33333C2.59695 5.33333 2 5.93029 2 6.66667V13.3333C2 14.0697 2.59695 14.6667 3.33333 14.6667H10C10.7364 14.6667 11.3333 14.0697 11.3333 13.3333V6.66667C11.3333 5.93029 10.7364 5.33333 10 5.33333H10.6667Z"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <span>Copy</span>
+          </>
+        )}
+      </button>
+      <pre className="guide-section__code-pre">
+        <code ref={codeRef} className={`language-${language}`}>
+          {code}
+        </code>
+      </pre>
+    </div>
   );
 };
 
