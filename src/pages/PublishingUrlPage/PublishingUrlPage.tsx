@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import PageTemplate from "../../components/PageTemplate/PageTemplate";
+import CommonLayout from "../../components/CommonLayout/CommonLayout";
 import Loading from "../../components/Loading/Loading";
 import "./PublishingUrlPage.scss";
 import { fetchMockUrls } from "../../mocks/mockData";
@@ -28,9 +29,15 @@ const PublishingUrlPage = () => {
 
   return (
     <PageTemplate title="퍼블리싱 URL 목록">
-      <div className="publishing-url-page">
-        <div className="publishing-url-page__table-container">
-          <table className="publishing-url-table">
+      <CommonLayout
+        headerVariant="sub"
+        headerCategoryName="퍼블리싱 URL"
+        headerOnBack={() => window.history.back()}
+        headerShowUtilities={false}
+      >
+        <div className="publishing-url-page">
+          <div className="publishing-url-page__table-container">
+            <table className="publishing-url-table">
             <thead>
               <tr>
                 <th>뎁스1</th>
@@ -87,6 +94,7 @@ const PublishingUrlPage = () => {
           </table>
         </div>
       </div>
+      </CommonLayout>
     </PageTemplate>
   );
 };

@@ -27,6 +27,12 @@ type CommonLayoutProps = {
   headerOnCartClick?: () => void;
   /** 헤더 유틸리티 버튼 클릭 시 실행할 함수 */
   headerOnUtilityClick?: (key: string) => void;
+  /** 알림 개수 (메인 헤더에서 사용) */
+  headerNotificationCount?: number;
+  /** 알림 클릭 핸들러 (메인 헤더에서 사용) */
+  headerOnNotificationClick?: () => void;
+  /** 로고 클릭 핸들러 (메인 헤더에서 사용) */
+  headerOnLogoClick?: () => void;
   // Footer 관련 props
   /** 푸터 표시 여부 */
   showFooter?: boolean;
@@ -81,6 +87,9 @@ const CommonLayout = ({
   headerOnPageChange,
   headerOnCartClick,
   headerOnUtilityClick,
+  headerNotificationCount,
+  headerOnNotificationClick,
+  headerOnLogoClick,
   // Footer props
   showFooter = false,
   footerNav,
@@ -118,6 +127,9 @@ const CommonLayout = ({
             onPageChange={headerOnPageChange}
             onCartClick={headerOnCartClick}
             onUtilityClick={headerOnUtilityClick}
+            notificationCount={headerNotificationCount}
+            onNotificationClick={headerOnNotificationClick}
+            onLogoClick={headerOnLogoClick}
           />
         )
       )}

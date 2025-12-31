@@ -288,10 +288,10 @@ import YourPage from "./pages/YourPage/YourPage";
 프로젝트에 이미 구현된 컴포넌트들을 활용하세요:
 
 ### 레이아웃
-- **Header** - 모바일 헤더 (메인 헤더: 햄버거 메뉴 / 서브 헤더: 뒤로가기, 카테고리명, 유틸리티 버튼, `sticky` prop으로 sticky 위치 지정 가능)
+- **Header** - 모바일 헤더 (메인 헤더: 햄버거 메뉴, 로고, 알림 아이콘 / 서브 헤더: 뒤로가기, 카테고리명, 유틸리티 버튼, `sticky` prop으로 sticky 위치 지정 가능, `notificationCount` prop으로 알림 아이콘 표시, `notificationCount`가 undefined가 아니면 항상 아이콘 표시, badge는 0보다 클 때만 표시)
 - **Footer** - 푸터
 - **PageTemplate** - 페이지 템플릿 (다크모드, 폰트 스케일 지원)
-- **CommonLayout** - 공통 레이아웃 컴포넌트 (Header, Footer, BottomDock, ScrollTop 통합 관리, 다양한 props로 커스터마이징 가능)
+- **CommonLayout** - 공통 레이아웃 컴포넌트 (Header, Footer, BottomDock, ScrollTop 통합 관리, 다양한 props로 커스터마이징 가능, `headerNotificationCount`, `headerOnLogoClick`, `headerOnNotificationClick` props 지원)
 - **ListContainer** - 리스트 컨테이너 (section/article 태그 기반)
 - **ScrollTop** - 스크롤 탑 버튼 (스크롤 시 나타나는 상단 이동 버튼, CommonLayout에서 통합 관리)
 

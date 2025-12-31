@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import Header from "../../components/Header/Header";
+import CommonLayout from "../../components/CommonLayout/CommonLayout";
 import Skeleton from "../../components/Skeleton/Skeleton";
 import LoadingGrid from "../../components/LoadingGrid/LoadingGrid";
+import Typography from "../../components/Typography/Typography";
+import Tabs from "../../components/Tabs/Tabs";
+import Header from "../../components/Header/Header";
 import "./SamplePage.scss";
 // import { fetchMockSamplePage } from "../../mocks/mockData"; // 필요시 주석 해제
 
@@ -36,6 +39,28 @@ function SamplePage({ customClass = "sample-page" }) {
   const [cards, setCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState("sample");
+  const [activeDock, setActiveDock] = useState("home");
+  const [activeLayoutType, setActiveLayoutType] = useState("type4");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  const bottomDockItems = [
+    { key: "home", label: "홈", icon: "🏠" },
+    { key: "search", label: "검색", icon: "🔍" },
+    { key: "profile", label: "프로필", icon: "👤" },
+  ];
+  
+  const layoutTabs = [
+    { id: "type4", label: "유형 1", description: "모든 요소 포함" },
+    { id: "type1", label: "유형 2", description: "서브 헤더 + ScrollTop" },
+    { id: "type2", label: "유형 3", description: "메인 헤더 + BottomDock + ScrollTop" },
+    { id: "type3", label: "유형 4", description: "서브 헤더 + 푸터" },
+  ];
+  
+  const handleMenuClick = (typeId: string) => {
+    setActiveLayoutType(typeId);
+    setIsMobileMenuOpen(false);
+  };
 
   // 데이터 로드 예시 (필요시 주석 해제)
   // useEffect(() => {
@@ -95,66 +120,218 @@ function SamplePage({ customClass = "sample-page" }) {
   //   );
   // }
 
+  const renderLayout = (type: string) => {
+    switch (type) {
+      case "type1":
+        return (
+          <CommonLayout
+            headerVariant="sub"
+            headerCategoryName="샘플 페이지"
+            headerOnBack={() => console.log("뒤로가기")}
+            showScrollTop={true}
+            scrollTopShowAfter={100}
+          >
+            <div className="sample-page__content">
+              <Typography variant="body" size="medium">
+                서브 헤더와 ScrollTop이 포함된 레이아웃입니다.
+              </Typography>
+              <div className="sample-page__grid">
+                <PlaceholderCard title="카드 제목 1" desc="카드 설명을 여기에 작성하세요." />
+                <PlaceholderCard title="카드 제목 2" desc="카드 설명을 여기에 작성하세요." />
+                <PlaceholderCard title="카드 제목 3" desc="카드 설명을 여기에 작성하세요." />
+              </div>
+            </div>
+          </CommonLayout>
+        );
+      
+      case "type2":
+        return (
+          <CommonLayout
+            headerVariant="main"
+            headerCurrentPage={currentPage}
+            headerOnPageChange={(page) => setCurrentPage(page)}
+            showBottomDock={true}
+            bottomDockItems={bottomDockItems}
+            bottomDockOnChange={(key) => setActiveDock(key)}
+            bottomDockDefaultActive="home"
+            bottomDockPosition="relative"
+            showScrollTop={true}
+            customHeader={
+              <Header
+                variant="main"
+                currentPage={currentPage}
+                onPageChange={(page) => setCurrentPage(page)}
+                notificationCount={3}
+                onNotificationClick={() => console.log("알림 클릭")}
+              />
+            }
+          >
+            <div className="sample-page__content">
+              <Typography variant="body" size="medium">
+                메인 헤더와 하단 도크가 있는 레이아웃입니다.
+              </Typography>
+              <div className="sample-page__grid">
+                <PlaceholderCard title="카드 제목 1" desc="카드 설명을 여기에 작성하세요." />
+                <PlaceholderCard title="카드 제목 2" desc="카드 설명을 여기에 작성하세요." />
+                <PlaceholderCard title="카드 제목 3" desc="카드 설명을 여기에 작성하세요." />
+              </div>
+            </div>
+          </CommonLayout>
+        );
+      
+      case "type3":
+        return (
+          <CommonLayout
+            headerVariant="sub"
+            headerCategoryName="샘플 페이지"
+            showFooter={true}
+            footerNav={[
+              { label: "회사소개", href: "/company" },
+              { label: "이용약관", href: "/terms" },
+            ]}
+            footerInfo={{
+              address: "서울특별시 강남구",
+              contact: "02-1234-5678",
+            }}
+          >
+            <div className="sample-page__content">
+              <Typography variant="body" size="medium">
+                서브 헤더와 푸터가 포함된 레이아웃입니다.
+              </Typography>
+              <div className="sample-page__grid">
+                <PlaceholderCard title="카드 제목 1" desc="카드 설명을 여기에 작성하세요." />
+                <PlaceholderCard title="카드 제목 2" desc="카드 설명을 여기에 작성하세요." />
+                <PlaceholderCard title="카드 제목 3" desc="카드 설명을 여기에 작성하세요." />
+              </div>
+            </div>
+          </CommonLayout>
+        );
+      
+      case "type4":
+        return (
+          <CommonLayout
+            headerVariant="main"
+            headerCurrentPage={currentPage}
+            headerOnPageChange={(page) => setCurrentPage(page)}
+            headerNotificationCount={3}
+            headerOnNotificationClick={() => console.log("알림 클릭")}
+            showBottomDock={true}
+            bottomDockItems={bottomDockItems}
+            bottomDockOnChange={(key) => setActiveDock(key)}
+            bottomDockDefaultActive="home"
+            bottomDockPosition="relative"
+            showFooter={true}
+            footerNav={[
+              { label: "회사소개", href: "/company" },
+              { label: "이용약관", href: "/terms" },
+            ]}
+            footerInfo={{
+              address: "서울특별시 강남구",
+              contact: "02-1234-5678",
+            }}
+            showScrollTop={true}
+            scrollTopShowAfter={100}
+          >
+            <div className="sample-page__content">
+              <Typography variant="body" size="medium">
+                모든 요소가 포함된 완전한 레이아웃입니다.
+              </Typography>
+              <div className="sample-page__grid">
+                <PlaceholderCard title="카드 제목 1" desc="카드 설명을 여기에 작성하세요." />
+                <PlaceholderCard title="카드 제목 2" desc="카드 설명을 여기에 작성하세요." />
+                <PlaceholderCard title="카드 제목 3" desc="카드 설명을 여기에 작성하세요." />
+              </div>
+            </div>
+          </CommonLayout>
+        );
+      
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="sample-page">
-      {/* Header 컴포넌트 - currentPage는 App.js에서 관리하는 페이지 ID와 일치시켜야 함 */}
-      <Header currentPage="sample" onPageChange={() => {}} />
+      <div className="sample-page__layout">
+        {/* 모바일 메뉴 토글 버튼 */}
+        <div className="sample-page__mobile-toggle">
+          <button onClick={() => setIsMobileMenuOpen(true)}>메뉴</button>
+        </div>
 
-      <main className="contents">
-        {/* 히어로 섹션 - 메인 비주얼 영역 */}
-        <section className="sample-page__hero">
-          <div>
-            {/* 배지/태그 */}
-            <p className="sample-page__badge">샘플</p>
-            {/* 메인 타이틀 */}
-            <h1>페이지 제목</h1>
-            {/* 서브 타이틀/설명 */}
-            <p className="sample-page__lead">페이지 설명을 여기에 작성하세요.</p>
-            {/* CTA 버튼 영역 */}
-            <div className="sample-page__actions">
-              <button className="btn btn--primary btn--md">주요 액션</button>
-              <button className="btn btn--secondary btn--md">보조 액션</button>
+        {/* 모바일 메뉴 모달 */}
+        {isMobileMenuOpen && (
+          <div className="sample-page__mobile-menu-overlay" onClick={() => setIsMobileMenuOpen(false)}>
+            <div
+              className="sample-page__mobile-menu-modal"
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-label="레이아웃 유형 메뉴"
+            >
+              <div className="sample-page__mobile-menu-header">
+                <h4>레이아웃 유형</h4>
+                <button onClick={() => setIsMobileMenuOpen(false)} aria-label="닫기">✕</button>
+              </div>
+              <div className="sample-page__mobile-menu-body">
+                <ul className="sample-page__menu-list">
+                  {layoutTabs.map((tab) => {
+                    const isActive = activeLayoutType === tab.id;
+                    return (
+                      <li key={tab.id}>
+                        <button
+                          className={`sample-page__menu-link${isActive ? " is-active" : ""}`}
+                          aria-current={isActive ? "true" : undefined}
+                          onClick={() => handleMenuClick(tab.id)}
+                        >
+                          <span className="sample-page__menu-label">{tab.label}</span>
+                          <span className="sample-page__menu-desc">{tab.description}</span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
             </div>
           </div>
-          {/* 비주얼 영역 - 배너/이미지/그래프 등 */}
-          <div className="sample-page__hero-placeholder">
-            <p className="sample-page__label">비주얼 영역</p>
-            <p className="sample-page__hint">배너 / 이미지 / 그래프 등을 배치하세요.</p>
-            {/* 예시: <Image src="..." alt="..." /> */}
-          </div>
-        </section>
+        )}
 
-        {/* 콘텐츠 섹션 - 메인 콘텐츠 영역 */}
-        <section className="sample-page__section">
-          <div className="sample-page__section-head">
-            <h3>콘텐츠 영역</h3>
-            <p>필요한 모듈을 자유롭게 배치할 공간입니다.</p>
-          </div>
-          {/* 그리드 레이아웃 예시 */}
-          <div className="sample-page__grid">
-            {/* 카드 컴포넌트 예시 */}
-            <PlaceholderCard title="카드 제목 1" desc="카드 설명을 여기에 작성하세요." />
-            <PlaceholderCard title="카드 제목 2" desc="카드 설명을 여기에 작성하세요." />
-            <PlaceholderCard title="카드 제목 3" desc="카드 설명을 여기에 작성하세요." />
-            {/* 동적 데이터 사용 예시 */}
-            {/* {cards.map((card) => (
-              <PlaceholderCard key={card.id} title={card.title} desc={card.desc} />
-            ))} */}
-          </div>
-        </section>
+        {/* 왼쪽 네비게이션 메뉴 */}
+        <nav className="sample-page__lnb" aria-label="레이아웃 유형 메뉴">
+          <ul className="sample-page__lnb-list">
+            {layoutTabs.map((tab) => {
+              const isActive = activeLayoutType === tab.id;
+              return (
+                <li key={tab.id}>
+                  <button
+                    className={`sample-page__lnb-link${isActive ? " is-active" : ""}`}
+                    aria-current={isActive ? "true" : undefined}
+                    onClick={() => handleMenuClick(tab.id)}
+                  >
+                    <span className="sample-page__lnb-label">{tab.label}</span>
+                    <span className="sample-page__lnb-desc">{tab.description}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
 
-        {/* CTA 섹션 - 행동 유도 영역 */}
-        <section className="sample-page__section">
-          <div>
-            <h3>CTA 영역</h3>
-            <p>프로젝트별 목표 행동을 넣어주세요.</p>
+        {/* 오른쪽 컨텐츠 영역 */}
+        <div className="sample-page__content-area">
+          <div className="sample-page__header">
+            <Typography variant="h3" size="medium" className="sample-page__title">
+              CommonLayout 유형별 예제
+            </Typography>
+            <Typography variant="body" size="small" color="muted" className="sample-page__subtitle">
+              메뉴에서 유형을 선택하여 각 레이아웃을 확인하세요.
+            </Typography>
           </div>
-          <div className="sample-page__actions">
-            <button className="btn btn--primary btn--md">주요 액션</button>
-            <button className="btn btn--ghost btn--md">보조 액션</button>
+          
+          <div className="sample-page__layout-preview">
+            {renderLayout(activeLayoutType)}
           </div>
-        </section>
-      </main>
+        </div>
+      </div>
     </div>
   );
 }

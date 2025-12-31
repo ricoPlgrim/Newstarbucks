@@ -721,6 +721,10 @@
     background-color: rgba(12, 124, 89, 0.05);
     transition: none !important;
     transform: none !important;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 
     &:hover {
       transform: none !important;
@@ -2503,6 +2507,22 @@
       font-weight: 700;
       color: var(--color-text);
     }
+  }
+}
+
+.guide-preview--loading-grid {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  gap: px(24);
+  overflow-x: hidden;
+  box-sizing: border-box;
+  
+  > div {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 }
 

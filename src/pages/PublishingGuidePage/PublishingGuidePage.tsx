@@ -72,6 +72,9 @@ import BorderAnimation from "../../components/BorderAnimation/BorderAnimation";
 import ListContainer from "../../components/ListContainer/ListContainer";
 import ScrollTop from "../../components/ScrollTop/ScrollTop";
 import Weather from "../../components/Weather/Weather";
+import CommonLayout from "../../components/CommonLayout/CommonLayout";
+import LoadingGrid from "../../components/LoadingGrid/LoadingGrid";
+import AccessibilityHelper from "../../components/AccessibilityHelper/AccessibilityHelper";
 
 // 코드 블록 컴포넌트 (구문 강조 적용)
 const CodeBlock = ({ code, language = "tsx" }) => {
@@ -3102,6 +3105,164 @@ const ListContainerPreview = () => {
               </Typography>
             </div>
           </ListContainer>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const CommonLayoutPreview = () => {
+  const [currentPage, setCurrentPage] = useState("guide");
+  const [activeDock, setActiveDock] = useState("home");
+  
+  const bottomDockItems = [
+    { key: "home", label: "홈", icon: "🏠" },
+    { key: "search", label: "검색", icon: "🔍" },
+    { key: "profile", label: "프로필", icon: "👤" },
+  ];
+
+  return (
+    <div className="guide-preview guide-preview--common-layout">
+      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        <div>
+          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>기본 사용 (서브 헤더)</h4>
+          <div style={{ border: "1px solid var(--color-border)", borderRadius: "8px", overflow: "hidden" }}>
+            <CommonLayout
+              headerVariant="sub"
+              headerCategoryName="카테고리"
+              headerOnBack={() => console.log("뒤로가기")}
+              showScrollTop={true}
+              scrollTopShowAfter={100}
+            >
+              <div style={{ padding: "20px", minHeight: "200px" }}>
+                <Typography variant="body" size="medium">컨텐츠 영역입니다.</Typography>
+              </div>
+            </CommonLayout>
+          </div>
+        </div>
+
+        <div>
+          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>메인 헤더 + BottomDock</h4>
+          <div style={{ border: "1px solid var(--color-border)", borderRadius: "8px", overflow: "hidden" }}>
+            <CommonLayout
+              headerVariant="main"
+              headerCurrentPage={currentPage}
+              headerOnPageChange={(page) => setCurrentPage(page)}
+              showBottomDock={true}
+              bottomDockItems={bottomDockItems}
+              bottomDockOnChange={(key) => setActiveDock(key)}
+              bottomDockDefaultActive="home"
+              bottomDockPosition="relative"
+              showScrollTop={true}
+            >
+              <div style={{ padding: "20px", minHeight: "200px" }}>
+                <Typography variant="body" size="medium">메인 헤더와 하단 도크가 있는 레이아웃입니다.</Typography>
+              </div>
+            </CommonLayout>
+          </div>
+        </div>
+
+        <div>
+          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>푸터 포함</h4>
+          <div style={{ border: "1px solid var(--color-border)", borderRadius: "8px", overflow: "hidden" }}>
+            <CommonLayout
+              headerVariant="sub"
+              headerCategoryName="페이지"
+              showFooter={true}
+              footerNav={[
+                { label: "회사소개", href: "/company" },
+                { label: "이용약관", href: "/terms" },
+              ]}
+              footerInfo={{
+                address: "서울특별시 강남구",
+                contact: "02-1234-5678",
+              }}
+            >
+              <div style={{ padding: "20px", minHeight: "200px" }}>
+                <Typography variant="body" size="medium">푸터가 포함된 레이아웃입니다.</Typography>
+              </div>
+            </CommonLayout>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const LoadingGridPreview = () => {
+  return (
+    <div className="guide-preview guide-preview--loading-grid">
+      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        <div>
+          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>기본 사용 (12개, 5열)</h4>
+          <LoadingGrid count={12} columns={5} />
+        </div>
+
+        <div>
+          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>6개, 3열</h4>
+          <LoadingGrid count={6} columns={3} />
+        </div>
+
+        <div>
+          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>8개, 4열</h4>
+          <LoadingGrid count={8} columns={4} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const AccessibilityHelperPreview = () => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [fontScale, setFontScale] = useState("normal");
+
+  return (
+    <div className="guide-preview guide-preview--accessibility-helper">
+      <div style={{ display: "flex", flexDirection: "column", gap: "24px", minHeight: "300px", position: "relative" }}>
+        <div>
+          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>접근성 도우미</h4>
+          <Typography variant="body" size="small" color="muted" style={{ marginBottom: "16px" }}>
+            오른쪽 가운데 "옵션" 버튼을 클릭하여 열 수 있습니다.
+          </Typography>
+          <div style={{ border: "1px solid var(--color-border)", borderRadius: "8px", padding: "20px", minHeight: "200px" }}>
+            <Typography variant="body" size="medium">이 영역은 접근성 도우미의 영향을 받습니다.</Typography>
+            <Typography variant="body" size="small" color="muted" style={{ marginTop: "8px" }}>
+              다크모드와 폰트 크기를 변경할 수 있습니다.
+            </Typography>
+          </div>
+        </div>
+
+        <div style={{ position: "relative", height: "100px" }}>
+          <AccessibilityHelper
+            isDarkMode={isDarkMode}
+            setIsDarkMode={setIsDarkMode}
+            fontScale={fontScale}
+            setFontScale={setFontScale}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PageTemplatePreview = () => {
+  return (
+    <div className="guide-preview guide-preview--page-template">
+      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        <div>
+          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>PageTemplate 사용 예제</h4>
+          <Typography variant="body" size="small" color="muted" style={{ marginBottom: "16px" }}>
+            PageTemplate은 다크모드, 폰트 스케일 조절 등 접근성 기능을 포함합니다.
+            실제 페이지에서는 다음과 같이 사용합니다.
+          </Typography>
+          <div style={{ border: "1px solid var(--color-border)", borderRadius: "8px", padding: "20px", background: "var(--color-bg)" }}>
+            <Typography variant="body" size="medium" style={{ marginBottom: "12px" }}>
+              이 페이지는 PageTemplate으로 감싸져 있습니다.
+            </Typography>
+            <Typography variant="body" size="small" color="muted">
+              오른쪽 하단의 접근성 도우미를 통해 테마와 폰트 크기를 조절할 수 있습니다.
+            </Typography>
+          </div>
         </div>
       </div>
     </div>
@@ -7759,6 +7920,366 @@ const WeatherSelector = () => {
 `,
     PreviewComponent: WeatherPreview,
   },
+  {
+    id: "common-layout",
+    label: "공통 레이아웃",
+    title: "CommonLayout 컴포넌트",
+    description:
+      "Header, Footer, BottomDock, ScrollTop을 통합한 공통 레이아웃 컴포넌트입니다. 여러 페이지에서 일관된 레이아웃 구조를 제공하며, 각 요소의 표시 여부와 동작을 props로 제어할 수 있습니다.",
+    code: `import CommonLayout from "./CommonLayout";
+import { useState } from "react";
+
+// ===== Props 설명 (TypeScript) =====
+// children: ReactNode;                    // 레이아웃 내부에 표시할 컨텐츠
+// headerVariant?: "main" | "sub";        // 헤더 타입
+// headerCategoryName?: string;           // 서브 헤더에 표시할 카테고리명
+// headerOnBack?: () => void;             // 뒤로가기 버튼 클릭 시 실행할 함수
+// headerShowUtilities?: boolean;        // 헤더 유틸리티 버튼 표시 여부
+// headerSticky?: boolean;                // 헤더 고정 여부 (기본값: true)
+// headerCurrentPage?: string;           // 현재 선택된 페이지
+// headerOnPageChange?: (page: string) => void; // 페이지 변경 시 실행할 함수
+// headerOnCartClick?: () => void;        // 장바구니 아이콘 클릭 시 실행할 함수
+// headerOnUtilityClick?: (key: string) => void; // 헤더 유틸리티 버튼 클릭 시 실행할 함수
+// showFooter?: boolean;                  // 푸터 표시 여부
+// footerNav?: Array<{ label: string; href: string }>; // 푸터 네비게이션 링크 배열
+// footerInfo?: { address: string; contact: string }; // 푸터 정보
+// footerSns?: string[];                  // 푸터 SNS 링크 배열
+// footerLogo?: string;                   // 푸터 로고 이미지 경로
+// showBottomDock?: boolean;              // 하단 도크 표시 여부
+// bottomDockItems?: Array<{ key: string; label: string; icon: string }>; // 하단 도크 아이템 배열
+// bottomDockOnChange?: (key: string) => void; // 하단 도크 아이템 변경 시 실행할 함수
+// bottomDockDefaultActive?: string;       // 하단 도크 기본 활성화 아이템 키
+// bottomDockPosition?: "fixed" | "relative"; // 하단 도크 위치
+// showScrollTop?: boolean;                // 스크롤 탑 버튼 표시 여부
+// scrollTopShowAfter?: number;           // 스크롤 탑 버튼이 나타날 스크롤 픽셀 값 (기본값: 100)
+// scrollTopSmooth?: boolean;              // 스크롤 탑 버튼 부드러운 스크롤 사용 여부 (기본값: true)
+// customHeader?: ReactNode;              // 커스텀 헤더 컴포넌트
+// className?: string;                     // 추가 클래스명
+
+// ===== 기본 사용 (서브 헤더) =====
+<CommonLayout
+  headerVariant="sub"
+  headerCategoryName="카테고리"
+  headerOnBack={() => navigate(-1)}
+>
+  <div>컨텐츠 영역</div>
+</CommonLayout>;
+
+// ===== 메인 헤더 + BottomDock =====
+const [currentPage, setCurrentPage] = useState("home");
+const [activeDock, setActiveDock] = useState("home");
+
+const bottomDockItems = [
+  { key: "home", label: "홈", icon: "🏠" },
+  { key: "search", label: "검색", icon: "🔍" },
+  { key: "profile", label: "프로필", icon: "👤" },
+];
+
+<CommonLayout
+  headerVariant="main"
+  headerCurrentPage={currentPage}
+  headerOnPageChange={(page) => setCurrentPage(page)}
+  showBottomDock={true}
+  bottomDockItems={bottomDockItems}
+  bottomDockOnChange={(key) => setActiveDock(key)}
+  bottomDockDefaultActive="home"
+  bottomDockPosition="fixed"
+  showScrollTop={true}
+  scrollTopShowAfter={100}
+  scrollTopSmooth={true}
+>
+  <div>컨텐츠 영역</div>
+</CommonLayout>;
+
+// ===== 푸터 포함 =====
+<CommonLayout
+  headerVariant="sub"
+  headerCategoryName="페이지"
+  showFooter={true}
+  footerNav={[
+    { label: "회사소개", href: "/company" },
+    { label: "이용약관", href: "/terms" },
+  ]}
+  footerInfo={{
+    address: "서울특별시 강남구",
+    contact: "02-1234-5678",
+  }}
+  footerSns={["Instagram", "Facebook"]}
+  footerLogo="STARBUCKS"
+>
+  <div>컨텐츠 영역</div>
+</CommonLayout>;
+
+// ===== 커스텀 헤더 사용 =====
+<CommonLayout
+  customHeader={
+    <Header
+      variant="main"
+      notificationCount={3}
+      onLogoClick={() => console.log("로고 클릭")}
+      onNotificationClick={() => console.log("알림 클릭")}
+    />
+  }
+  showBottomDock={true}
+  bottomDockItems={bottomDockItems}
+>
+  <div>컨텐츠 영역</div>
+</CommonLayout>;
+
+// ===== ScrollTop만 사용 =====
+<CommonLayout
+  headerVariant="sub"
+  headerCategoryName="페이지"
+  showScrollTop={true}
+  scrollTopShowAfter={200}
+  scrollTopSmooth={true}
+>
+  <div>긴 컨텐츠 영역</div>
+</CommonLayout>;
+
+// ===== 주의사항 =====
+// 1. headerVariant가 "main"일 때는 headerCurrentPage와 headerOnPageChange를 함께 사용해야 합니다.
+// 2. showBottomDock이 true일 때는 bottomDockItems와 bottomDockOnChange를 필수로 제공해야 합니다.
+// 3. bottomDockPosition이 "relative"일 때는 하단 도크가 일반 컨텐츠처럼 배치됩니다.
+// 4. customHeader를 사용하면 headerVariant 관련 props는 무시됩니다.
+// 5. showFooter가 true일 때는 footerNav, footerInfo 등을 제공하는 것이 좋습니다.`,
+    PreviewComponent: CommonLayoutPreview,
+  },
+  {
+    id: "loading-grid",
+    label: "로딩 그리드",
+    title: "LoadingGrid 컴포넌트",
+    description:
+      "Skeleton 컴포넌트를 그리드 형태로 배치한 로딩 인디케이터입니다. 카드 리스트나 상품 목록 등의 로딩 상태를 표시할 때 사용합니다. count와 columns props로 개수와 열 수를 조절할 수 있습니다.",
+    code: `import LoadingGrid from "./LoadingGrid";
+
+// ===== Props 설명 (TypeScript) =====
+// count?: number;        // 표시할 스켈레톤 개수 (기본값: 12)
+// columns?: number;     // 그리드 열 수 (기본값: 5)
+// className?: string;    // 추가 CSS 클래스명
+
+// ===== 기본 사용 =====
+<LoadingGrid />;
+
+// ===== 개수와 열 수 지정 =====
+<LoadingGrid count={12} columns={5} />;
+<LoadingGrid count={6} columns={3} />;
+<LoadingGrid count={8} columns={4} />;
+
+// ===== 컨테이너 내에서 사용 =====
+// LoadingGrid는 자동으로 컨테이너의 너비에 맞춰 조정됩니다.
+// max-width: 100%, overflow: hidden이 자동으로 적용되어 컨테이너를 넘지 않습니다.
+<div style={{ width: "100%", maxWidth: "1200px", padding: "20px" }}>
+  <LoadingGrid count={12} columns={5} />
+</div>;
+
+// ===== 실제 데이터 로딩과 함께 사용 =====
+import { useState, useEffect } from "react";
+
+const ProductList = () => {
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProducts().then((data) => {
+      setProducts(data);
+      setIsLoading(false);
+    });
+  }, []);
+
+  if (isLoading) {
+    return <LoadingGrid count={12} columns={5} />;
+  }
+
+  return (
+    <div className="product-grid">
+      {products.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
+  );
+};
+
+// ===== 반응형 동작 =====
+// 모바일 환경(480px 이하)에서는 자동으로 2열로 변경됩니다.
+// 5열, 4열, 6열 그리드는 모바일에서 2열로 자동 조정됩니다.
+// 3열 그리드도 모바일에서 2열로 변경됩니다.
+
+// ===== 컴포넌트 구조 =====
+// LoadingGrid
+// └── loading-grid (그리드 컨테이너)
+//     └── loading-grid__card (각 카드)
+//         ├── loading-grid__thumb (썸네일 영역, aspect-ratio: 4/3)
+//         │   └── Skeleton (이미지 스켈레톤)
+//         └── loading-grid__lines (텍스트 라인 영역)
+//             ├── Skeleton (80% 너비, 12px 높이)
+//             ├── Skeleton (70% 너비, 10px 높이)
+//             └── Skeleton (60% 너비, 10px 높이)
+
+// ===== 주의사항 =====
+// 1. count는 표시할 스켈레톤 카드의 총 개수입니다.
+// 2. columns는 그리드의 열 수를 지정하며, CSS grid의 repeat() 함수를 사용합니다.
+// 3. 각 스켈레톤 카드는 썸네일 이미지(4:3 비율)와 텍스트 라인 3개로 구성됩니다.
+// 4. 실제 데이터가 로드되면 LoadingGrid를 제거하고 실제 컨텐츠를 표시합니다.
+// 5. LoadingGrid는 자동으로 컨테이너의 너비에 맞춰 조정되며, 컨테이너를 넘지 않습니다.
+// 6. 그리드 열은 minmax(0, 1fr)를 사용하여 컨테이너 너비에 맞춰 자동으로 조정됩니다.
+// 7. 모바일 환경에서는 미디어쿼리를 통해 자동으로 2열로 변경됩니다.`,
+    PreviewComponent: LoadingGridPreview,
+  },
+  {
+    id: "accessibility-helper",
+    label: "접근성 도우미",
+    title: "AccessibilityHelper 컴포넌트",
+    description:
+      "다크모드와 폰트 크기 조절 기능을 제공하는 접근성 도우미 컴포넌트입니다. 오른쪽 하단에 고정되어 있으며, 클릭하면 패널이 열려 테마와 폰트 크기를 변경할 수 있습니다. PageTemplate 컴포넌트 내부에서 자동으로 사용됩니다.",
+    code: `import AccessibilityHelper from "./AccessibilityHelper";
+import { useState } from "react";
+
+// ===== Props 설명 (TypeScript) =====
+// isDarkMode: boolean;                    // 다크모드 활성화 여부
+// setIsDarkMode: (value: boolean) => void; // 다크모드 변경 함수
+// fontScale: "small" | "normal" | "large" | "xlarge"; // 폰트 크기
+// setFontScale: (value: string) => void;  // 폰트 크기 변경 함수
+
+// ===== 기본 사용 =====
+const [isDarkMode, setIsDarkMode] = useState(false);
+const [fontScale, setFontScale] = useState("normal");
+
+<AccessibilityHelper
+  isDarkMode={isDarkMode}
+  setIsDarkMode={setIsDarkMode}
+  fontScale={fontScale}
+  setFontScale={setFontScale}
+/>;
+
+// ===== PageTemplate 내부에서 자동 사용 =====
+// PageTemplate 컴포넌트를 사용하면 AccessibilityHelper가 자동으로 포함됩니다.
+import PageTemplate from "./PageTemplate";
+
+<PageTemplate title="페이지 제목">
+  <div>페이지 컨텐츠</div>
+</PageTemplate>;
+
+// ===== 수동으로 다크모드 제어 =====
+const [isDarkMode, setIsDarkMode] = useState(() => {
+  // localStorage에서 저장된 설정 불러오기
+  const stored = localStorage.getItem("accessibility-theme");
+  return stored === "dark";
+});
+
+useEffect(() => {
+  // 다크모드 변경 시 localStorage에 저장
+  document.documentElement.dataset.theme = isDarkMode ? "dark" : "light";
+  localStorage.setItem("accessibility-theme", isDarkMode ? "dark" : "light");
+}, [isDarkMode]);
+
+<AccessibilityHelper
+  isDarkMode={isDarkMode}
+  setIsDarkMode={setIsDarkMode}
+  fontScale={fontScale}
+  setFontScale={setFontScale}
+/>;
+
+// ===== 폰트 크기 옵션 =====
+// - small: 작게
+// - normal: 보통 (기본값)
+// - large: 크게
+// - xlarge: 아주 크게
+
+// ===== 주의사항 =====
+// 1. AccessibilityHelper는 오른쪽 하단에 고정되어 있습니다.
+// 2. 패널이 열리면 오른쪽에서 슬라이드 애니메이션으로 나타납니다.
+// 3. 다크모드 변경 시 document.documentElement.dataset.theme이 자동으로 업데이트됩니다.
+// 4. 폰트 크기 변경 시 document.documentElement.dataset.fontScale이 자동으로 업데이트됩니다.
+// 5. 설정은 localStorage에 자동으로 저장되어 다음 방문 시에도 유지됩니다.
+// 6. PageTemplate을 사용하면 이러한 설정 관리가 자동으로 처리됩니다.`,
+    PreviewComponent: AccessibilityHelperPreview,
+  },
+  {
+    id: "page-template",
+    label: "페이지 템플릿",
+    title: "PageTemplate 컴포넌트",
+    description:
+      "접근성 기능(다크모드, 폰트 스케일 조절)을 포함한 페이지 템플릿 컴포넌트입니다. 페이지를 감싸면 자동으로 AccessibilityHelper가 포함되며, 다크모드와 폰트 크기 설정이 localStorage에 저장되어 다음 방문 시에도 유지됩니다.",
+    code: `import PageTemplate from "./PageTemplate";
+
+// ===== Props 설명 (TypeScript) =====
+// children: ReactNode;    // 페이지 컨텐츠
+// title?: string;        // 페이지 제목 (기본값: "페이지 제목")
+
+// ===== 기본 사용 =====
+<PageTemplate title="내 페이지">
+  <div>페이지 컨텐츠</div>
+</PageTemplate>;
+
+// ===== 접근성 기능 =====
+// PageTemplate을 사용하면 다음 기능이 자동으로 제공됩니다:
+// 1. 다크모드 자동 감지 및 적용 (localStorage 저장)
+// 2. 큰글씨 모드 지원 (작게, 보통, 크게, 아주 크게)
+// 3. 오른쪽 접근성 도우미 자동 포함
+// 4. 반응형 최대 너비 설정 (1200px)
+// 5. FOUC 방지 (초기 로드 시 깜빡임 없음)
+
+// ===== 실제 페이지 예제 =====
+import PageTemplate from "./PageTemplate";
+import Header from "./Header";
+import "./MyPage.scss";
+
+const MyPage = () => {
+  return (
+    <PageTemplate title="내 페이지">
+      <div className="my-page">
+        <Header variant="main" />
+        <main className="my-page__main">
+          <h1>페이지 제목</h1>
+          <p>페이지 컨텐츠입니다.</p>
+        </main>
+      </div>
+    </PageTemplate>
+  );
+};
+
+export default MyPage;
+
+// ===== 다크모드 동작 =====
+// 1. 시스템 설정을 기본값으로 사용합니다.
+// 2. 사용자가 다크모드를 변경하면 localStorage에 저장됩니다.
+// 3. 다음 방문 시 저장된 설정을 우선 사용합니다.
+// 4. document.documentElement.dataset.theme이 "dark" 또는 "light"로 설정됩니다.
+
+// ===== 폰트 스케일 동작 =====
+// 1. 기본값은 "normal"입니다.
+// 2. 사용자가 폰트 크기를 변경하면 localStorage에 저장됩니다.
+// 3. 다음 방문 시 저장된 설정을 사용합니다.
+// 4. document.documentElement.dataset.fontScale이 "small", "normal", "large", "xlarge"로 설정됩니다.
+// 5. .font-scale-applied 클래스가 적용된 영역에만 폰트 크기가 적용됩니다.
+
+// ===== CommonLayout과 함께 사용 =====
+import PageTemplate from "./PageTemplate";
+import CommonLayout from "./CommonLayout";
+
+const MyPage = () => {
+  return (
+    <PageTemplate title="내 페이지">
+      <CommonLayout
+        headerVariant="sub"
+        headerCategoryName="카테고리"
+        showScrollTop={true}
+      >
+        <div>컨텐츠</div>
+      </CommonLayout>
+    </PageTemplate>
+  );
+};
+
+// ===== 주의사항 =====
+// 1. PageTemplate은 페이지의 최상위 래퍼로 사용해야 합니다.
+// 2. 다크모드와 폰트 스케일 설정은 localStorage에 저장되므로 브라우저별로 다를 수 있습니다.
+// 3. 폰트 스케일은 .font-scale-applied 클래스가 적용된 영역에만 적용됩니다.
+// 4. AccessibilityHelper는 자동으로 포함되므로 별도로 추가할 필요가 없습니다.
+// 5. 시스템 다크모드 설정을 감지하여 초기 테마를 결정합니다.`,
+    PreviewComponent: PageTemplatePreview,
+  },
 ];
 
 // 1뎁스 그룹 구성 (LNB용) - ㄱ~ㅎ 순서로 정렬
@@ -7786,7 +8307,7 @@ const guideGroups = [
   {
     id: "layout-group",
     label: "레이아웃",
-    items: ["footer", "header"],
+    items: ["common-layout", "footer", "header", "page-template"],
   },
   {
     id: "list-card-group",
@@ -7816,7 +8337,7 @@ const guideGroups = [
   {
     id: "status-group",
     label: "상태 & 로딩",
-    items: ["badge", "empty-state", "error-state", "loading", "skeleton-placeholder"],
+    items: ["badge", "empty-state", "error-state", "loading", "loading-grid", "skeleton-placeholder"],
   },
   {
     id: "feedback-group",
@@ -7831,7 +8352,7 @@ const guideGroups = [
   {
     id: "functional-group",
     label: "기능 컴포넌트",
-    items: ["dnd", "listsync", "more"],
+    items: ["accessibility-helper", "dnd", "listsync", "more"],
   },
   {
     id: "form-group",

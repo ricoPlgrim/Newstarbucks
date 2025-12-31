@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import PageTemplate from "../../components/PageTemplate/PageTemplate";
+import CommonLayout from "../../components/CommonLayout/CommonLayout";
 import SearchField from "../../components/SearchField/SearchField";
 import List, { ListItem } from "../../components/List/List";
 import Typography from "../../components/Typography/Typography";
@@ -110,7 +111,13 @@ const SearchSamplePage = () => {
 
   return (
     <PageTemplate>
-      <div className="search-sample-page">
+      <CommonLayout
+        headerVariant="sub"
+        headerCategoryName="검색"
+        headerOnBack={() => window.history.back()}
+        headerShowUtilities={false}
+      >
+        <div className="search-sample-page">
         {/* 검색 헤더 */}
         <div className="search-sample-page__header">
           <div className="search-sample-page__search-wrapper">
@@ -241,6 +248,7 @@ const SearchSamplePage = () => {
           </div>
         )}
       </div>
+      </CommonLayout>
     </PageTemplate>
   );
 };

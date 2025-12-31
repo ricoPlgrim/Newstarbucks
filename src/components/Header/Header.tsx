@@ -6,20 +6,33 @@ import "./Header.scss";
 type HeaderVariant = "main" | "sub";
 
 type HeaderProps = {
+  /** 현재 선택된 페이지 (메인 헤더에서 사용) */
   currentPage?: string;
+  /** 페이지 변경 시 실행할 함수 (메인 헤더에서 사용) */
   onPageChange?: (page: string) => void;
+  /** 헤더 타입: "main" (메인 헤더) 또는 "sub" (서브 헤더) */
   variant?: HeaderVariant;
+  /** 서브 헤더에 표시할 카테고리명 (서브 헤더에서 사용) */
   categoryName?: string;
+  /** 뒤로가기 버튼 클릭 시 실행할 함수 (서브 헤더에서 사용) */
   onBack?: () => void;
+  /** 장바구니 아이콘 클릭 시 실행할 함수 (서브 헤더에서 사용) */
   onCartClick?: () => void;
+  /** 헤더 유틸리티 버튼 클릭 시 실행할 함수 (서브 헤더에서 사용) */
   onUtilityClick?: (key: string) => void;
-  sticky?: boolean; // sticky 활성화 여부 (기본값: false)
-  showUtilities?: boolean; // 서브 헤더에서 유틸리티 버튼 표시 여부 (기본값: true)
-  showMoreButton?: boolean; // 더보기 버튼 표시 여부 (기본값: true)
+  /** 헤더 고정 여부 (sticky) - 기본값: false */
+  sticky?: boolean;
+  /** 서브 헤더에서 유틸리티 버튼 표시 여부 - 기본값: true */
+  showUtilities?: boolean;
+  /** 더보기 버튼 표시 여부 - 기본값: true */
+  showMoreButton?: boolean;
   // 메인 헤더 전용 props
-  notificationCount?: number; // 알림 개수
-  onLogoClick?: () => void; // 로고 클릭 핸들러
-  onNotificationClick?: () => void; // 알림 클릭 핸들러
+  /** 알림 개수 (메인 헤더에서 사용) */
+  notificationCount?: number;
+  /** 로고 클릭 핸들러 (메인 헤더에서 사용) */
+  onLogoClick?: () => void;
+  /** 알림 클릭 핸들러 (메인 헤더에서 사용) */
+  onNotificationClick?: () => void;
 };
 
 // GNB 메뉴 데이터 (3뎁스 구조) - 컴포넌트 외부로 이동하여 모든 함수에서 사용 가능하도록
@@ -542,7 +555,9 @@ function Header({
         {/* 로고 섹션 */}
         <button
           className="header__logo-section"
-          onClick={onLogoClick}
+          onClick={() => {
+            if (onLogoClick) onLogoClick();
+          }}
           aria-label="MOBILE OFFICE 메뉴 열기"
         >
           <div className="header__logo">스타벅스</div>
@@ -558,32 +573,34 @@ function Header({
           </div>
         </button>
 
-        {/* 알림 버튼 */}
-        <button
-          className="header__notification"
-          onClick={onNotificationClick}
-          aria-label={`알림 ${notificationCount}개`}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M13.73 21a2 2 0 0 1-3.46 0"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          {notificationCount > 0 && (
-            <span className="header__notification-badge">{notificationCount}</span>
-          )}
-        </button>
+        {/* 알림 버튼 - notificationCount가 prop으로 전달되면 항상 표시 */}
+        {notificationCount !== undefined && (
+          <button
+            className="header__notification"
+            onClick={onNotificationClick}
+            aria-label={`알림 ${notificationCount > 0 ? notificationCount : 0}개`}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M13.73 21a2 2 0 0 1-3.46 0"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            {notificationCount !== undefined && notificationCount > 0 && (
+              <span className="header__notification-badge">{notificationCount}</span>
+            )}
+          </button>
+        )}
       </div>
 
       {/* 모바일 사이드 메뉴 */}

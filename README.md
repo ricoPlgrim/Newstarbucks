@@ -267,9 +267,12 @@ import CommonLayout from "../../components/CommonLayout/CommonLayout";
 const MyPage = () => {
   return (
     <CommonLayout
-      headerVariant="sub"
-      headerCategoryName="카테고리명"
-      headerOnBack={() => console.log("뒤로가기")}
+      headerVariant="main"
+      headerCurrentPage="my-page"
+      headerOnPageChange={(page) => console.log(page)}
+      headerNotificationCount={3}
+      headerOnNotificationClick={() => console.log("알림 클릭")}
+      headerOnLogoClick={() => console.log("로고 클릭")}
       showFooter={true}
       showBottomDock={true}
       bottomDockItems={[
@@ -299,9 +302,22 @@ export default MyPage;
 | `headerOnBack` | `() => void` | - | 뒤로가기 버튼 클릭 시 실행할 함수 |
 | `headerShowUtilities` | `boolean` | `false` | 헤더 유틸리티 버튼 표시 여부 |
 | `headerSticky` | `boolean` | `true` | 헤더 고정 여부 |
+| `headerCurrentPage` | `string` | - | 현재 선택된 페이지 (메인 헤더에서 사용) |
+| `headerOnPageChange` | `(page: string) => void` | - | 페이지 변경 시 실행할 함수 (메인 헤더에서 사용) |
+| `headerOnCartClick` | `() => void` | - | 장바구니 아이콘 클릭 시 실행할 함수 (서브 헤더에서 사용) |
+| `headerOnUtilityClick` | `(key: string) => void` | - | 헤더 유틸리티 버튼 클릭 시 실행할 함수 (서브 헤더에서 사용) |
+| `headerNotificationCount` | `number` | - | 알림 개수 (메인 헤더에서 사용, undefined가 아니면 항상 아이콘 표시, badge는 0보다 클 때만 표시) |
+| `headerOnLogoClick` | `() => void` | - | 로고 클릭 핸들러 (메인 헤더에서 사용) |
+| `headerOnNotificationClick` | `() => void` | - | 알림 클릭 핸들러 (메인 헤더에서 사용) |
 | `showFooter` | `boolean` | `false` | 푸터 표시 여부 |
+| `footerNav` | `Array<{label, href}>` | - | 푸터 네비게이션 링크 배열 |
+| `footerInfo` | `{address, contact}` | - | 푸터 정보 (주소, 연락처) |
+| `footerSns` | `string[]` | - | 푸터 SNS 링크 배열 |
+| `footerLogo` | `string` | - | 푸터 로고 이미지 경로 |
 | `showBottomDock` | `boolean` | `false` | 하단 도크 표시 여부 |
 | `bottomDockItems` | `Array<{key, label, icon}>` | - | 하단 도크 아이템 배열 |
+| `bottomDockOnChange` | `(key: string) => void` | - | 하단 도크 아이템 변경 시 실행할 함수 |
+| `bottomDockDefaultActive` | `string` | - | 하단 도크 기본 활성화 아이템 키 |
 | `bottomDockPosition` | `"fixed" \| "relative"` | `"fixed"` | 하단 도크 위치 |
 | `showScrollTop` | `boolean` | `false` | 스크롤 탑 버튼 표시 여부 |
 | `scrollTopShowAfter` | `number` | `100` | 스크롤 탑 버튼이 나타날 스크롤 픽셀 값 |
@@ -858,11 +874,16 @@ export default MyPage;
 - ✅ 접근성 도우미 동작 확인
 
 ### SamplePage (샘플 페이지)
-헤더/풋터와 공통 컴포넌트를 조합한 실사용 예시 페이지입니다.
+CommonLayout의 다양한 유형을 보여주는 예시 페이지입니다.
 
-- ✅ Header/공통 레이아웃 유지, 본문은 자유롭게 교체 가능
-- ✅ 히어로/콘텐츠 그리드/CTA 예시 블록 제공
+- ✅ **유형 1**: 모든 요소 포함 (메인 헤더 + BottomDock + Footer + ScrollTop, 알림 아이콘 포함)
+- ✅ **유형 2**: 서브 헤더 + ScrollTop
+- ✅ **유형 3**: 메인 헤더 + BottomDock + ScrollTop (알림 아이콘 포함)
+- ✅ **유형 4**: 서브 헤더 + 푸터
+- ✅ 왼쪽 네비게이션 메뉴 (LNB)로 유형 전환 (데스크톱)
+- ✅ 모바일에서는 메뉴 버튼으로 모달 열기
 - ✅ 반응형 레이아웃
+- ✅ 각 유형별 실제 사용 예시 제공
 
 ### ReportPage (보고 작성 페이지)
 재해시설 보고서 작성 페이지입니다.

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Header from "../../components/Header/Header";
+import CommonLayout from "../../components/CommonLayout/CommonLayout";
 import Image from "../../components/Image/Image";
 import Carousel from "../../components/Carousel/Carousel";
 import Toast from "../../components/Toast/Toast";
@@ -105,10 +105,16 @@ function AmericanoPage() {
   ];
 
   return (
-    <div className="americano-page">
-      <Header currentPage="americano" onPageChange={() => {}} />
-
-      <main className="americano-main">
+    <CommonLayout
+      headerVariant="sub"
+      headerCategoryName="아메리카노"
+      headerOnBack={() => window.history.back()}
+      headerShowUtilities={true}
+      headerOnCartClick={() => console.log("장바구니 클릭")}
+      headerOnUtilityClick={(key) => console.log(`${key} 클릭`)}
+    >
+      <div className="americano-page">
+        <main className="americano-main">
         {/* 히어로 섹션 */}
         <section className="americano-hero">
           <div className="americano-hero__text">
@@ -208,17 +214,18 @@ function AmericanoPage() {
             <button className="btn btn--ghost btn--md">다른 메뉴 보기</button>
           </div>
         </section>
-      </main>
+        </main>
 
-      {/* Toast 알림 */}
-      {toast.message && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={clearToast}
-        />
-      )}
-    </div>
+        {/* Toast 알림 */}
+        {toast.message && (
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={clearToast}
+          />
+        )}
+      </div>
+    </CommonLayout>
   );
 }
 
