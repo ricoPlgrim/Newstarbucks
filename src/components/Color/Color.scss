@@ -134,11 +134,22 @@
   &__mode {
     @include px(font-size, 12);
     font-weight: 600;
-    color: var(--color-muted);
     text-align: center;
     padding: px(6) px(10);
-    background-color: var(--color-bg);
     border-radius: px(6);
+    transition: all 0.2s ease;
+
+    &:nth-child(1) {
+      background-color: #ffffff;
+      border: 1px solid #000000;
+      color: #000000;
+    }
+
+    &:nth-child(2) {
+      background-color: #000000;
+      border: 1px solid #000000;
+      color: #ffffff;
+    }
   }
 
   &__grid {

@@ -85,7 +85,7 @@ function AccessibilityHelper({ isDarkMode, setIsDarkMode, fontScale, setFontScal
         ref={panelRef}
         className={`accessibility-helper__panel ${!isPanelVisible ? "is-hidden" : ""}`}
       >
-          <div className="accessibility-helper__section">
+        <div className="accessibility-helper__section">
             <div className="accessibility-helper__control">
               <label className="accessibility-helper__label-text">테마 모드</label>
               <div className="accessibility-helper__toggle-group" role="group">

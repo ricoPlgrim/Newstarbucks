@@ -1,0 +1,119 @@
+@use "../../styles/index.scss" as *;
+
+.infinite-scroll-list {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  .common-layout {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1;
+  }
+
+  .common-layout__content {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  &__scroll-container {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
+    max-height: 100%;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: px(12);
+    padding: px(16);
+  }
+
+  &__item {
+    display: flex;
+    gap: px(12);
+    padding: px(16);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: px(12);
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: var(--accent);
+      box-shadow: var(--s);
+    }
+  }
+
+  &__item-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: px(32);
+    height: px(32);
+    background: var(--bg-2);
+    border-radius: px(8);
+    font-size: px(14);
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  &__item-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: px(4);
+  }
+
+  &__item-title {
+    margin: 0;
+    font-size: px(16);
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  &__item-description {
+    margin: 0;
+    font-size: px(14);
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  &__load-more {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: px(24) px(16);
+    min-height: px(100);
+    width: 100%;
+  }
+
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: px(16);
+    width: 100%;
+    min-height: px(60);
+    visibility: visible;
+    opacity: 1;
+  }
+
+  &__end-message {
+    font-size: px(14);
+    color: var(--muted);
+    text-align: center;
+    padding: px(16);
+  }
+}
+

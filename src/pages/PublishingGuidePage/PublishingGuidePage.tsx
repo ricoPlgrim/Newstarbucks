@@ -43,6 +43,7 @@ import {
   fetchMockSamplePage,
   fetchMockUrls,
   fetchMockTableBasic,
+  fetchMockInfiniteScrollItems,
 } from "../../mocks/mockData";
 import Skeleton from "../../components/Skeleton/Skeleton";
 import SkeletonPlaceholder from "../../components/Skeleton/SkeletonPlaceholder";
@@ -75,6 +76,7 @@ import Weather from "../../components/Weather/Weather";
 import CommonLayout from "../../components/CommonLayout/CommonLayout";
 import LoadingGrid from "../../components/LoadingGrid/LoadingGrid";
 import AccessibilityHelper from "../../components/AccessibilityHelper/AccessibilityHelper";
+import InfiniteScrollList from "../../components/InfiniteScrollList/InfiniteScrollList";
 
 // 코드 블록 컴포넌트 (구문 강조 적용)
 const CodeBlock = ({ code, language = "tsx" }) => {
@@ -2531,17 +2533,41 @@ const AccordionPreview = () => {
     {
       id: "1",
       label: "에피타이저",
-      content: "에피타이저 메뉴입니다. 다양한 전채 요리를 제공합니다.",
+      content: (
+        <>
+          에피타이저 메뉴입니다. 다양한 전채 요리를 제공합니다.
+          <br />
+          <a href="#appetizer" onClick={(e) => { e.preventDefault(); alert("에피타이저 링크 클릭됨"); }}>
+            에피타이저 상세보기
+          </a>
+        </>
+      ),
     },
     {
       id: "2",
       label: "메인 음식",
-      content: "메인 음식 메뉴입니다. 풍부한 맛의 메인 요리를 제공합니다.",
+      content: (
+        <>
+          메인 음식 메뉴입니다. 풍부한 맛의 메인 요리를 제공합니다.
+          <br />
+          <a href="#main" onClick={(e) => { e.preventDefault(); alert("메인 음식 링크 클릭됨"); }}>
+            메인 음식 상세보기
+          </a>
+        </>
+      ),
     },
     {
       id: "3",
       label: "디저트",
-      content: "디저트 메뉴입니다. 달콤한 디저트를 제공합니다.",
+      content: (
+        <>
+          디저트 메뉴입니다. 달콤한 디저트를 제공합니다.
+          <br />
+          <a href="#dessert" onClick={(e) => { e.preventDefault(); alert("디저트 링크 클릭됨"); }}>
+            디저트 상세보기
+          </a>
+        </>
+      ),
     },
   ];
 
@@ -2549,17 +2575,41 @@ const AccordionPreview = () => {
     {
       id: "4",
       label: "음료",
-      content: "음료 메뉴입니다. 다양한 음료를 제공합니다.",
+      content: (
+        <>
+          음료 메뉴입니다. 다양한 음료를 제공합니다.
+          <br />
+          <a href="#drink" onClick={(e) => { e.preventDefault(); alert("음료 링크 클릭됨"); }}>
+            음료 상세보기
+          </a>
+        </>
+      ),
     },
     {
       id: "5",
       label: "셀러드",
-      content: "셀러드 메뉴입니다. 신선한 샐러드를 제공합니다.",
+      content: (
+        <>
+          셀러드 메뉴입니다. 신선한 샐러드를 제공합니다.
+          <br />
+          <a href="#salad" onClick={(e) => { e.preventDefault(); alert("셀러드 링크 클릭됨"); }}>
+            셀러드 상세보기
+          </a>
+        </>
+      ),
     },
     {
       id: "6",
       label: "일식",
-      content: "일식 메뉴입니다. 정통 일식을 제공합니다.",
+      content: (
+        <>
+          일식 메뉴입니다. 정통 일식을 제공합니다.
+          <br />
+          <a href="#japanese" onClick={(e) => { e.preventDefault(); alert("일식 링크 클릭됨"); }}>
+            일식 상세보기
+          </a>
+        </>
+      ),
     },
   ];
 
@@ -3198,23 +3248,6 @@ const CommonLayoutPreview = () => {
     <div className="guide-preview guide-preview--common-layout">
       <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
         <div>
-          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>기본 사용 (서브 헤더)</h4>
-          <div style={{ border: "1px solid var(--color-border)", borderRadius: "8px", overflow: "hidden" }}>
-            <CommonLayout
-              headerVariant="sub"
-              headerCategoryName="카테고리"
-              headerOnBack={() => console.log("뒤로가기")}
-              showScrollTop={true}
-              scrollTopShowAfter={100}
-            >
-              <div style={{ padding: "20px", minHeight: "200px" }}>
-                <Typography variant="body" size="medium">컨텐츠 영역입니다.</Typography>
-              </div>
-            </CommonLayout>
-          </div>
-        </div>
-
-        <div>
           <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>메인 헤더 + BottomDock</h4>
           <div style={{ border: "1px solid var(--color-border)", borderRadius: "8px", overflow: "hidden" }}>
             <CommonLayout
@@ -3257,6 +3290,23 @@ const CommonLayoutPreview = () => {
             </CommonLayout>
           </div>
         </div>
+
+        <div>
+          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>기본 사용 (서브 헤더)</h4>
+          <div style={{ border: "1px solid var(--color-border)", borderRadius: "8px", overflow: "hidden" }}>
+            <CommonLayout
+              headerVariant="sub"
+              headerCategoryName="카테고리"
+              headerOnBack={() => console.log("뒤로가기")}
+              showScrollTop={true}
+              scrollTopShowAfter={100}
+            >
+              <div style={{ padding: "20px", minHeight: "200px" }}>
+                <Typography variant="body" size="medium">컨텐츠 영역입니다.</Typography>
+              </div>
+            </CommonLayout>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -3280,6 +3330,47 @@ const LoadingGridPreview = () => {
           <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>8개, 4열</h4>
           <LoadingGrid count={8} columns={4} />
         </div>
+      </div>
+    </div>
+  );
+};
+
+const InfiniteScrollListPreview = () => {
+  const [mockItems, setMockItems] = useState<Array<{ id: number; title: string; description: string }>>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    fetchMockInfiniteScrollItems()
+      .then((data) => {
+        setMockItems(data);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+      });
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="guide-preview guide-preview--infinite-scroll-list">
+        <div style={{ display: "flex", justifyContent: "center", padding: "40px" }}>
+          <Loading size={32} />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="guide-preview guide-preview--infinite-scroll-list">
+      <div style={{ border: "1px solid var(--border)", borderRadius: "8px", overflow: "hidden", height: "600px" }}>
+        <InfiniteScrollList
+          items={mockItems}
+          initialLoad={5}
+          itemsPerLoad={5}
+          headerVariant="sub"
+          headerCategoryName="인피니티 스크롤"
+          headerOnBack={() => console.log("뒤로가기")}
+        />
       </div>
     </div>
   );
@@ -3853,6 +3944,91 @@ const Item = React.memo(({ item }) => (
 // 9. SEO를 고려해야 하는 경우 서버 사이드 렌더링을 사용해야 합니다.
 // 10. 데이터가 변경될 때 visibleItems를 적절히 조정해야 합니다.`,
     PreviewComponent: LoadMorePreview,
+  },
+  {
+    id: "infinite-scroll-list",
+    label: "인피니티 스크롤 리스트",
+    title: "InfiniteScrollList 컴포넌트",
+    description:
+      "CommonLayout을 사용하여 인피니티 스크롤 리스트를 제공합니다. 스크롤이 하단에 도달하면 자동으로 더 많은 데이터를 로드합니다. Intersection Observer API를 사용하여 효율적으로 스크롤을 감지합니다.",
+    code: `import InfiniteScrollList from "./InfiniteScrollList";
+
+// ===== Props 설명 (TypeScript) =====
+// initialLoad?: number;              // 초기 로드할 아이템 개수 (기본값: 10)
+// itemsPerLoad?: number;             // 한 번에 추가로 로드할 아이템 개수 (기본값: 10)
+// items: Array<{                     // 전체 아이템 데이터
+//   id: number | string;
+//   title: string;
+//   description?: string;
+//   image?: string;
+//   [key: string]: any;
+// }>;
+// renderItem?: (item: any, index: number) => React.ReactNode; // 아이템 렌더링 함수
+// loadingComponent?: React.ReactNode; // 로딩 중일 때 표시할 컴포넌트
+// endMessage?: string;               // 모든 아이템을 로드했을 때 표시할 메시지
+// headerVariant?: "main" | "sub";    // 헤더 variant (기본값: "sub")
+// headerCategoryName?: string;       // 헤더 카테고리명 (기본값: "리스트")
+// headerOnBack?: () => void;         // 뒤로가기 핸들러
+// className?: string;                // 추가 클래스명
+
+// ===== 기본 사용 =====
+const items = Array.from({ length: 50 }, (_, i) => ({
+  id: i + 1,
+  title: \`리스트 아이템 \${i + 1}\`,
+  description: \`이것은 \${i + 1}번째 리스트 아이템의 설명입니다.\`,
+}));
+
+<InfiniteScrollList
+  items={items}
+  initialLoad={10}
+  itemsPerLoad={10}
+  headerVariant="sub"
+  headerCategoryName="리스트"
+  headerOnBack={() => navigate(-1)}
+/>;
+
+// ===== 커스텀 아이템 렌더링 =====
+<InfiniteScrollList
+  items={items}
+  initialLoad={10}
+  itemsPerLoad={10}
+  renderItem={(item, index) => (
+    <div key={item.id} style={{ padding: "16px", border: "1px solid #ddd", marginBottom: "8px" }}>
+      <h3>{item.title}</h3>
+      <p>{item.description}</p>
+      <span>#{index + 1}</span>
+    </div>
+  )}
+  headerVariant="sub"
+  headerCategoryName="커스텀 리스트"
+/>;
+
+// ===== 메인 헤더 사용 =====
+<InfiniteScrollList
+  items={items}
+  initialLoad={10}
+  itemsPerLoad={10}
+  headerVariant="main"
+  headerCategoryName="메인 리스트"
+/>;
+
+// ===== 커스텀 로딩 컴포넌트 =====
+<InfiniteScrollList
+  items={items}
+  initialLoad={10}
+  itemsPerLoad={10}
+  loadingComponent={<Loading size="large" label="데이터를 불러오는 중..." />}
+  endMessage="더 이상 불러올 데이터가 없습니다."
+  headerVariant="sub"
+  headerCategoryName="리스트"
+/>;
+
+// ===== 주의사항 =====
+// 1. items 배열은 전체 데이터를 포함해야 합니다. 컴포넌트 내부에서 visibleItems만큼만 표시합니다.
+// 2. 실제 API를 사용할 때는 items를 상태로 관리하고, 스크롤 시 API를 호출하여 items를 업데이트해야 합니다.
+// 3. Intersection Observer는 자동으로 스크롤을 감지하므로 별도의 스크롤 이벤트 리스너가 필요 없습니다.
+// 4. containerRef는 CommonLayout의 스크롤 컨테이너를 참조합니다.`,
+    PreviewComponent: InfiniteScrollListPreview,
   },
   {
     id: "icon",
@@ -8029,15 +8205,6 @@ import { useState } from "react";
 // customHeader?: ReactNode;              // 커스텀 헤더 컴포넌트
 // className?: string;                     // 추가 클래스명
 
-// ===== 기본 사용 (서브 헤더) =====
-<CommonLayout
-  headerVariant="sub"
-  headerCategoryName="카테고리"
-  headerOnBack={() => navigate(-1)}
->
-  <div>컨텐츠 영역</div>
-</CommonLayout>;
-
 // ===== 메인 헤더 + BottomDock =====
 const [currentPage, setCurrentPage] = useState("home");
 const [activeDock, setActiveDock] = useState("home");
@@ -8425,7 +8592,7 @@ const guideGroups = [
   {
     id: "functional-group",
     label: "기능 컴포넌트",
-    items: ["accessibility-helper", "dnd", "listsync", "more"],
+    items: ["accessibility-helper", "dnd", "listsync", "more", "infinite-scroll-list"],
   },
   {
     id: "form-group",

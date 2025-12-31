@@ -86,9 +86,11 @@ const Accordion = ({
             <li
               key={item.id}
               className={`accordion__item ${isOpen ? "accordion__item--open" : ""}`}
-              onClick={() => handleItemClick(item.id)}
             >
-              <div className="accordion__header">
+              <div 
+                className="accordion__header"
+                onClick={() => handleItemClick(item.id)}
+              >
                 <span className="accordion__label">{item.label}</span>
                 <div className="accordion__icon">
                   <svg

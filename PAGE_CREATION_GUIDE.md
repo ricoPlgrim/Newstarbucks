@@ -339,6 +339,9 @@ import YourPage from "./pages/YourPage/YourPage";
 - **EmptyState** - 빈 상태 UI
 - **ErrorState** - 에러 상태 UI (error, nodata, network, notfound)
 
+### 기능 컴포넌트
+- **InfiniteScrollList** - 인피니티 스크롤 리스트 (CommonLayout 통합, Intersection Observer 기반 자동 로드, 초기 로드/더보기 개수 설정 가능, 로딩 상태 표시, 모바일 스크롤 최적화)
+
 ### 기타 UI
 - **Button** - 버튼 (Primary, Secondary, Ghost, Small/Medium/Large, Disabled)
 - **Toggle** - 토글 스위치

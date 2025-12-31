@@ -114,6 +114,7 @@ Newstarbucks/
 │   │   ├── Icon/                     # 아이콘 컴포넌트
 │   │   ├── Image/                    # 이미지 컴포넌트
 │   │   ├── Input/                    # 입력 컴포넌트
+│   │   ├── InfiniteScrollList/       # 인피니티 스크롤 리스트 컴포넌트
 │   │   ├── CommonLayout/             # 공통 레이아웃 컴포넌트 (Header, Footer, BottomDock, ScrollTop 통합)
 │   │   ├── ScrollTop/                # 스크롤 탑 버튼 컴포넌트
 │   │   ├── Layout/                   # 레이아웃 컴포넌트 (디자인 시스템)
@@ -361,6 +362,64 @@ export default MyPage;
 | `title` | `string` | `"페이지 제목"` | 페이지 헤더에 표시될 제목 |
 | `children` | `ReactNode` | - | 페이지 컨텐츠 |
 
+### InfiniteScrollList
+
+CommonLayout을 사용하여 인피니티 스크롤 리스트를 제공하는 컴포넌트입니다.
+
+#### 기능
+- ✅ CommonLayout 통합 (Header, Footer 등 자동 포함)
+- ✅ Intersection Observer 기반 자동 스크롤 감지
+- ✅ 초기 로드 개수 및 더보기 개수 설정 가능
+- ✅ 로딩 상태 표시
+- ✅ 모바일 스크롤 최적화
+- ✅ 커스텀 아이템 렌더링 지원
+
+#### 사용법
+
+```tsx
+import InfiniteScrollList from "../../components/InfiniteScrollList/InfiniteScrollList";
+
+const MyPage = () => {
+  const items = Array.from({ length: 50 }, (_, i) => ({
+    id: i + 1,
+    title: `리스트 아이템 ${i + 1}`,
+    description: `이것은 ${i + 1}번째 리스트 아이템의 설명입니다.`,
+  }));
+
+  return (
+    <InfiniteScrollList
+      items={items}
+      initialLoad={5}
+      itemsPerLoad={5}
+      headerVariant="sub"
+      headerCategoryName="리스트"
+      headerOnBack={() => navigate(-1)}
+    />
+  );
+};
+```
+
+#### 주요 Props
+
+| Prop | Type | Default | 설명 |
+|------|------|---------|------|
+| `items` | `Array<{id, title, description?, ...}>` | `[]` | 전체 아이템 데이터 배열 |
+| `initialLoad` | `number` | `10` | 초기 로드할 아이템 개수 |
+| `itemsPerLoad` | `number` | `10` | 한 번에 추가로 로드할 아이템 개수 |
+| `renderItem` | `(item, index) => ReactNode` | - | 커스텀 아이템 렌더링 함수 |
+| `loadingComponent` | `ReactNode` | - | 로딩 중일 때 표시할 컴포넌트 |
+| `endMessage` | `string` | `"모든 데이터를 불러왔습니다."` | 모든 아이템을 로드했을 때 표시할 메시지 |
+| `headerVariant` | `"main" \| "sub"` | `"sub"` | 헤더 variant |
+| `headerCategoryName` | `string` | `"리스트"` | 헤더 카테고리명 |
+| `headerOnBack` | `() => void` | - | 뒤로가기 핸들러 |
+| `className` | `string` | `""` | 추가 클래스명 |
+
+#### 특징
+- 스크롤이 하단에 도달하면 자동으로 더 많은 데이터를 로드합니다.
+- Intersection Observer API를 사용하여 효율적으로 스크롤을 감지합니다.
+- 모바일에서도 부드러운 스크롤을 지원합니다.
+- 로딩 중에는 하단에 로딩 인디케이터가 표시됩니다.
+
 ### AccessibilityHelper
 
 오른쪽에 고정되는 접근성 도우미 컴포넌트입니다.
@@ -458,6 +517,9 @@ export default MyPage;
 - **Dropdown** - 드롭다운
 - **DatePicker** - 날짜 선택 (단일/범위/다중 선택, 닫기 버튼, 자동 닫기 제거)
 - **DayPicker** - 날짜 선택 컴포넌트 (react-day-picker 기반, 단일/범위 선택 지원, 한국어 로케일 지원)
+
+#### 기능 컴포넌트
+- **InfiniteScrollList** - 인피니티 스크롤 리스트 (CommonLayout 통합, Intersection Observer 기반 자동 로드, 초기 로드/더보기 개수 설정 가능, 로딩 상태 표시, 모바일 스크롤 최적화)
 
 #### 기타 UI
 - **Table** - 테이블 (가로 스크롤·열 고정 / 세로 스크롤·헤더 고정 3개 컬럼 / 가로·세로 스크롤·헤더&열 고정)
@@ -848,12 +910,13 @@ export default MyPage;
 ### PublishingGuidePage (퍼블리싱 가이드)
 퍼블리싱을 위한 UI 컴포넌트 가이드 페이지입니다.
 
-- 🎨 **레이아웃, 입력 컴포넌트, 선택 컴포넌트, 리스트 & 카드, 네비게이션, 피드백, 미디어, 상태 & 로딩, 기타 UI, API 데이터, 폼 예제** 카테고리별 컴포넌트 예시
-- 💻 코드 예시와 실제 UI 미리보기 동시 표시
+- 🎨 **레이아웃, 입력 컴포넌트, 선택 컴포넌트, 리스트 & 카드, 네비게이션, 피드백, 미디어, 상태 & 로딩, 기능 컴포넌트, 기타 UI, API 데이터, 폼 예제** 카테고리별 컴포넌트 예시
+- 💻 코드 예시와 실제 UI 미리보기 동시 표시 (코드 복사 기능 포함)
 - 🎯 컴포넌트별 사용법 및 Props 설명
 - 📱 반응형 디자인 및 인터랙션 예시
 - ♿ 접근성 기능 포함 (다크모드, 큰글씨 모드)
 - 📊 DataList 컴포넌트 유형별 예시 (Card 그리드, List/ListItem, Badge 포함 Card, Button 포함 Card, 아이콘 리스트)
+- ♾️ InfiniteScrollList 컴포넌트 예시 (초기 로드 5개, 더보기마다 5개씩)
 
 ### PublishingUrlPage (퍼블리싱 URL 관리)
 퍼블리싱된 페이지들의 URL을 체계적으로 관리하는 페이지입니다.

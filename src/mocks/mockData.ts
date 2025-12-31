@@ -174,6 +174,12 @@ export const mockSampleCards = [
   { id: 3, title: "블록 3", desc: "그래프, 배너 등 원하는 모듈을 추가하세요." },
 ];
 
+export const mockInfiniteScrollItems = Array.from({ length: 50 }, (_, i) => ({
+  id: i + 1,
+  title: `리스트 아이템 ${i + 1}`,
+  description: `이것은 ${i + 1}번째 리스트 아이템의 설명입니다. 인피니티 스크롤을 통해 자동으로 더 많은 데이터를 불러옵니다.`,
+}));
+
 // 공통 fetch 헬퍼
 export const fetchMockData = (options = {}) =>
   withLatency({ ...mockData, timestamp: new Date().toLocaleString() }, { delay: 1200, ...options });
@@ -188,4 +194,6 @@ export const fetchMockTableWide = (options = {}) =>
   withLatency({ headers: mockTableWideHeaders, rows: mockTableWideRows }, { delay: 700, ...options });
 export const fetchMockSamplePage = (options = {}) =>
   withLatency({ hero: mockSampleHero, cards: mockSampleCards }, { delay: 600, ...options });
+export const fetchMockInfiniteScrollItems = (options = {}) =>
+  withLatency(mockInfiniteScrollItems, { delay: 500, ...options });
 

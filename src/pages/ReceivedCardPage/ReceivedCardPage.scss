@@ -42,7 +42,6 @@
   }
 
   &__card-container {
-    background-color: transparent;
     border-radius: px(12);
     padding: px(20) 0;
     margin-bottom: px(24);
@@ -61,17 +60,22 @@
   &__card-image {
     width: 100%;
     margin-bottom: px(16);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     
     img {
-      width: 100%;
+      max-width: 100%;
       height: auto;
       object-fit: contain;
+      display: block;
     }
   }
 
   &__card-image-element {
-    width: 100%;
+    max-width: 100%;
     height: auto;
+    object-fit: contain;
   }
 
   &__card-message {
@@ -184,9 +188,12 @@
     max-height: px(200);
     min-height: px(80);
     box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     
     img {
-      width: 100%;
+      max-width: 100%;
       height: auto;
       object-fit: contain;
       display: block;
@@ -195,8 +202,9 @@
   }
 
   &__letter-header-image {
-    width: 100%;
+    max-width: 100%;
     height: auto;
+    object-fit: contain;
   }
 
   &__letter-body {

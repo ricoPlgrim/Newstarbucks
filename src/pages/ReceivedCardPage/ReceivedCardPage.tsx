@@ -89,14 +89,35 @@ const ReceivedCardPage = () => {
       // 렌더링 완료를 위한 짧은 대기
       await new Promise((resolve) => setTimeout(resolve, 200));
 
-      // 요소의 실제 크기 계산
+      // 요소의 실제 크기 계산 (모든 내용 포함)
       const rect = targetRef.current.getBoundingClientRect();
+      // scrollHeight를 사용하여 모든 내용(overflow 포함)을 포함
       const elementWidth = Math.ceil(targetRef.current.offsetWidth || rect.width);
-      const elementHeight = Math.ceil(targetRef.current.scrollHeight || targetRef.current.offsetHeight || rect.height);
+      const elementHeight = Math.ceil(
+        Math.max(
+          targetRef.current.scrollHeight,
+          targetRef.current.offsetHeight,
+          rect.height
+        )
+      );
 
       // 모바일에서도 정확한 캡처를 위한 설정
+      // CSS에서 실제 배경색 가져오기
+      const computedStyle = window.getComputedStyle(targetRef.current);
+      let backgroundColor = computedStyle.backgroundColor;
+      
+      // transparent나 rgba(0,0,0,0)인 경우 CSS 변수에서 직접 가져오기
+      if (!backgroundColor || backgroundColor === 'transparent' || backgroundColor === 'rgba(0, 0, 0, 0)') {
+        const rootStyle = getComputedStyle(document.documentElement);
+        backgroundColor = rootStyle.getPropertyValue('--color-mint-light').trim() || '#d4f4e0';
+      }
+      
+      // 편지지인 경우 흰색 배경 사용
+      const isLetter = isCardPublic && letterRef.current;
+      const finalBackgroundColor = isLetter ? '#ffffff' : backgroundColor;
+      
       const canvas = await html2canvas(targetRef.current, {
-        backgroundColor: '#fce4ec',
+        backgroundColor: finalBackgroundColor,
         scale: Math.min(window.devicePixelRatio || 2, 3), // 디바이스 픽셀 비율 사용, 최대 3배
         logging: false,
         useCORS: true,
@@ -118,28 +139,64 @@ const ReceivedCardPage = () => {
           // 클론된 문서에서 편지지 스타일 보정
           const clonedLetter = clonedDoc.body.querySelector('.received-card-page__letter');
           const clonedCardContainer = clonedDoc.body.querySelector('.received-card-page__card-container');
-          const clonedElement = clonedLetter || clonedCardContainer;
+          const clonedLetterHeader = clonedDoc.body.querySelector('.received-card-page__letter-header');
           
-          if (clonedElement) {
-            const htmlElement = clonedElement as HTMLElement;
-            // 모바일에서도 정확한 크기와 배경 유지
+          // 편지지 헤더의 배경색을 CSS에서 가져오기
+          if (clonedLetterHeader) {
+            const letterHeaderElement = clonedLetterHeader as HTMLElement;
+            const originalLetterHeader = document.querySelector('.received-card-page__letter-header') as HTMLElement;
+            
+            let letterHeaderBg: string;
+            if (originalLetterHeader) {
+              const letterHeaderStyle = window.getComputedStyle(originalLetterHeader);
+              letterHeaderBg = letterHeaderStyle.backgroundColor;
+              
+              // transparent나 rgba(0,0,0,0)인 경우 CSS 변수에서 직접 가져오기
+              if (!letterHeaderBg || letterHeaderBg === 'transparent' || letterHeaderBg === 'rgba(0, 0, 0, 0)') {
+                const rootStyle = getComputedStyle(document.documentElement);
+                letterHeaderBg = rootStyle.getPropertyValue('--color-mint-light').trim() || '#d4f4e0';
+              }
+            } else {
+              // 원본 요소가 없으면 CSS 변수에서 직접 가져오기
+              const rootStyle = getComputedStyle(document.documentElement);
+              letterHeaderBg = rootStyle.getPropertyValue('--color-mint-light').trim() || '#d4f4e0';
+            }
+            
+            letterHeaderElement.style.backgroundColor = letterHeaderBg;
+          }
+          
+          if (clonedCardContainer) {
+            const htmlElement = clonedCardContainer as HTMLElement;
+            // 카드 컨테이너의 모든 내용이 포함되도록 설정
             htmlElement.style.width = `${elementWidth}px`;
             htmlElement.style.height = 'auto';
+            htmlElement.style.minHeight = `${elementHeight}px`;
             htmlElement.style.maxWidth = 'none';
             htmlElement.style.boxSizing = 'border-box';
-            htmlElement.style.backgroundColor = htmlElement.style.backgroundColor || '#fff';
+            htmlElement.style.overflow = 'visible';
             
-            // 편지지인 경우 배경색 명시
-            if (clonedLetter) {
-              htmlElement.style.backgroundColor = '#fff';
-              htmlElement.style.borderRadius = '12px';
-            }
+            // 카드 컨테이너의 배경색을 실제 CSS에서 가져온 값으로 설정
+            htmlElement.style.backgroundColor = backgroundColor || '#d4f4e0';
+            htmlElement.style.borderRadius = '12px';
+          }
+          
+          if (clonedLetter) {
+            const htmlElement = clonedLetter as HTMLElement;
+            // 편지지의 모든 내용이 포함되도록 설정
+            htmlElement.style.width = `${elementWidth}px`;
+            htmlElement.style.height = 'auto';
+            htmlElement.style.minHeight = `${elementHeight}px`;
+            htmlElement.style.maxWidth = 'none';
+            htmlElement.style.boxSizing = 'border-box';
+            htmlElement.style.overflow = 'visible';
+            htmlElement.style.backgroundColor = '#ffffff';
+            htmlElement.style.borderRadius = '12px';
           }
           
           // 배경색이 제대로 적용되도록 body 스타일 설정
           const clonedBody = clonedDoc.body;
           if (clonedBody) {
-            clonedBody.style.backgroundColor = '#fce4ec';
+            clonedBody.style.backgroundColor = finalBackgroundColor;
             clonedBody.style.margin = '0';
             clonedBody.style.padding = '0';
           }
@@ -469,7 +526,7 @@ const ReceivedCardPage = () => {
             </>
           )}
 
-          {/* 닫는 메시지 - 항상 표시 */}
+          {/* 닫는 메시지 - 카드 컨테이너 내부에 포함 (이미지 저장 시 포함) */}
           <div className="received-card-page__closing">
             <Typography variant="h4" size="small" weight="bold" className="received-card-page__closing-title">
               {cardData.closing.title}

@@ -2570,6 +2570,12 @@
   width: 100%;
   max-width: 100%;
   gap: px(24);
+}
+
+.guide-preview--infinite-scroll-list {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
   overflow-x: hidden;
   box-sizing: border-box;
   
