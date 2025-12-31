@@ -15,11 +15,11 @@
 }
 
 .table {
-  background: #ffffff;
-  border: px(1) solid rgba(0, 0, 0, 0.05);
+  background: var(--color-card);
+  border: px(1) solid var(--color-border);
   border-radius: px(12);
   padding: px(20);
-  box-shadow: 0 px(8) px(20) rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-soft);
   width: 100%;
   max-width: 100%;
 }
@@ -33,7 +33,7 @@
 
 .table__desc {
   margin: 0;
-  color: #5b5c60;
+  color: var(--color-muted);
   font-size: px(14);
 }
 
@@ -41,9 +41,9 @@
   width: 100%;
   max-width: 100%;
   overflow: hidden;
-  border: px(1) solid rgba(0, 0, 0, 0.06);
+  border: px(1) solid var(--color-border);
   border-radius: px(10);
-  background: #fafbfc;
+  background: var(--color-bg-tertiary);
 }
 
 .table__table-wrapper--scroll-horizontal {
@@ -103,8 +103,8 @@
 .table__table td {
   padding: px(12) px(14);
   text-align: left;
-  border-bottom: px(1) solid rgba(0, 0, 0, 0.06);
-  background: #ffffff;
+  border-bottom: px(1) solid var(--color-border);
+  background: var(--color-card);
   position: relative; // z-index 제어 가능
   min-width: px(80);
 }
@@ -118,7 +118,7 @@
 }
 
 .table__table thead th {
-  background: #f5f6f7;
+  background: var(--color-bg);
   font-weight: 600;
   position: relative;
 }
@@ -134,21 +134,21 @@
 
 .table__title {
   font-weight: 600;
-  color: #1b1b1f;
+  color: var(--color-text);
 }
 
 .table__table--freeze .is-sticky {
   position: sticky;
-  background: #ffffff;
+  background: var(--color-card);
   z-index: 6; // 일반 셀보다 높게
-  border-right: px(1) solid rgba(0, 0, 0, 0.06);
+  border-right: px(1) solid var(--color-border);
 }
 
 .table__table--freeze .is-sticky--first {
   left: 0;
   min-width: var(--freeze-first);
   width: var(--freeze-first);
-  box-shadow: 8px 0 14px rgba(0, 0, 0, 0.05);
+  box-shadow: 8px 0 14px var(--shadow-overlay);
   z-index: 8;
 }
 
@@ -156,7 +156,7 @@
   left: var(--freeze-first);
   min-width: var(--freeze-second);
   width: var(--freeze-second);
-  box-shadow: 8px 0 14px rgba(0, 0, 0, 0.05);
+  box-shadow: 8px 0 14px var(--shadow-overlay);
   z-index: 7;
 }
 
@@ -167,7 +167,7 @@
 
 .table__table--freeze thead th.is-sticky--first,
 .table__table--freeze thead th.is-sticky--second {
-  box-shadow: 6px 0 14px rgba(0, 0, 0, 0.06);
+  box-shadow: 6px 0 14px var(--shadow-overlay);
   z-index: 22; // 첫 번째, 두 번째 고정 열이 가장 위에
 }
 

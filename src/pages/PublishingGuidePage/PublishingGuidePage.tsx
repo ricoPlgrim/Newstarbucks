@@ -237,6 +237,7 @@ const WeatherPreview = () => {
               <p style={{ marginBottom: "16px", fontSize: "14px", color: "var(--color-text-secondary)", lineHeight: "1.6" }}>
                 GPS 신호를 사용하여 현재 위치의 날씨 정보를 가져옵니다.
                 브라우저에서 위치 권한을 요청하며, 허용 시 현재 위치의 날씨 정보가 표시됩니다.
+                위치 정보가 성공적으로 조회되면 카드 하단에 현재 위치의 시 명이 한글로 표시됩니다.
               </p>
               <div style={{ width: "300px", maxWidth: "100%" }}>
                 <Weather useGPS={true} useMock={false} />
@@ -676,15 +677,15 @@ const ButtonPreview = () => (
     <div className="button-preview__section">
       <h4 className="button-preview__title">아이콘 버튼</h4>
       <div className="button-preview__row">
-        <Button variant="primary" size="medium" className="button-preview__btn">
+        <Button variant="primary" size="medium" className="button-preview__btn" style={{ width: "80px" }}>
           <Icon name="알림" size="small">🔔</Icon>
           알림
         </Button>
-        <Button variant="secondary" size="medium" className="button-preview__btn">
+        <Button variant="secondary" size="medium" className="button-preview__btn" style={{ width: "100px" }}>
           <Icon name="즐겨찾기" size="small">⭐</Icon>
           즐겨찾기
         </Button>
-        <Button variant="ghost" size="medium" className="button-preview__btn">
+        <Button variant="ghost" size="medium" className="button-preview__btn" style={{ width: "80px" }}>
           <Icon name="설정" size="small">⚙️</Icon>
           설정
         </Button>

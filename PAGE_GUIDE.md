@@ -430,7 +430,7 @@ export default MyPage;
 - **PageTemplate** - 페이지 템플릿 (다크모드, 폰트 스케일 지원)
 - **CommonLayout** - 공통 레이아웃 컴포넌트 (Header, Footer, BottomDock, ScrollTop 통합 관리, 다양한 props로 커스터마이징 가능, `headerNotificationCount`, `headerOnLogoClick`, `headerOnNotificationClick` props 지원)
 - **ListContainer** - 리스트 컨테이너 (section/article 태그 기반)
-- **ScrollTop** - 스크롤 탑 버튼 (스크롤 시 나타나는 상단 이동 버튼, `showAfter`, `smooth` props 지원, CommonLayout에서 통합 관리)
+- **ScrollTop** - 스크롤 탑 버튼 (스크롤 시 나타나는 상단 이동 버튼, `showAfter`, `smooth` props 지원, 호버 애니메이션 제거, CommonLayout에서 통합 관리)
 
 ### 입력 컴포넌트
 - **Input** - 텍스트 입력 (text, password, number, tel, email, 자동 하이픈 포맷팅)
@@ -458,8 +458,8 @@ export default MyPage;
 
 ### 피드백
 - **Toast** - 토스트 알림 (빈 메시지일 때 자동으로 렌더링하지 않음, 조건부 렌더링 강화)
-- **Tooltip** - 툴팁
-- **Popup** - 팝업 (기본: Swiper 캐러셀 지원 / 시트: 드래그로 닫기 / 풀스크린: showHeaderClose, showBottomClose props로 3가지 타입 지원)
+- **Tooltip** - 툴팁 (다크모드 지원, CSS 변수 사용)
+- **Popup** - 팝업 (기본: Swiper 캐러셀 지원 / 시트: 드래그로 닫기 / 풀스크린: showHeaderClose, showBottomClose props로 3가지 타입 지원, 모바일 주소창 대응을 위한 `100dvh` 및 `env(safe-area-inset-bottom)` 사용)
   - **ImageZoomPopup** - 이미지 확대 팝업 (Swiper 기반, 핀치 줌/더블 탭 줌 지원, 확대 시 페이지네이션 및 네비게이션 버튼 자동 숨김, 줌 해제 시 부드러운 위치 복원, 이미지가 컨테이너를 꽉 채우도록 최적화, 배지 스타일 페이지네이션)
 
 ### 미디어
@@ -483,7 +483,7 @@ export default MyPage;
 - **Button** - 버튼 (Primary, Secondary, Ghost, Small/Medium/Large, Disabled)
 - **Toggle** - 토글 스위치
 - **Dropdown** - 드롭다운
-- **DatePicker** - 날짜 선택 (닫기 버튼, 자동 닫기 제거)
+- **DatePicker** - 날짜 선택 (닫기 버튼, 자동 닫기 제거, 다크모드 지원, range 선택 시 다크모드 색상 최적화)
 - **DayPicker** - 날짜 선택 컴포넌트 (react-day-picker 기반, 단일/범위 선택 지원, 한국어 로케일 지원)
 - **Table** - 테이블 (가로 스크롤·열 고정 / 세로 스크롤·헤더 고정 3개 컬럼 / 가로·세로 스크롤·헤더&열 고정)
 - **Form** - 폼 요소 (유효성 검사 포함, Button 컴포넌트 사용)

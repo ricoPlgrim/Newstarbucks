@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, useLocation, Navigate } from "react-router-dom";
 import PublishingGuidePage from "./pages/PublishingGuidePage/PublishingGuidePage";
 import PublishingUrlPage from "./pages/PublishingUrlPage/PublishingUrlPage";
 import SamplePage from "./pages/SamplePage/SamplePage";
@@ -76,6 +76,7 @@ function AppContent() {
         <Route path="/send-card" element={<SendCardPage />} />
         <Route path="/received-card" element={<ReceivedCardPage />} />
         <Route path="/menu/coffee/americano" element={<AmericanoPage />} />
+        <Route path="/Newstarbucks" element={<Navigate to="/url" replace />} />
         <Route path="/" element={<PublishingUrlPage />} />
       </Routes>
 

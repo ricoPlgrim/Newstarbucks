@@ -244,6 +244,7 @@ const ReceivedCardPage = () => {
                         justify-content: center;
                         align-items: center;
                         min-height: 100vh;
+                        min-height: 100dvh;
                         background: #f5f5f5;
                         padding: 20px;
                       }
@@ -299,6 +300,7 @@ const ReceivedCardPage = () => {
                       justify-content: center;
                       align-items: center;
                       min-height: 100vh;
+                      min-height: 100dvh;
                       background: #f5f5f5;
                       padding: 20px;
                     }

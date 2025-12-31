@@ -2,10 +2,15 @@
 
 .skeleton {
   display: inline-block;
-  background: linear-gradient(90deg, #f2f3f5 25%, #e6e8ec 50%, #f2f3f5 75%);
+  background: linear-gradient(90deg, var(--color-bg-lighter) 25%, var(--color-bg-light) 50%, var(--color-bg-lighter) 75%);
   background-size: 320% 100%;
   animation: skeleton-shimmer 1.6s ease infinite;
-  border: 1px solid #eef0f4;
+  border: 1px solid var(--color-border);
+}
+
+[data-theme="dark"] .skeleton {
+  background: linear-gradient(90deg, var(--color-bg-gray-dark) 25%, var(--color-bg-gray-darker) 50%, var(--color-bg-gray-dark) 75%);
+  background-size: 320% 100%;
 }
 
 .skeleton--circle {

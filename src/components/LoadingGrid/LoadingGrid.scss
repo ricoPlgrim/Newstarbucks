@@ -31,11 +31,11 @@
 }
 
 .loading-grid__card {
-  background: var(--color-bg-secondary, #f8f9fb);
+  background: var(--color-bg-secondary);
   border-radius: px(14);
   padding: px(12);
-  box-shadow: 0 px(10) px(22) rgba(0, 0, 0, 0.06);
-  border: px(1) solid var(--color-border, #eef0f4);
+  box-shadow: var(--shadow-overlay);
+  border: px(1) solid var(--color-border);
   display: flex;
   flex-direction: column;
   gap: px(10);

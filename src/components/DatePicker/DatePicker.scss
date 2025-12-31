@@ -35,7 +35,7 @@
   padding: px(12) px(14);
   border: 1px solid var(--color-border);
   border-radius: px(12);
-  background: #fff;
+  background: var(--color-card);
   cursor: pointer;
   box-shadow: var(--shadow-soft);
 
@@ -53,10 +53,10 @@
   position: absolute;
   top: calc(100% + px(8));
   left: 0;
-  background: #fff;
+  background: var(--color-card);
   border: 1px solid var(--color-border);
   border-radius: px(14);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+  box-shadow: var(--shadow-overlay-large);
   padding: px(14);
   z-index: 20;
   min-width: px(280);
@@ -79,7 +79,7 @@
   border: 1px solid var(--color-border);
   border-radius: px(12);
   padding: px(10);
-  background: #fff;
+  background: var(--color-card);
   box-shadow: var(--shadow-soft);
 }
 
@@ -99,9 +99,13 @@
   margin: 0;
   --rdp-cell-size: 36px;
   --rdp-accent-color: var(--color-accent);
-  --rdp-background-color: rgba(12, 124, 89, 0.08);
+  --rdp-background-color: var(--color-brand-primary-light);
   --rdp-outline: 2px solid var(--color-accent);
-  --rdp-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --rdp-shadow: var(--shadow-overlay);
+}
+
+[data-theme="dark"] .rdp {
+  --rdp-background-color: var(--color-brand-primary-light);
 }
 
 .rdp-nav {
@@ -133,7 +137,7 @@
 .rdp-day_selected:not([disabled]),
 .rdp-day_selected:focus-visible {
   background-color: var(--color-accent);
-  color: #fff;
+  color: var(--color-white);
   border-color: var(--color-accent);
   border-radius: px(8);
 }
@@ -164,7 +168,7 @@
 .rdp-day_range_start,
 .rdp-day_range_end {
   background-color: var(--color-accent) !important;
-  color: #fff !important;
+  color: var(--color-white) !important;
   border: 1px solid var(--color-accent) !important;
   border-radius: px(8) !important;
   position: relative !important;
@@ -177,7 +181,7 @@
 
   &:hover {
     background-color: var(--color-accent) !important;
-    color: #fff !important;
+    color: var(--color-white) !important;
     border: 1px solid var(--color-accent) !important;
     border-radius: px(8) !important;
   }
@@ -204,13 +208,23 @@
   }
 }
 
+[data-theme="dark"] .rdp-day_range_middle {
+  background-color: var(--color-gray-dark) !important;
+  color: var(--color-text) !important;
+  
+  &:hover {
+    background-color: var(--color-gray-dark) !important;
+    color: var(--color-text) !important;
+  }
+}
+
 .rdp-day_range_start.rdp-day_range_end {
   border-radius: px(8) !important;
 }
 
 .rdp-day_today:not(.rdp-day_selected) {
   color: var(--color-accent);
-  border-color: rgba(12, 124, 89, 0.35);
+  border-color: var(--color-brand-primary-light);
 }
 
 .rdp-caption_label {
@@ -287,7 +301,7 @@
   white-space: nowrap;
 
   &:hover {
-    background-color: rgba(var(--color-accent-rgb), 0.1);
+    background-color: var(--color-brand-primary-light);
     border-color: var(--color-accent);
   }
 

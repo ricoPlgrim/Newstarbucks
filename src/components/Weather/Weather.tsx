@@ -588,9 +588,13 @@ const Weather = ({ city = "Seoul", apiKey, useMock = true, useGPS = false, class
            * 
            * - 500ms 지연을 추가하여 로딩 상태를 시뮬레이션
            * - mockWeatherData를 사용하여 날씨 정보 설정
+           * - GPS 모드일 때는 예제용 시 명을 추가
            */
           await new Promise((resolve) => setTimeout(resolve, 500));
-          setWeather(mockWeatherData);
+          setWeather({
+            ...mockWeatherData,
+            location: useGPS ? "서울" : undefined,
+          });
         } else if (useGPS && location) {
           /**
            * GPS 위치 기반 OpenWeatherMap API 호출
