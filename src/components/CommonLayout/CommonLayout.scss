@@ -11,6 +11,17 @@
     flex: 1;
     width: 100%;
     min-height: 0; // flexbox 오버플로우 방지
+
+    &--with-bottom-dock {
+      // BottomDock 높이 계산:
+      // 상단 패딩(10px) + 아이템 높이(10px 상단 + 20px 아이콘 + 4px gap + 10px 라벨 + 10px 하단) + 하단 패딩(10px + safe-area)
+      // = 10px + 54px + 10px + safe-area = 74px + safe-area-inset-bottom
+      padding-bottom: calc(#{px(74)} + env(safe-area-inset-bottom, 0px));
+      
+      @supports (padding: max(0px)) {
+        padding-bottom: max(#{px(74)}, calc(#{px(74)} + env(safe-area-inset-bottom)));
+      }
+    }
   }
 }
 

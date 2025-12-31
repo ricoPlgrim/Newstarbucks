@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import Typography from "../Typography/Typography";
 import Icon from "../Icon/Icon";
+import { BottomSheetPopup } from "../Popup/Popup";
 import "./Header.scss";
 
 type HeaderVariant = "main" | "sub";
@@ -33,6 +34,14 @@ type HeaderProps = {
   onLogoClick?: () => void;
   /** 알림 클릭 핸들러 (메인 헤더에서 사용) */
   onNotificationClick?: () => void;
+  /** 로고 텍스트 (메인 헤더에서 사용, 기본값: "스타벅스") */
+  logoText?: string;
+  /** 타이틀 텍스트 (메인 헤더에서 사용, 기본값: "MOBILE OFFICE") */
+  titleText?: string;
+  /** chevron 아이콘 표시 여부 (메인 헤더에서 사용, 기본값: true) */
+  showChevron?: boolean;
+  /** 로고 클릭 시 표시할 바텀 팝업 옵션 (메인 헤더에서 사용) */
+  bottomSheetOptions?: Array<{ icon?: string; label: string; onClick?: () => void }>;
 };
 
 // GNB 메뉴 데이터 (3뎁스 구조) - 컴포넌트 외부로 이동하여 모든 함수에서 사용 가능하도록
@@ -112,10 +121,15 @@ function Header({
   // 메인 헤더 전용 props
   notificationCount = 0,
   onLogoClick,
-  onNotificationClick
+  onNotificationClick,
+  logoText = "스타벅스",
+  titleText = "MOBILE OFFICE",
+  showChevron = true,
+  bottomSheetOptions
 }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [expandedItems, setExpandedItems] = useState({});
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   // 각 서브메뉴의 DOM 참조 (2뎁스, 3뎁스 애니메이션용)
   const submenuRefs = useRef({});
   // expandedItems의 최신 상태를 추적하기 위한 ref
@@ -556,20 +570,25 @@ function Header({
         <button
           className="header__logo-section"
           onClick={() => {
+            if (bottomSheetOptions && bottomSheetOptions.length > 0) {
+              setIsBottomSheetOpen(true);
+            }
             if (onLogoClick) onLogoClick();
           }}
-          aria-label="MOBILE OFFICE 메뉴 열기"
+          aria-label={`${titleText} 메뉴 열기`}
         >
-          <div className="header__logo">스타벅스</div>
+          <div className="header__logo">{logoText}</div>
           <div className="header__title">
             <Typography variant="h4" size="medium" weight="bold">
-              MOBILE OFFICE
+              {titleText}
             </Typography>
-            <Icon name="chevron-down" size="small">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </Icon>
+            {showChevron && (
+              <Icon name="chevron-down" size="small">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </Icon>
+            )}
           </div>
         </button>
 
@@ -710,6 +729,16 @@ function Header({
           onClick={closeMenu}
           aria-hidden="true"
         ></div>
+      )}
+
+      {/* 바텀 팝업 */}
+      {bottomSheetOptions && bottomSheetOptions.length > 0 && (
+        <BottomSheetPopup
+          open={isBottomSheetOpen}
+          onClose={() => setIsBottomSheetOpen(false)}
+          className="custom-bottom-sheet"
+          options={bottomSheetOptions}
+        />
       )}
     </header>
   );

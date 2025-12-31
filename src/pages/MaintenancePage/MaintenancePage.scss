@@ -1,0 +1,265 @@
+@use "../../styles/index.scss" as *;
+
+.maintenance-page {
+  padding: px(16);
+  background: #f5f5f5;
+  min-height: 100vh;
+
+  &__banner {
+    display: flex;
+    align-items: center;
+    gap: px(12);
+    padding: px(16);
+    background: #94d3c0;
+    border-radius: px(8);
+    margin-bottom: px(16);
+  }
+
+  &__location {
+    display: flex;
+    align-items: center;
+    gap: px(4);
+    color: var(--color-text);
+  }
+
+  &__separator {
+    width: px(1);
+    height: px(16);
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  &__greeting {
+    display: flex;
+    align-items: center;
+    gap: px(8);
+    color: var(--color-text);
+  }
+
+  &__greeting-emoji {
+    font-size: px(20);
+  }
+
+  &__dashboard {
+    margin-bottom: px(16);
+    
+    .card__content {
+      display: flex;
+      flex-direction: row !important;
+      gap: 0;
+      padding: px(16);
+    }
+  }
+
+  &__dashboard-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: px(8);
+    text-align: center;
+    position: relative;
+  }
+
+  &__dashboard-icon {
+    font-size: px(32);
+    margin-bottom: px(4);
+  }
+
+  &__dashboard-label {
+    color: var(--color-text);
+    margin-bottom: px(4);
+  }
+
+  &__dashboard-count {
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+
+  &__amount-card {
+    margin-bottom: px(16);
+    padding: px(20);
+  }
+
+  &__amount-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  &__amount-left {
+    display: flex;
+    flex-direction: column;
+    gap: px(4);
+  }
+
+  &__amount-right {
+    display: flex;
+    align-items: center;
+  }
+
+  &__amount-value {
+    color: var(--color-accent);
+  }
+
+  &__request-card {
+    padding: px(20);
+    margin-bottom: px(16);
+  }
+
+  &__request-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: px(16);
+    gap: px(12);
+  }
+
+  &__request-title {
+    flex: 1;
+    color: var(--color-text);
+  }
+
+  &__request-tags {
+    display: flex;
+    gap: px(8);
+    flex-shrink: 0;
+  }
+
+  &__request-tag {
+    white-space: nowrap;
+  }
+
+  &__request-details {
+    display: flex;
+    flex-direction: column;
+    gap: px(12);
+    margin-bottom: px(20);
+    padding-bottom: px(20);
+    border-bottom: px(1) solid #e6e9e7;
+  }
+
+  &__request-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__request-amount {
+    color: var(--color-accent);
+  }
+
+  &__progress {
+    margin-bottom: px(16);
+  }
+
+  &__pagination {
+    display: flex;
+    justify-content: center;
+    gap: px(8);
+    margin-top: px(16);
+  }
+
+  &__pagination-dot {
+    width: px(8);
+    height: px(8);
+    border-radius: 50%;
+    border: none;
+    background: #d8dedb;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.2s ease;
+
+    &--active {
+      background: #7f8b85;
+    }
+
+    &:hover {
+      background: #b4bcb8;
+    }
+  }
+
+  &__menu-section {
+    display: flex;
+    align-items: stretch;
+    gap: px(12);
+    margin-top: px(16);
+  }
+
+  &__menu-left {
+    display: flex;
+    flex-direction: column;
+    gap: px(12);
+    flex: 0 0 auto;
+    width: calc(50% - px(6));
+  }
+
+  &__menu-card {
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 px(4) px(8) rgba(0, 0, 0, 0.1);
+    }
+
+    .card__content {
+      display: flex;
+      flex-direction: row !important;
+      align-items: center;
+      gap: px(12);
+      padding: px(16);
+    }
+  }
+
+  &__menu-icon-wrapper {
+    width: px(48);
+    height: px(48);
+    border-radius: 50%;
+    background: #e6e9e7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--color-text);
+  }
+
+  &__menu-right-card {
+    flex: 1;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+  }
+
+  &__menu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: px(12);
+    padding: px(16);
+    cursor: pointer;
+    transition: background 0.2s ease;
+    flex: 1;
+
+    &:hover {
+      background: #f5f5f5;
+    }
+
+    &:first-child {
+      border-radius: px(8) px(8) 0 0;
+    }
+
+    &:last-child {
+      border-radius: 0 0 px(8) px(8);
+    }
+  }
+
+  &__menu-divider {
+    width: 100%;
+    height: px(1);
+    background: #e6e9e7;
+    margin: 0;
+  }
+}
+

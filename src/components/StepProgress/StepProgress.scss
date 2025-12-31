@@ -1,0 +1,253 @@
+@use "../../styles/index.scss" as *;
+
+.step-progress {
+  position: relative;
+  width: 100%;
+
+  &__bar {
+    position: relative;
+    width: 100%;
+    height: px(20);
+    background: #e6e9e7;
+    border-radius: px(2);
+    overflow: hidden;
+    margin-bottom: 0;
+
+    // 눈금자 패턴 (위로 올라가는 작은 세로선)
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      background-image: repeating-linear-gradient(
+        to right,
+        transparent 0,
+        transparent calc(px(10) - px(1)),
+        rgba(0, 0, 0, 0.08) calc(px(10) - px(1)),
+        rgba(0, 0, 0, 0.08) px(10)
+      );
+      opacity: 0.6;
+      pointer-events: none;
+      z-index: 1;
+    }
+  }
+
+  &__bar-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: #e6e9e7;
+    border-radius: px(2);
+  }
+
+  &__bar-active {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: #94d3c0;
+    border-radius: px(2);
+    transition: width 0.25s ease;
+    z-index: 2;
+    opacity: 0.5;
+  }
+
+  &__ticks {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background-image: repeating-linear-gradient(
+      to right,
+      transparent 0,
+      transparent calc(px(10) - px(1)),
+      rgba(0, 0, 0, 0.08) calc(px(10) - px(1)),
+      rgba(0, 0, 0, 0.08) px(10)
+    );
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 3;
+
+    &--active {
+      background-image: repeating-linear-gradient(
+        to right,
+        transparent 0,
+        transparent calc(px(10) - px(1)),
+        rgba(0, 128, 86, 0.15) calc(px(10) - px(1)),
+        rgba(0, 128, 86, 0.15) px(10)
+      );
+      opacity: 0.8;
+    }
+  }
+
+  &__steps {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+  }
+
+  &__step {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: px(4);
+    text-align: center;
+    flex: 1;
+    color: var(--color-text);
+
+    &:first-child {
+      flex: 0 0 auto;
+      margin-left: 0;
+    }
+
+    &:not(:first-child):not(:last-child) {
+      flex: 1;
+    }
+
+    &:last-child {
+      flex: 0 0 auto;
+      margin-right: 0;
+    }
+  }
+
+  &__line-vertical {
+    position: absolute;
+    top: px(-20); // 가로바 하단에서 시작 (가로바와 겹침)
+    left: 50%;
+    transform: translateX(-50%);
+    width: px(1);
+    height: px(38); // 가로바 하단부터 도트 아래까지
+    background: #e6e9e7;
+    z-index: 0;
+
+    .step-progress__step:first-child & {
+      left: 0;
+      transform: none;
+    }
+
+    .step-progress__step:last-child & {
+      left: auto;
+      right: 0;
+      transform: none;
+    }
+  }
+
+  &__step {
+    &--done {
+      .step-progress__line-vertical {
+        background: var(--color-accent);
+      }
+      .step-progress__dot {
+        background: transparent;
+        border-color: var(--color-accent);
+      }
+      .step-progress__label-main {
+        color: #7f8b85;
+        font-weight: 600;
+      }
+    }
+
+    &--active {
+      .step-progress__line-vertical {
+        background: var(--color-accent);
+      }
+      .step-progress__dot {
+        background: var(--color-accent);
+        border-color: var(--color-accent);
+      }
+      .step-progress__label-main {
+        color: var(--color-accent);
+        font-weight: 700;
+      }
+    }
+
+    &--upcoming {
+      .step-progress__line-vertical {
+        background: #d8dedb;
+      }
+      .step-progress__dot {
+        background: transparent;
+        border-color: #d8dedb;
+      }
+      .step-progress__label-main {
+        color: #b4bcb8;
+      }
+      .step-progress__label-sub {
+        color: #c3c9c6;
+      }
+    }
+  }
+
+  &__dot {
+    position: absolute;
+    top: px(-1); // 세로선 중앙에 위치 (세로선이 -20px에서 시작하고 높이 38px이면 중앙은 -1px)
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: px(12);
+    height: px(12);
+    border-radius: 50%;
+    border: px(2) solid var(--color-accent);
+    background: transparent;
+    box-sizing: border-box;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .step-progress__step:first-child & {
+      left: 0;
+      transform: translateY(-50%);
+    }
+
+    .step-progress__step:last-child & {
+      left: auto;
+      right: 0;
+      transform: translateY(-50%);
+    }
+
+    &--icon {
+      width: px(22);
+      height: px(22);
+      border-width: px(2);
+      background: var(--color-accent);
+      color: #fff;
+      img,
+      svg {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+
+  &__label {
+    display: flex;
+    flex-direction: column;
+    gap: px(2);
+    line-height: 1.2;
+    margin-top: px(13); // 도트 아래 여백
+  }
+
+  &__label-main {
+    @include px(font-size, 12);
+    color: var(--color-text);
+    word-break: keep-all;
+  }
+
+  &__label-sub {
+    @include px(font-size, 12);
+    color: var(--color-text);
+    opacity: 0.75;
+  }
+}
+

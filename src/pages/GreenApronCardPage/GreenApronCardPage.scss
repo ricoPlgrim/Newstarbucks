@@ -1,0 +1,164 @@
+@use "../../styles/index.scss" as *;
+
+.green-apron-card-page {
+  padding: px(16);
+  padding-bottom: px(100); // 하단 네비게이션 공간
+
+  &__greeting-banner {
+    background: #d4e8d9;
+    padding: px(16);
+    border-radius: px(8);
+    margin-bottom: px(16);
+  }
+
+  &__card-management {
+    display: flex;
+    padding: 0;
+    margin-bottom: px(16);
+
+    .card__content {
+      display: flex;
+      flex-direction: row !important;
+      gap: 0;
+      padding: px(16);
+    }
+  }
+
+  &__card-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: px(8);
+    text-align: center;
+    padding: px(16);
+
+    &--send {
+      cursor: pointer;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.02);
+      }
+    }
+  }
+
+  &__send-icon {
+    color: var(--color-accent);
+    margin-top: px(4);
+  }
+
+  &__new-card-notice {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: px(16);
+    padding: px(16);
+  }
+
+  &__notice-content {
+    display: flex;
+    align-items: center;
+    gap: px(12);
+    flex: 1;
+  }
+
+  &__notice-icon-wrapper {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  &__notice-icon {
+    width: px(40);
+    height: px(40);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: px(2) solid #ffa366;
+    border-radius: px(8);
+    color: #ffa366;
+  }
+
+  &__new-badge {
+    position: absolute;
+    top: px(-8);
+    left: px(-8);
+    font-size: px(10);
+    padding: px(2) px(6);
+  }
+
+  &__notice-text {
+    flex: 1;
+  }
+
+  &__notice-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: px(4);
+    flex-shrink: 0;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--color-text);
+    }
+  }
+
+  &__promo-section {
+    margin-bottom: px(16);
+
+    .guide-preview--carousel {
+      margin: 0;
+    }
+  }
+
+  &__award-card {
+    background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+    color: #fff;
+    padding: px(20);
+    margin-bottom: px(16);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+      background-size: px(40) px(40);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+
+  &__award-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__award-title {
+    color: #fff;
+    margin-bottom: px(8);
+    line-height: 1.4;
+  }
+
+  &__award-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: px(8);
+    font-weight: 400;
+  }
+
+  &__award-description {
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 400;
+  }
+}
+

@@ -96,6 +96,77 @@ export default YourPage;
 - ✅ 폰트 스케일 조절 기능
 - ✅ 접근성 도우미 패널 포함
 
+### 3. **CommonLayout 사용 (모바일 오피스 앱 페이지)**
+
+하단 네비게이션, 커스텀 헤더 등이 필요한 모바일 앱 스타일 페이지
+
+**예시**: `MobileOfficeHomePage`, `MaintenancePage`, `GreenApronCardPage`
+
+```tsx
+import { useNavigate } from "react-router-dom";
+import CommonLayout from "../../components/CommonLayout/CommonLayout";
+import Header from "../../components/Header/Header";
+import "./YourPage.scss";
+
+const YourPage = () => {
+  const navigate = useNavigate();
+
+  const handleBottomDockChange = (key: string) => {
+    if (key === "home") {
+      navigate("/mobile-office");
+    } else if (key === "maintenance") {
+      navigate("/maintenance");
+    } else if (key === "green-apron") {
+      navigate("/green-apron");
+    }
+  };
+
+  return (
+    <CommonLayout
+      customHeader={
+        <Header
+          variant="main"
+          sticky={true}
+          notificationCount={3}
+          onNotificationClick={() => console.log("알림 클릭")}
+          logoText="STARBUCKS"
+          titleText="YOUR APP"
+          showChevron={true}
+          bottomSheetOptions={[
+            {
+              icon: "🏠",
+              label: "MOBILE OFFICE",
+              onClick: () => navigate("/mobile-office"),
+            },
+          ]}
+        />
+      }
+      showBottomDock={true}
+      bottomDockItems={[
+        { key: "maintenance", label: "유지보수", icon: "🔧" },
+        { key: "home", label: "홈", icon: "🏠" },
+        { key: "green-apron", label: "그린에이프런", icon: "👔" },
+      ]}
+      bottomDockOnChange={handleBottomDockChange}
+      bottomDockDefaultActive="home"
+    >
+      <div className="your-page">
+        {/* 페이지 내용 */}
+      </div>
+    </CommonLayout>
+  );
+};
+
+export default YourPage;
+```
+
+**장점**:
+- ✅ Header, Footer, BottomDock, ScrollTop 통합 관리
+- ✅ 커스텀 헤더 지원 (로고/타이틀 커스터마이징)
+- ✅ 바텀 팝업 통합 (Header 컴포넌트 내부에서 관리)
+- ✅ 하단 네비게이션 페이지 이동 기능
+- ✅ 하단 네비게이션 있을 때 콘텐츠 영역 자동 패딩 처리
+
 ## 📝 페이지 생성 단계
 
 ### Step 1: 페이지 폴더 및 파일 생성
@@ -288,12 +359,13 @@ import YourPage from "./pages/YourPage/YourPage";
 프로젝트에 이미 구현된 컴포넌트들을 활용하세요:
 
 ### 레이아웃
-- **Header** - 모바일 헤더 (메인 헤더: 햄버거 메뉴, 로고, 알림 아이콘 / 서브 헤더: 뒤로가기, 카테고리명, 유틸리티 버튼, `sticky` prop으로 sticky 위치 지정 가능, `notificationCount` prop으로 알림 아이콘 표시, `notificationCount`가 undefined가 아니면 항상 아이콘 표시, badge는 0보다 클 때만 표시)
+- **Header** - 모바일 헤더 (메인 헤더: 햄버거 메뉴, 로고, 알림 아이콘, 로고/타이틀 커스터마이징 가능, 바텀 팝업 통합 / 서브 헤더: 뒤로가기, 카테고리명, 유틸리티 버튼, `sticky` prop으로 sticky 위치 지정 가능, `notificationCount` prop으로 알림 아이콘 표시, `notificationCount`가 undefined가 아니면 항상 아이콘 표시, badge는 0보다 클 때만 표시, `logoText`, `titleText`, `showChevron`, `bottomSheetOptions` props 지원)
 - **Footer** - 푸터
 - **PageTemplate** - 페이지 템플릿 (다크모드, 폰트 스케일 지원)
-- **CommonLayout** - 공통 레이아웃 컴포넌트 (Header, Footer, BottomDock, ScrollTop 통합 관리, 다양한 props로 커스터마이징 가능, `headerNotificationCount`, `headerOnLogoClick`, `headerOnNotificationClick` props 지원)
+- **CommonLayout** - 공통 레이아웃 컴포넌트 (Header, Footer, BottomDock, ScrollTop 통합 관리, 다양한 props로 커스터마이징 가능, `headerNotificationCount`, `headerOnLogoClick`, `headerOnNotificationClick`, `headerLogoText`, `headerTitleText`, `headerShowChevron`, `headerBottomSheetOptions` props 지원, 하단 네비게이션 있을 때 콘텐츠 영역 자동 패딩 처리)
 - **ListContainer** - 리스트 컨테이너 (section/article 태그 기반)
 - **ScrollTop** - 스크롤 탑 버튼 (스크롤 시 나타나는 상단 이동 버튼, 호버 애니메이션 제거, CommonLayout에서 통합 관리)
+- **PageScrollReset** - 페이지 전환 시 스크롤 리셋 컴포넌트 (`useLayoutEffect`를 사용하여 화면 렌더링 전에 스크롤을 맨 위로 이동, `App.tsx`에 통합되어 모든 페이지 전환 시 자동 적용)
 
 ### 입력 컴포넌트
 - **Input** - 텍스트 입력 (text, password, number, tel, email, 자동 하이픈 포맷팅)
@@ -385,5 +457,8 @@ import YourPage from "./pages/YourPage/YourPage";
 4. **색상 변수 사용**: 직접 색상 코드(`#fff`, `#000`, `rgba(...)` 등)를 사용하지 말고, 항상 `_variables.scss`에 정의된 CSS 변수를 사용하세요. 이를 통해 다크모드 지원과 테마 관리가 자동으로 처리됩니다.
 5. **접근성**: 키보드 네비게이션, 스크린 리더 지원을 고려하세요
 6. **TypeScript 사용**: 모든 컴포넌트는 TypeScript로 작성하며, 타입을 명시하세요
-7. **새로운 페이지 예시**: `ReportPage`, `SearchSamplePage`, `LoginPage`, `SendCardPage`, `ReceivedCardPage`를 참고하세요
+7. **새로운 페이지 예시**: `ReportPage`, `SearchSamplePage`, `LoginPage`, `SendCardPage`, `ReceivedCardPage`, `MobileOfficeHomePage`, `MaintenancePage`, `GreenApronCardPage`를 참고하세요
+8. **페이지 전환 시 스크롤 리셋**: `PageScrollReset` 컴포넌트가 `App.tsx`에 통합되어 있어 모든 페이지 전환 시 자동으로 스크롤이 맨 위로 이동합니다
+9. **Header 바텀 팝업 통합**: 각 페이지에서 개별적으로 관리하던 바텀 팝업을 Header 컴포넌트의 `bottomSheetOptions` prop으로 통합하여 코드 중복을 제거했습니다
+10. **하단 네비게이션 페이지 이동**: `useNavigate` 훅을 사용하여 하단 네비게이션 버튼 클릭 시 해당 페이지로 이동하는 기능을 구현했습니다
 

@@ -73,6 +73,24 @@ export const mockUrlData = [
     url: "/received-card",
     description: "받은 카드 페이지 (카드 공개 토글, 이미지 저장 기능 포함)",
   },
+  {
+    id: 6,
+    depth1: "모바일 오피스",
+    depth2: "유지보수",
+    depth3: "",
+    depth4: "",
+    url: "/maintenance",
+    description: "유지보수 페이지 (대시보드, 수선 요청 상세, StepProgress 컴포넌트 포함)",
+  },
+  {
+    id: 7,
+    depth1: "모바일 오피스",
+    depth2: "그린에이프런",
+    depth3: "",
+    depth4: "",
+    url: "/green-apron",
+    description: "그린에이프런 카드 페이지 (INBOX/SENT 카드 관리, 새 카드 알림, 프로모션, 파트너 어워드)",
+  },
 ];
 
 // 가이드/데모용 추가 목업 데이터 (차후 각 컴포넌트에서 비동기 사용 예정)

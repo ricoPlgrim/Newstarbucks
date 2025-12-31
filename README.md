@@ -27,6 +27,7 @@
 - 📱 **모바일 최적화**: 반응형 디자인 및 모바일 우선 설계
 - 🎨 **iOS 스타일 스크롤바**: 전역 및 Tabs 컴포넌트에 iOS 스타일 스크롤바 적용
 - 🏗️ **CommonLayout**: Header, Footer, BottomDock, ScrollTop을 통합 관리하는 공통 레이아웃 컴포넌트
+- 🔄 **PageScrollReset**: 페이지 전환 시 자동으로 스크롤을 맨 위로 이동 (useLayoutEffect 사용)
 
 ### 🛠 기술 스택
 
@@ -117,6 +118,7 @@ Newstarbucks/
 │   │   ├── InfiniteScrollList/       # 인피니티 스크롤 리스트 컴포넌트
 │   │   ├── CommonLayout/             # 공통 레이아웃 컴포넌트 (Header, Footer, BottomDock, ScrollTop 통합)
 │   │   ├── ScrollTop/                # 스크롤 탑 버튼 컴포넌트
+│   │   ├── ScrollToTop/              # 페이지 전환 시 스크롤 리셋 컴포넌트 (PageScrollReset)
 │   │   ├── Layout/                   # 레이아웃 컴포넌트 (디자인 시스템)
 │   │   ├── List/                     # 리스트 컴포넌트
 │   │   ├── ListContainer/            # 리스트 컨테이너 컴포넌트
@@ -146,6 +148,9 @@ Newstarbucks/
 │   │   ├── ReportPage/                # 보고 작성 페이지
 │   │   ├── SearchSamplePage/          # 검색 샘플 페이지
 │   │   ├── LoginPage/                 # 로그인 페이지
+│   │   ├── MobileOfficeHomePage/      # 모바일 오피스 홈 페이지
+│   │   ├── MaintenancePage/           # 유지보수 페이지
+│   │   ├── GreenApronCardPage/        # 그린에이프런 카드 페이지
 │   │   ├── SendCardPage/              # 카드 보내기 페이지
 │   │   ├── ReceivedCardPage/          # 받은 카드 페이지
 │   │   └── SamplePage/                # 샘플 페이지
@@ -254,11 +259,12 @@ Newstarbucks/
 공통 레이아웃을 제공하는 컴포넌트입니다. Header, Footer, BottomDock, ScrollTop을 통합 관리할 수 있습니다.
 
 #### 기능
-- ✅ Header 통합 관리 (메인/서브 헤더, 다양한 props 지원)
+- ✅ Header 통합 관리 (메인/서브 헤더, 다양한 props 지원, 바텀 팝업 통합)
 - ✅ Footer 통합 관리 (표시 여부, 네비게이션, 정보, SNS, 로고)
-- ✅ BottomDock 통합 관리 (표시 여부, 아이템, 위치 설정)
+- ✅ BottomDock 통합 관리 (표시 여부, 아이템, 위치 설정, 하단 패딩 자동 처리)
 - ✅ ScrollTop 통합 관리 (표시 여부, 표시 기준 픽셀, 부드러운 스크롤)
 - ✅ 커스텀 헤더 지원
+- ✅ 하단 네비게이션 있을 때 콘텐츠 영역 자동 패딩 처리
 
 #### 사용법
 
@@ -310,6 +316,10 @@ export default MyPage;
 | `headerNotificationCount` | `number` | - | 알림 개수 (메인 헤더에서 사용, undefined가 아니면 항상 아이콘 표시, badge는 0보다 클 때만 표시) |
 | `headerOnLogoClick` | `() => void` | - | 로고 클릭 핸들러 (메인 헤더에서 사용) |
 | `headerOnNotificationClick` | `() => void` | - | 알림 클릭 핸들러 (메인 헤더에서 사용) |
+| `headerLogoText` | `string` | `"스타벅스"` | 로고 텍스트 (메인 헤더에서 사용) |
+| `headerTitleText` | `string` | `"MOBILE OFFICE"` | 타이틀 텍스트 (메인 헤더에서 사용) |
+| `headerShowChevron` | `boolean` | `true` | 타이틀 옆 chevron 아이콘 표시 여부 (메인 헤더에서 사용) |
+| `headerBottomSheetOptions` | `Array<{icon?, label, onClick?}>` | - | 로고 클릭 시 표시할 바텀 팝업 옵션 (메인 헤더에서 사용) |
 | `showFooter` | `boolean` | `false` | 푸터 표시 여부 |
 | `footerNav` | `Array<{label, href}>` | - | 푸터 네비게이션 링크 배열 |
 | `footerInfo` | `{address, contact}` | - | 푸터 정보 (주소, 연락처) |
@@ -458,12 +468,13 @@ const MyPage = () => {
 - **Icon** - 아이콘 컴포넌트 (이모지, SVG, 텍스트 지원, size/color 옵션, 모바일/태블릿에서 한 줄 표시)
 
 #### 레이아웃
-- **Header** - 모바일 헤더 (메인 헤더: 햄버거 메뉴, 3뎁스 메뉴 구조 / 서브 헤더: 뒤로가기, 카테고리명, 유틸리티 버튼, `sticky` prop으로 sticky 위치 지정 가능)
+- **Header** - 모바일 헤더 (메인 헤더: 햄버거 메뉴, 3뎁스 메뉴 구조, 로고/타이틀 커스터마이징 가능, 바텀 팝업 통합 / 서브 헤더: 뒤로가기, 카테고리명, 유틸리티 버튼, `sticky` prop으로 sticky 위치 지정 가능)
 - **Footer** - 푸터
 - **PageTemplate** - 페이지 템플릿 (다크모드, 폰트 스케일 지원)
 - **ListContainer** - 리스트 컨테이너 (section/article 태그 기반, 제목/설명, bordered/divided 옵션)
-- **CommonLayout** - 공통 레이아웃 컴포넌트 (Header, Footer, BottomDock, ScrollTop 통합 관리, 다양한 props로 커스터마이징 가능)
+- **CommonLayout** - 공통 레이아웃 컴포넌트 (Header, Footer, BottomDock, ScrollTop 통합 관리, 다양한 props로 커스터마이징 가능, 하단 네비게이션 있을 때 콘텐츠 영역 자동 패딩 처리)
 - **ScrollTop** - 스크롤 탑 버튼 (스크롤 시 나타나는 상단 이동 버튼, `showAfter`, `smooth` props 지원, 호버 애니메이션 제거, CommonLayout에서 통합 관리)
+- **PageScrollReset** - 페이지 전환 시 스크롤 리셋 컴포넌트 (`useLayoutEffect`를 사용하여 화면 렌더링 전에 스크롤을 맨 위로 이동, 이전 페이지 화면이 보이는 것을 방지, `App.tsx`에 통합되어 모든 페이지 전환 시 자동 적용)
 
 #### 입력 컴포넌트
 - **Input** - 텍스트 입력 (text, password, number, tel, email, validation states, help text, clear button, 자동 하이픈 포맷팅)
@@ -995,6 +1006,42 @@ CommonLayout의 다양한 유형을 보여주는 예시 페이지입니다.
 - ✅ 이미지 저장 기능 (html2canvas 사용, 카드 공개 시 편지지만 저장, 다운로드 버튼 제외)
 - ✅ 답장하기 버튼
 - ✅ 서브 헤더 사용 (sticky 지원)
+
+### MobileOfficeHomePage (모바일 오피스 홈)
+모바일 오피스 메인 홈 페이지입니다.
+
+- ✅ 3x3 그리드 메뉴 (편집, 수선요청서 작성, 카드보내기, 진행현황, 장비점검 일정관리, 지원센터 접수, 유지보수 이력조회, 받은카드)
+- ✅ 환영 배너 (매장명, 사용자명)
+- ✅ 공지사항 (오늘 하루 보지않기 기능)
+- ✅ 프로모션 캐러셀 (Swiper 기반)
+- ✅ 하단 네비게이션 (유지보수, 홈, 그린에이프런)
+- ✅ 헤더 로고 클릭 시 바텀 팝업 (Maintenance App, Green Apron Card)
+- ✅ CommonLayout 사용
+
+### MaintenancePage (유지보수 페이지)
+유지보수 관련 기능을 제공하는 페이지입니다.
+
+- ✅ 대시보드 카드 (수선요청서 작성, 진행현황, 확인요청 - 3개 섹션을 하나의 카드로 통합)
+- ✅ 위치 및 인사 배너
+- ✅ 사용 가능 금액 카드
+- ✅ 수선 요청 상세 카드 (StepProgress 컴포넌트 사용)
+- ✅ 페이지네이션
+- ✅ 메뉴 섹션 (완료내역, 지역수선증빙, 장비점검 일정관리, 세척 일정관리)
+- ✅ 커스텀 헤더 ("STARBUCKS MAINTENANCE APP")
+- ✅ 하단 네비게이션 (유지보수 탭 활성화)
+- ✅ CommonLayout 사용
+
+### GreenApronCardPage (그린에이프런 카드 페이지)
+그린에이프런 카드 관련 기능을 제공하는 페이지입니다.
+
+- ✅ 인사 배너 (매장명, 사용자명, 이모지)
+- ✅ 카드 관리 섹션 (INBOX 89, SENT 61, 카드 보내기 버튼)
+- ✅ 새 카드 알림 배너 (New 배지, 확인 버튼)
+- ✅ 프로모션 카드 캐러셀 (가로 스크롤)
+- ✅ 파트너 어워드 섹션 (그라데이션 배경, 눈송이 패턴)
+- ✅ 커스텀 헤더 ("STARBUCKS GREEN APRON CARD")
+- ✅ 하단 네비게이션 (그린에이프런 탭 활성화)
+- ✅ CommonLayout 사용
 
 ---
 

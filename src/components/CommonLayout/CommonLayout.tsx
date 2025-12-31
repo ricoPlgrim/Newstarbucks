@@ -135,7 +135,9 @@ const CommonLayout = ({
       )}
 
       {/* Content 영역 */}
-      <main className="common-layout__content">{children}</main>
+      <main className={`common-layout__content ${showBottomDock ? "common-layout__content--with-bottom-dock" : ""}`.trim()}>
+        {children}
+      </main>
 
       {/* Footer 영역 */}
       {showFooter && (

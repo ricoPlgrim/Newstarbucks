@@ -1,5 +1,6 @@
 import { useState } from "react";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import CommonLayout from "../../components/CommonLayout/CommonLayout";
 import Header from "../../components/Header/Header";
 import Button from "../../components/Button/Button";
@@ -10,14 +11,13 @@ import Notice from "../../components/Notice/Notice";
 import Icon from "../../components/Icon/Icon";
 import Carousel from "../../components/Carousel/Carousel";
 import BorderAnimation from "../../components/BorderAnimation/BorderAnimation";
-import { BottomSheetPopup } from "../../components/Popup/Popup";
 import christmasPromo1 from "../../assets/images/christmas-promo-1.jpg";
 import "./MobileOfficeHomePage.scss";
 
 const MobileOfficeHomePage = () => {
+  const navigate = useNavigate();
   const [notificationCount] = useState(3);
   const [hideNotice, setHideNotice] = useState(false);
-  const [isBottomPopupOpen, setIsBottomPopupOpen] = useState(false);
 
   // 3x3 그리드 메뉴 데이터
   const menuItems = [
@@ -80,8 +80,13 @@ const MobileOfficeHomePage = () => {
   ];
 
   const handleBottomDockChange = (key: string) => {
-    console.log(`하단 네비게이션 클릭: ${key}`);
-    // 여기에 라우팅 로직 추가 가능
+    if (key === "home") {
+      navigate("/mobile-office");
+    } else if (key === "maintenance") {
+      navigate("/maintenance");
+    } else if (key === "green-apron") {
+      navigate("/green-apron");
+    }
   };
 
   return (
@@ -91,8 +96,23 @@ const MobileOfficeHomePage = () => {
           variant="main"
           sticky={true}
           notificationCount={notificationCount}
-          onLogoClick={() => setIsBottomPopupOpen(true)}
           onNotificationClick={() => console.log("알림 클릭")}
+          bottomSheetOptions={[
+            {
+              icon: "🔧",
+              label: "Maintenance App",
+              onClick: () => {
+                navigate("/maintenance");
+              },
+            },
+            {
+              icon: "👔",
+              label: "Green Apron Card",
+              onClick: () => {
+                navigate("/green-apron");
+              },
+            },
+          ]}
         />
       }
       showBottomDock={true}
@@ -194,25 +214,6 @@ const MobileOfficeHomePage = () => {
           </Card>
         </div>
       </div>
-
-      {/* 바텀 팝업 */}
-      <BottomSheetPopup
-        open={isBottomPopupOpen}
-        onClose={() => setIsBottomPopupOpen(false)}
-        className="custom-bottom-sheet" 
-        options={[
-          {
-            icon: "🔧",
-            label: "Maintenance App",
-            onClick: () => console.log("Maintenance App 클릭"),
-          },
-          {
-            icon: "👔",
-            label: "Green Apron Card",
-            onClick: () => console.log("Green Apron Card 클릭"),
-          },
-        ]}
-      />
       </div>
     </CommonLayout>
   );

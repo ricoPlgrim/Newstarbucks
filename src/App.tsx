@@ -9,7 +9,10 @@ import ReportPage from "./pages/ReportPage/ReportPage";
 import MobileOfficeHomePage from "./pages/MobileOfficeHomePage/MobileOfficeHomePage";
 import SendCardPage from "./pages/SendCardPage/SendCardPage";
 import ReceivedCardPage from "./pages/ReceivedCardPage/ReceivedCardPage";
+import MaintenancePage from "./pages/MaintenancePage/MaintenancePage";
+import GreenApronCardPage from "./pages/GreenApronCardPage/GreenApronCardPage";
 import Footer from "./components/Footer/Footer";
+import PageScrollReset from "./components/ScrollToTop/PageScrollReset";
 import "./App.scss";
 
 function AppNav() {
@@ -60,10 +63,13 @@ function AppContent() {
   const isMobileOfficeHome = location.pathname === '/mobile-office';
   const isSendCardPage = location.pathname === '/send-card';
   const isReceivedCardPage = location.pathname === '/received-card';
+  const isMaintenancePage = location.pathname === '/maintenance';
+  const isGreenApronCardPage = location.pathname === '/green-apron';
   
   return (
     <div className="app">
-      {!isLoginPage && !isReportPage && !isMobileOfficeHome && !isSendCardPage && !isReceivedCardPage && <AppNav />}
+      <PageScrollReset />
+      {!isLoginPage && !isReportPage && !isMobileOfficeHome && !isSendCardPage && !isReceivedCardPage && !isMaintenancePage && !isGreenApronCardPage && <AppNav />}
       
       <Routes>
         <Route path="/url" element={<PublishingUrlPage />} />
@@ -75,12 +81,14 @@ function AppContent() {
         <Route path="/mobile-office" element={<MobileOfficeHomePage />} />
         <Route path="/send-card" element={<SendCardPage />} />
         <Route path="/received-card" element={<ReceivedCardPage />} />
+        <Route path="/maintenance" element={<MaintenancePage />} />
+        <Route path="/green-apron" element={<GreenApronCardPage />} />
         <Route path="/menu/coffee/americano" element={<AmericanoPage />} />
         <Route path="/Newstarbucks" element={<Navigate to="/url" replace />} />
         <Route path="/" element={<PublishingUrlPage />} />
       </Routes>
 
-      {!isLoginPage && !isReportPage && !isMobileOfficeHome && !isSendCardPage && !isReceivedCardPage && <Footer />}
+      {!isLoginPage && !isReportPage && !isMobileOfficeHome && !isSendCardPage && !isReceivedCardPage && !isMaintenancePage && !isGreenApronCardPage && <Footer />}
     </div>
   );
 }
