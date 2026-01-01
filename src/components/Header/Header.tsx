@@ -44,6 +44,8 @@ type HeaderProps = {
   bottomSheetOptions?: Array<{ icon?: string; label: string; onClick?: () => void }>;
   /** 바텀 팝업 열림/닫힘 상태 변경 시 호출되는 콜백 (메인 헤더에서 사용) */
   onBottomSheetOpenChange?: (isOpen: boolean) => void;
+  /** 바텀 팝업에 적용할 커스텀 클래스명 (메인 헤더에서 사용, 기본값: "custom-bottom-sheet") */
+  bottomSheetClassName?: string;
 };
 
 // GNB 메뉴 데이터 (3뎁스 구조) - 컴포넌트 외부로 이동하여 모든 함수에서 사용 가능하도록
@@ -128,7 +130,8 @@ function Header({
   titleText = "MOBILE OFFICE",
   showChevron = true,
   bottomSheetOptions,
-  onBottomSheetOpenChange
+  onBottomSheetOpenChange,
+  bottomSheetClassName = "custom-bottom-sheet"
 }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [expandedItems, setExpandedItems] = useState({});
@@ -743,7 +746,7 @@ function Header({
             setIsBottomSheetOpen(false);
             onBottomSheetOpenChange?.(false);
           }}
-          className="custom-bottom-sheet"
+          className={bottomSheetClassName}
           options={bottomSheetOptions}
         />
       )}

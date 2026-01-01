@@ -50,10 +50,12 @@
     padding-bottom: px(20);
     gap: px(8);
     &.custom-bottom-sheet{
+      box-shadow: none;
+      border-radius: 0 !important;
+      background: transparent;
       .popup__handle{
         display: none;
       }
-      background: transparent;
       .popup__body,
       .popup__actions{
         background: var(--color-card);
