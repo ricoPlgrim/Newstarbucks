@@ -19,9 +19,10 @@ type TabsProps = {
   items?: TabItem[];
   type?: TabsType;
   scrollContainerId?: string;
-  onChange?: (activeTabId: string) => void;
   className?: string;
   showContent?: boolean;
+  activeTabId?: string;             
+  onChange?: (activeTabId: string) => void;
 };
 
 const defaultTabItems: TabItem[] = [
@@ -46,6 +47,7 @@ function Tabs({
   onChange,
   className = "",
   showContent = true,
+  activeTabId,                     
 }: TabsProps) {
   // 현재 활성화된 탭 ID 상태
   const [activeTab, setActiveTab] = useState<string>(items[0]?.id ?? "");
@@ -56,13 +58,16 @@ function Tabs({
   // 스크롤 컨테이너 참조 (scroll 타입일 때 사용)
   const scrollContainerRef = useRef<HTMLElement | null>(null);
 
-  /**
-   * items 배열이 변경되면 첫 번째 탭으로 초기화
-   */
-  useEffect(() => {
-    // 새로운 데이터가 들어오면 첫 번째 탭으로 초기화
-    setActiveTab(items[0]?.id ?? "");
-  }, [items]);
+    // items가 바뀌었을 때만, active가 목록에 없으면 첫 번째로 세팅
+    useEffect(() => {
+      if (!activeTabId && items.length > 0) {
+        const exists = items.some((it) => it.id === activeTab);
+        if (!exists) {
+          setActiveTab(items[0].id);
+        }
+      }
+    }, [items, activeTabId, activeTab]);
+    
 
   /**
    * scroll 타입일 때 스크롤 컨테이너 요소 찾기

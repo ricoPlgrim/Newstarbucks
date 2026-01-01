@@ -110,6 +110,7 @@ const CommonLayout = ({
   customHeader,
   className = "",
 }: CommonLayoutProps) => {
+  
   return (
     <div className={`common-layout ${className}`.trim()}>
       {/* Header 영역 */}

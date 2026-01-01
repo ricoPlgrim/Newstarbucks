@@ -11,6 +11,7 @@ import SendCardPage from "./pages/SendCardPage/SendCardPage";
 import ReceivedCardPage from "./pages/ReceivedCardPage/ReceivedCardPage";
 import MaintenancePage from "./pages/MaintenancePage/MaintenancePage";
 import GreenApronCardPage from "./pages/GreenApronCardPage/GreenApronCardPage";
+import ProgressStatusPage from "./pages/ProgressStatusPage/ProgressStatusPage";
 import Footer from "./components/Footer/Footer";
 import PageScrollReset from "./components/ScrollToTop/PageScrollReset";
 import "./App.scss";
@@ -65,11 +66,12 @@ function AppContent() {
   const isReceivedCardPage = location.pathname === '/received-card';
   const isMaintenancePage = location.pathname === '/maintenance';
   const isGreenApronCardPage = location.pathname === '/green-apron';
+  const isProgressStatusPage = location.pathname === '/progress-status';
   
   return (
     <div className="app">
       <PageScrollReset />
-      {!isLoginPage && !isReportPage && !isMobileOfficeHome && !isSendCardPage && !isReceivedCardPage && !isMaintenancePage && !isGreenApronCardPage && <AppNav />}
+      {!isLoginPage && !isReportPage && !isMobileOfficeHome && !isSendCardPage && !isReceivedCardPage && !isMaintenancePage && !isGreenApronCardPage && !isProgressStatusPage && <AppNav />}
       
       <Routes>
         <Route path="/url" element={<PublishingUrlPage />} />
@@ -83,12 +85,13 @@ function AppContent() {
         <Route path="/received-card" element={<ReceivedCardPage />} />
         <Route path="/maintenance" element={<MaintenancePage />} />
         <Route path="/green-apron" element={<GreenApronCardPage />} />
+        <Route path="/progress-status" element={<ProgressStatusPage />} />
         <Route path="/menu/coffee/americano" element={<AmericanoPage />} />
         <Route path="/Newstarbucks" element={<Navigate to="/url" replace />} />
         <Route path="/" element={<PublishingUrlPage />} />
       </Routes>
 
-      {!isLoginPage && !isReportPage && !isMobileOfficeHome && !isSendCardPage && !isReceivedCardPage && !isMaintenancePage && !isGreenApronCardPage && <Footer />}
+      {!isLoginPage && !isReportPage && !isMobileOfficeHome && !isSendCardPage && !isReceivedCardPage && !isMaintenancePage && !isGreenApronCardPage && !isProgressStatusPage && <Footer />}
     </div>
   );
 }

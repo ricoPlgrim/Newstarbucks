@@ -91,6 +91,15 @@ export const mockUrlData = [
     url: "/green-apron",
     description: "그린에이프런 카드 페이지 (INBOX/SENT 카드 관리, 새 카드 알림, 프로모션, 파트너 어워드)",
   },
+  {
+    id: 8,
+    depth1: "모바일 오피스",
+    depth2: "유지보수",
+    depth3: "진행현황",
+    depth4: "",
+    url: "/progress-status",
+    description: "진행현황 페이지 (진행상태 필터, 상태별 필터 버튼, 진행현황 리스트)",
+  },
 ];
 
 // 가이드/데모용 추가 목업 데이터 (차후 각 컴포넌트에서 비동기 사용 예정)

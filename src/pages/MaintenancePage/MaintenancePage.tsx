@@ -91,7 +91,7 @@ const MaintenancePage = () => {
               icon: "👔",
               label: "Green Apron Card",
               onClick: () => {
-                console.log("Green Apron Card 클릭");
+                navigate("/green-apron");
               },
             },
           ]}
