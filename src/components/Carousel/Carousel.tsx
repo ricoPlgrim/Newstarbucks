@@ -30,16 +30,35 @@ const defaultSlides: CarouselSlide[] = [
  * @param {Array} slides - 슬라이드 데이터 배열 [{ id, title, desc, description, image }]
  * @param {boolean} showOptionsPanel - 옵션 패널 표시 여부 (기본값: false)
  * @param {boolean} showNavigation - 좌우 네비게이션 버튼 표시 여부 (기본값: true)
+ * @param {boolean} showPagination - 페이지네이션 도트 표시 여부 (기본값: true)
  * @param {string} paginationColor - 페이지네이션 도트 색상 (기본값: 'var(--color-accent)')
+ * @param {number} slidesPerView - 한 번에 보이는 슬라이드 개수 (기본값: 1)
+ * @param {number} spaceBetween - 슬라이드 간격 (px, 기본값: 0)
+ * @param {boolean} centeredSlides - 슬라이드 중앙 정렬 (기본값: false)
+ * @param {boolean} useFadeEffect - 페이드 효과 사용 여부 (기본값: slidesPerView === 1)
  */
 type CarouselProps = {
   slides?: CarouselSlide[];
   showOptionsPanel?: boolean;
   showNavigation?: boolean;
+  showPagination?: boolean;
   paginationColor?: string;
+  slidesPerView?: number;
+  spaceBetween?: number;
+  centeredSlides?: boolean;
+  useFadeEffect?: boolean;
 };
 
-const Carousel = ({ slides = defaultSlides, showOptionsPanel = false, showNavigation = true, paginationColor = "var(--color-accent)" }: CarouselProps) => {
+const Carousel = ({ 
+  slides = defaultSlides, 
+  showOptionsPanel = false, 
+  showNavigation = true,
+  showPagination = true,
+  paginationColor = "var(--color-accent)",
+  slidesPerView = 1,
+  spaceBetween = 0,
+  centeredSlides = false
+}: CarouselProps) => {
   // 슬라이드 데이터가 없을 때 처리
   if (!slides || slides.length === 0) {
     return <div className="guide-preview guide-preview--carousel">슬라이드 데이터가 없습니다.</div>;
@@ -54,14 +73,31 @@ const Carousel = ({ slides = defaultSlides, showOptionsPanel = false, showNaviga
       {shouldUseSwiper ? (
         // 스와이퍼 활성화: 2개 이상의 슬라이드가 있을 때
         <Swiper
-          modules={showNavigation ? [Navigation, Pagination, EffectFade] : [Pagination, EffectFade]}
+          modules={
+            slidesPerView === 1
+              ? showNavigation && showPagination
+                ? [Navigation, Pagination, EffectFade]
+                : showNavigation
+                ? [Navigation, EffectFade]
+                : showPagination
+                ? [Pagination, EffectFade]
+                : [EffectFade]
+              : showNavigation && showPagination
+              ? [Navigation, Pagination]
+              : showNavigation
+              ? [Navigation]
+              : showPagination
+              ? [Pagination]
+              : []
+          }
           navigation={showNavigation}
-          pagination={{ clickable: true }}
-          effect="fade"
-          fadeEffect={{ crossFade: true }}
-          spaceBetween={0}
-          slidesPerView={1}
-          loop
+          pagination={showPagination ? { clickable: true } : false}
+          effect={slidesPerView === 1 ? "fade" : undefined}
+          fadeEffect={slidesPerView === 1 ? { crossFade: true } : undefined}
+          spaceBetween={spaceBetween}
+          slidesPerView={slidesPerView}
+          centeredSlides={centeredSlides}
+          loop={slides.length > slidesPerView}
           style={{
             "--swiper-pagination-color": paginationColor,
           } as React.CSSProperties}

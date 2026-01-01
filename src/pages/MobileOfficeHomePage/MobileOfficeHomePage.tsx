@@ -18,6 +18,7 @@ const MobileOfficeHomePage = () => {
   const navigate = useNavigate();
   const [notificationCount] = useState(3);
   const [hideNotice, setHideNotice] = useState(false);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   // 3x3 그리드 메뉴 데이터
   const menuItems = [
@@ -113,9 +114,10 @@ const MobileOfficeHomePage = () => {
               },
             },
           ]}
+          onBottomSheetOpenChange={setIsBottomSheetOpen}
         />
       }
-      showBottomDock={true}
+      showBottomDock={!isBottomSheetOpen}
       bottomDockItems={bottomDockItems}
       bottomDockOnChange={handleBottomDockChange}
       bottomDockDefaultActive="home"

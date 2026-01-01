@@ -11,7 +11,7 @@
   padding: px(10) px(12);
   padding-bottom: calc(#{px(10)} + env(safe-area-inset-bottom, 0px));
   background: var(--color-card);
-  z-index: 1000;
+  z-index: 2100;
   @supports (padding: max(0px)) {
     padding-bottom: max(#{px(10)}, env(safe-area-inset-bottom));
   }

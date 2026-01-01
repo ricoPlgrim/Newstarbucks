@@ -3,6 +3,7 @@
 .green-apron-card-page {
   padding: px(16);
   padding-bottom: px(100); // 하단 네비게이션 공간
+  overflow: hidden;
 
   &__greeting-banner {
     background: #d4e8d9;
@@ -18,7 +19,8 @@
 
     .card__content {
       display: flex;
-      flex-direction: row !important;
+      flex-direction: row;
+      justify-content: space-between;
       gap: 0;
       padding: px(16);
     }
@@ -50,11 +52,15 @@
   }
 
   &__new-card-notice {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     margin-bottom: px(16);
-    padding: px(16);
+
+    .card__content {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: px(16);
+    }
   }
 
   &__notice-content {
@@ -62,6 +68,7 @@
     align-items: center;
     gap: px(12);
     flex: 1;
+    justify-content: flex-start;
   }
 
   &__notice-icon-wrapper {
@@ -90,6 +97,15 @@
 
   &__notice-text {
     flex: 1;
+    word-break:keep-all;
+  }
+
+  &__notice-name {
+    font-weight: bold;
+  }
+
+  &__notice-count {
+    color: #ffa366;
   }
 
   &__notice-action {
@@ -101,6 +117,7 @@
     color: var(--color-text-muted);
     cursor: pointer;
     transition: color 0.2s ease;
+    text-decoration: none;
 
     &:hover {
       color: var(--color-text);
@@ -112,6 +129,79 @@
 
     .guide-preview--carousel {
       margin: 0;
+      width: 100%;
+    }
+
+    .swiper {
+      overflow: visible;
+      width: 100%;
+    }
+
+    .swiper-wrapper {
+      width: 100%;
+    }
+
+    .swiper-slide {
+      height: auto;
+      width: auto;
+    }
+
+    .carousel-card {
+      border-radius: px(12);
+      overflow: hidden;
+      position: relative;
+      background: var(--color-card);
+      box-shadow: var(--shadow-overlay);
+      display: block;
+      height: px(180);
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .carousel-card__image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: px(140);
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+        pointer-events: none;
+      }
+    }
+
+    .carousel-card__image-element {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .carousel-card__content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: px(20) px(16);
+      padding-bottom: px(24);
+      z-index: 1;
+      text-align: center;
+
+      .typography {
+        color: #fff;
+        text-shadow: 0 px(2) px(4) rgba(0, 0, 0, 0.5);
+        margin: 0;
+        font-weight: 500;
+        line-height: 1.4;
+      }
     }
   }
 

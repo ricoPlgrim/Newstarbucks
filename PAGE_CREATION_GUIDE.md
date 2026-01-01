@@ -389,7 +389,7 @@ import YourPage from "./pages/YourPage/YourPage";
 - **Tabs** - 탭 인터페이스 (default, scroll, swiper 타입, showContent prop으로 탭 UI만 표시 가능)
 - **Pagination** - 페이지네이션
 - **Accordion** - 아코디언 (exclusive, independent 타입)
-- **BottomDock** - 하단 내비게이션
+- **BottomDock** - 하단 내비게이션 (z-index: 2100으로 설정되어 바텀 시트 위에 표시)
 
 ### 피드백
 - **Toast** - 토스트 알림 (빈 메시지일 때 자동으로 렌더링하지 않음, 조건부 렌더링 강화)
@@ -399,7 +399,7 @@ import YourPage from "./pages/YourPage/YourPage";
 
 ### 미디어
 - **Image** - 이미지 컴포넌트 (에러 처리, 비율 자동 판단, fallback 이미지 지원)
-- **Carousel** - 캐러셀 (Swiper 기반, 단일 슬라이드 시 no-swiper 클래스, lazy loading)
+- **Carousel** - 캐러셀 (Swiper 기반, 단일 슬라이드 시 no-swiper 클래스, lazy loading, `showPagination` prop으로 페이지네이션 표시 제어, `slidesPerView`, `spaceBetween`, `centeredSlides` props 지원)
 - **Lottie** - Lottie 애니메이션
 
 ### 상태 & 로딩

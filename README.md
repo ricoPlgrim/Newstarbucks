@@ -498,7 +498,7 @@ const MyPage = () => {
 - **Tabs** - 탭 인터페이스 (default, scroll, swiper 타입, 가운데 정렬, showContent prop으로 탭 UI만 표시 가능)
 - **Pagination** - 페이지네이션
 - **Accordion** - 아코디언 (exclusive, independent 타입)
-- **BottomDock** - 하단 내비게이션
+- **BottomDock** - 하단 내비게이션 (z-index: 2100으로 설정되어 바텀 시트 위에 표시)
 
 #### 피드백
 - **Toast** - 토스트 알림 (빈 메시지일 때 자동으로 렌더링하지 않음, 조건부 렌더링 강화)
@@ -508,7 +508,7 @@ const MyPage = () => {
 
 #### 미디어
 - **Image** - 이미지 컴포넌트 (에러 처리, 비율 자동 판단, landscape/portrait/square, fallback 이미지 지원)
-- **Carousel** - 캐러셀 (Swiper 기반, 다양한 효과: fade, cube, coverflow, flip, multiple slides, 단일 슬라이드 시 no-swiper 클래스, lazy loading)
+- **Carousel** - 캐러셀 (Swiper 기반, 다양한 효과: fade, cube, coverflow, flip, multiple slides, 단일 슬라이드 시 no-swiper 클래스, lazy loading, `showPagination` prop으로 페이지네이션 표시 제어, `slidesPerView`, `spaceBetween`, `centeredSlides` props 지원)
 - **Lottie** - Lottie 애니메이션
 
 #### 상태 & 로딩
@@ -1014,8 +1014,10 @@ CommonLayout의 다양한 유형을 보여주는 예시 페이지입니다.
 - ✅ 환영 배너 (매장명, 사용자명)
 - ✅ 공지사항 (오늘 하루 보지않기 기능)
 - ✅ 프로모션 캐러셀 (Swiper 기반)
-- ✅ 하단 네비게이션 (유지보수, 홈, 그린에이프런)
+- ✅ 하단 네비게이션 (유지보수, 홈, 그린에이프런, 바텀 시트 위에 표시)
 - ✅ 헤더 로고 클릭 시 바텀 팝업 (Maintenance App, Green Apron Card)
+- ✅ 새 카드 알림 배너 (조건부 렌더링, 데이터 없을 때 숨김)
+- ✅ 프로모션 카드 캐러셀 (2.05개 슬라이드 표시, 페이지네이션 숨김)
 - ✅ CommonLayout 사용
 
 ### MaintenancePage (유지보수 페이지)

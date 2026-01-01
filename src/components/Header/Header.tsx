@@ -42,6 +42,8 @@ type HeaderProps = {
   showChevron?: boolean;
   /** 로고 클릭 시 표시할 바텀 팝업 옵션 (메인 헤더에서 사용) */
   bottomSheetOptions?: Array<{ icon?: string; label: string; onClick?: () => void }>;
+  /** 바텀 팝업 열림/닫힘 상태 변경 시 호출되는 콜백 (메인 헤더에서 사용) */
+  onBottomSheetOpenChange?: (isOpen: boolean) => void;
 };
 
 // GNB 메뉴 데이터 (3뎁스 구조) - 컴포넌트 외부로 이동하여 모든 함수에서 사용 가능하도록
@@ -125,7 +127,8 @@ function Header({
   logoText = "스타벅스",
   titleText = "MOBILE OFFICE",
   showChevron = true,
-  bottomSheetOptions
+  bottomSheetOptions,
+  onBottomSheetOpenChange
 }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [expandedItems, setExpandedItems] = useState({});
@@ -572,6 +575,7 @@ function Header({
           onClick={() => {
             if (bottomSheetOptions && bottomSheetOptions.length > 0) {
               setIsBottomSheetOpen(true);
+              onBottomSheetOpenChange?.(true);
             }
             if (onLogoClick) onLogoClick();
           }}
@@ -735,7 +739,10 @@ function Header({
       {bottomSheetOptions && bottomSheetOptions.length > 0 && (
         <BottomSheetPopup
           open={isBottomSheetOpen}
-          onClose={() => setIsBottomSheetOpen(false)}
+          onClose={() => {
+            setIsBottomSheetOpen(false);
+            onBottomSheetOpenChange?.(false);
+          }}
           className="custom-bottom-sheet"
           options={bottomSheetOptions}
         />

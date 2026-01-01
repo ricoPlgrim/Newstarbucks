@@ -15,6 +15,7 @@ const MaintenancePage = () => {
   const navigate = useNavigate();
   const [notificationCount] = useState(3);
   const [currentPage, setCurrentPage] = useState(0);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   // 하단 네비게이션 변경 핸들러
   const handleBottomDockChange = (key: string) => {
@@ -94,9 +95,10 @@ const MaintenancePage = () => {
               },
             },
           ]}
+          onBottomSheetOpenChange={setIsBottomSheetOpen}
         />
       }
-      showBottomDock={true}
+      showBottomDock={!isBottomSheetOpen}
       bottomDockItems={[
         { key: "maintenance", label: "유지보수", icon: "🔧" },
         { key: "home", label: "홈", icon: "🏠" },
