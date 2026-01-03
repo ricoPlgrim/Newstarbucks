@@ -21,7 +21,9 @@ type TabsProps = {
   scrollContainerId?: string;
   className?: string;
   showContent?: boolean;
-  activeTabId?: string;             
+
+  /** controlled mode */
+  activeTabId?: string;
   onChange?: (activeTabId: string) => void;
 };
 
@@ -31,15 +33,6 @@ const defaultTabItems: TabItem[] = [
   { id: "qa", label: "Q&A", description: "자주 묻는 질문과 답변을 탭 안에서 바로 확인할 수 있습니다." },
 ];
 
-/**
- * Tabs 컴포넌트
- * @param {Array} items - 탭 아이템 배열 [{ id, label, description, contentId? }]
- * @param {string} type - 'default' | 'scroll' | 'swiper' (기본값: 'default')
- * @param {string} scrollContainerId - 스크롤 컨테이너 ID (type이 'scroll'일 때 사용)
- * @param {function} onChange - 탭 변경 핸들러 (activeTabId) => void
- * @param {string} className - 추가 클래스명
- * @param {boolean} showContent - 컨텐츠 영역 표시 여부 (기본값: true)
- */
 function Tabs({
   items = defaultTabItems,
   type = "default",
@@ -47,116 +40,118 @@ function Tabs({
   onChange,
   className = "",
   showContent = true,
-  activeTabId,                     
+  activeTabId,
 }: TabsProps) {
-  // 현재 활성화된 탭 ID 상태
   const [activeTab, setActiveTab] = useState<string>(items[0]?.id ?? "");
-  // Swiper 인스턴스 참조 (swiper 타입일 때 사용)
+
   const swiperRef = useRef<any>(null);
-  // 각 탭 버튼의 DOM 참조 (scroll 타입일 때 스크롤 위치 계산용)
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  // 스크롤 컨테이너 참조 (scroll 타입일 때 사용)
   const scrollContainerRef = useRef<HTMLElement | null>(null);
 
-    // items가 바뀌었을 때만, active가 목록에 없으면 첫 번째로 세팅
-    useEffect(() => {
-      if (!activeTabId && items.length > 0) {
-        const exists = items.some((it) => it.id === activeTab);
-        if (!exists) {
-          setActiveTab(items[0].id);
-        }
-      }
-    }, [items, activeTabId, activeTab]);
-    
-
   /**
-   * scroll 타입일 때 스크롤 컨테이너 요소 찾기
+   * scroll 타입일 때 스크롤 컨테이너 요소 찾기 (참조만 보관)
    */
   useEffect(() => {
-    // scrollContainerId가 있으면 해당 요소 찾기
     if (type === "scroll" && scrollContainerId) {
       scrollContainerRef.current = document.getElementById(scrollContainerId);
     }
   }, [type, scrollContainerId]);
 
+  /**
+   * ✅ 외부 제어(activeTabId) 지원 + items 변경 대응
+   */
+  useEffect(() => {
+    const firstId = items[0]?.id ?? "";
+    if (!firstId) return;
+
+    if (activeTabId) {
+      const exists = items.some((it) => it.id === activeTabId);
+      setActiveTab(exists ? activeTabId : firstId);
+      return;
+    }
+
+    const exists = items.some((it) => it.id === activeTab);
+    if (!exists) setActiveTab(firstId);
+  }, [items, activeTabId]);
+
+  /**
+   * ✅ scroll 타입: activeTab이 바뀔 때도(드롭다운/외부 제어 포함) 스크롤 가운데 정렬 이동
+   */
+  const scrollToActiveTab = (itemId: string) => {
+    if (type !== "scroll") return;
+    if (!scrollContainerId) return;
+
+    requestAnimationFrame(() => {
+      const targetElement = tabRefs.current[itemId];
+      if (!targetElement) return;
+
+      // ⚠️ id 중복을 피하기 위해, Tabs 내부에서 찍은 id(tabs__scroll-container)만 쓰는 걸 권장
+      let container: HTMLElement | null = document.getElementById(scrollContainerId);
+
+      // 외부 컨테이너를 찾았다면 내부 tabs__scroll-container를 찾기
+      if (container && !container.classList.contains("tabs__scroll-container")) {
+        container = container.querySelector(".tabs__scroll-container");
+      }
+
+      // 못 찾았으면 주변 DOM에서 tabs__scroll-container 탐색
+      if (!container) {
+        container =
+          targetElement.closest(".tabs--scroll")?.querySelector(".tabs__scroll-container") ?? null;
+      }
+
+      if (!container) return;
+
+      const containerRect = container.getBoundingClientRect();
+      const targetRect = targetElement.getBoundingClientRect();
+
+      const targetScrollLeft = Math.max(
+        0,
+        container.scrollLeft +
+          targetRect.left -
+          containerRect.left -
+          containerRect.width / 2 +
+          targetRect.width / 2
+      );
+
+      const startScrollLeft = container.scrollLeft;
+      const distance = targetScrollLeft - startScrollLeft;
+      const duration = 300;
+      const startTime = performance.now();
+
+      const animateScroll = (currentTime: number) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+        container!.scrollLeft = startScrollLeft + distance * easeOutCubic;
+
+        if (progress < 1) requestAnimationFrame(animateScroll);
+      };
+
+      requestAnimationFrame(animateScroll);
+    });
+  };
+
+  useEffect(() => {
+    if (type === "scroll" && activeTab) {
+      scrollToActiveTab(activeTab);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type, activeTab]);
+
   if (!items || items.length === 0) {
     return <div className="tabs-demo__empty">탭 데이터가 없습니다.</div>;
   }
 
-  /**
-   * 탭 클릭 이벤트 핸들러
-   * 탭 버튼 클릭 시 호출됨
-   * @param {string} itemId - 클릭된 탭의 ID
-   * @param {number} index - 클릭된 탭의 인덱스 (swiper 타입에서 사용)
-   */
-  const handleTabClick = (itemId, index?: number) => {
-    // 상태를 먼저 업데이트하여 active 클래스가 즉시 적용되도록 함
+  const handleTabClick = (itemId: string, index?: number) => {
     setActiveTab(itemId);
-    // 외부 onChange 핸들러 호출
     onChange?.(itemId);
 
     if (type === "scroll") {
-      // Scroll 타입: 부모 스크롤바를 이용한 가운데 정렬 이동
-      // requestAnimationFrame을 사용하여 DOM 업데이트 후 스크롤 실행
-      requestAnimationFrame(() => {
-        const targetElement = tabRefs.current[itemId];
-        if (!targetElement || !scrollContainerId) return;
-        
-        // scrollContainerId로 설정된 요소를 찾고, 그 안의 tabs__scroll-container를 찾거나
-        // scrollContainerId가 tabs__scroll-container의 id인 경우 직접 사용
-        let container = document.getElementById(scrollContainerId);
-        
-        // 만약 외부 컨테이너를 찾았다면, 그 안의 tabs__scroll-container를 찾기
-        if (container && !container.classList.contains('tabs__scroll-container')) {
-          container = container.querySelector('.tabs__scroll-container');
-        }
-        
-        // tabs__scroll-container를 직접 찾기 (id로 찾지 못한 경우)
-        if (!container) {
-          container = targetElement.closest('.tabs--scroll')?.querySelector('.tabs__scroll-container');
-        }
-        
-        if (!container) return;
-        
-        // 컨테이너와 타겟 요소의 위치 정보 가져오기
-        const containerRect = container.getBoundingClientRect();
-        const targetRect = targetElement.getBoundingClientRect();
-        
-        // 가운데 정렬을 위한 스크롤 위치 계산
-        // (타겟 요소가 컨테이너 중앙에 오도록 스크롤 위치 계산)
-        const targetScrollLeft = Math.max(0, container.scrollLeft + targetRect.left - containerRect.left - (containerRect.width / 2) + (targetRect.width / 2));
-        const startScrollLeft = container.scrollLeft;
-        const distance = targetScrollLeft - startScrollLeft;
-        const duration = 300; // Swiper 타입과 동일한 300ms
-        const startTime = performance.now();
-        
-        // 300ms 동안 부드러운 스크롤 애니메이션
-        const animateScroll = (currentTime) => {
-          const elapsed = currentTime - startTime;
-          const progress = Math.min(elapsed / duration, 1);
-          
-          // easeOutCubic 이징 함수 사용 (Swiper와 유사한 느낌)
-          const easeOutCubic = 1 - Math.pow(1 - progress, 3);
-          const currentScrollLeft = startScrollLeft + distance * easeOutCubic;
-          
-          container.scrollLeft = currentScrollLeft;
-          
-          if (progress < 1) {
-            requestAnimationFrame(animateScroll);
-          }
-        };
-        
-        requestAnimationFrame(animateScroll);
-      });
+      scrollToActiveTab(itemId);
     } else if (type === "swiper" && swiperRef.current) {
-      // Swiper 타입: Swiper를 이용한 가운데 정렬
-      // slideTo 전에 상태를 업데이트했으므로 active 클래스가 즉시 적용됨
-      // 300ms 애니메이션으로 해당 슬라이드로 이동
       const nextIndex =
         typeof index === "number" ? index : items.findIndex((item) => item.id === itemId);
-      if (nextIndex >= 0) {
-        swiperRef.current.slideTo(nextIndex, 300);
-      }
+      if (nextIndex >= 0) swiperRef.current.slideTo(nextIndex, 300);
     }
   };
 
@@ -169,10 +164,7 @@ function Tabs({
         <div className="tabs__wrapper">
           <Swiper
             modules={[FreeMode]}
-            freeMode={{
-              enabled: true,
-              sticky: false,
-            }}
+            freeMode={{ enabled: true, sticky: false }}
             slidesPerView="auto"
             spaceBetween={8}
             centeredSlides={true}
@@ -181,10 +173,7 @@ function Tabs({
               swiperRef.current = swiper;
             }}
             onSlideChange={(swiper) => {
-              // Swiper 슬라이드 변경 시 activeTab 업데이트 (스와이프 제스처로 변경된 경우)
-              // realIndex를 사용하여 실제 슬라이드 인덱스 가져오기 (loop 모드에서도 정확한 인덱스)
               const realIndex = swiper.realIndex;
-              // 인덱스가 유효하고 현재 activeTab과 다르면 업데이트
               if (items[realIndex] && activeTab !== items[realIndex].id) {
                 setActiveTab(items[realIndex].id);
                 onChange?.(items[realIndex].id);
@@ -207,6 +196,7 @@ function Tabs({
             ))}
           </Swiper>
         </div>
+
         {showContent && activeItem && (
           <div
             className="tabs__tabpanel"
@@ -224,7 +214,8 @@ function Tabs({
   // Scroll 타입
   if (type === "scroll") {
     return (
-      <div className={`tabs tabs--scroll ${className}`}> 
+      <div className={`tabs tabs--scroll ${className}`}>
+        {/* ✅ 이 요소에만 id를 부여하세요. (부모에서 같은 id를 또 주면 document.getElementById가 꼬일 수 있음) */}
         <div className="tabs__scroll-container" id={scrollContainerId || undefined}>
           <div className="tabs__tablist" role="tablist" aria-label="스크롤 탭 메뉴">
             {items.map((item, index) => (
@@ -244,6 +235,7 @@ function Tabs({
             ))}
           </div>
         </div>
+
         {showContent && activeItem && (
           <div
             className="tabs__tabpanel"
@@ -258,7 +250,7 @@ function Tabs({
     );
   }
 
-  // Default 타입 (기존 방식)
+  // Default 타입
   return (
     <div className={`tabs tabs--default ${className}`}>
       <div className="tabs__tablist" role="tablist" aria-label="콘텐츠 탭 예시">
@@ -275,6 +267,7 @@ function Tabs({
           </button>
         ))}
       </div>
+
       {showContent && activeItem && (
         <div
           className="tabs__tabpanel"
@@ -290,4 +283,3 @@ function Tabs({
 }
 
 export default Tabs;
-

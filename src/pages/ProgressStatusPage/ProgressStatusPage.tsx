@@ -21,7 +21,7 @@ type ProgressItem = {
 
 const ProgressStatusPage = () => {
   const navigate = useNavigate();
-  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("all");
   const [activeFilter, setActiveFilter] = useState("all");
 
   // 진행상태 옵션
@@ -30,14 +30,6 @@ const ProgressStatusPage = () => {
     { value: "store-request", label: "매장요청" },
     { value: "partner-received", label: "협력업체접수" },
     { value: "repair-completed", label: "수선완료/청구" },
-  ];
-
-  // 필터 옵션
-  const filterOptions = [
-    { id: "all", label: "전체", count: null },
-    { id: "store-request", label: "매장요청", count: 32 },
-    { id: "partner-received", label: "협력업체접수", count: 8 },
-    { id: "repair-completed", label: "수선완료/청구", count: null },
   ];
 
   // 진행현황 데이터
@@ -60,7 +52,7 @@ const ProgressStatusPage = () => {
     },
     {
       id: "3",
-      title: "[장비정기점검] 레일등/직부등(LED PAR-30전구)...",
+      title: "[장비정기점검] 레일등/직부등(LED PAR-30전구) 일등/직부등(LED PAR-30전구)일등/직부등(LED PAR-30전구)일등/직부등(LED PAR-30전구) 일등/직부등(LED PAR-30전구)일등/직부등(LED PAR-30전구)일등/직부등(LED PAR-30전구)",
       store: "매장 : 성동구청",
       lastModified: "최근수정일 : 2026-07-09",
       status: "repair-completed",
@@ -74,7 +66,53 @@ const ProgressStatusPage = () => {
       status: "partner-received",
       statusLabel: "협력업체접수",
     },
+    {
+      id: "5",
+      title: "[협력업체접수] 마스트레나 2PM관련",
+      store: "매장 : 종로구청",
+      lastModified: "최근수정일 : 2025-12-17",
+      status: "store-request",
+      statusLabel: "매장요청",
+    },
+    {
+      id: "6",
+      title: "[정기세척] 아이스빈 배관, 호스(수전)누수관련",
+      store: "매장 : 강남구청",
+      lastModified: "최근수정일 : 2026-01-09",
+      status: "partner-received",
+      statusLabel: "협력업체접수",
+    },
+    {
+      id: "7",
+      title: "[장비정기점검] 레일등/직부등(LED PAR-30전구) 일등/직부등(LED PAR-30전구)일등/직부등(LED PAR-30전구)일등/직부등(LED PAR-30전구) 일등/직부등(LED PAR-30전구)일등/직부등(LED PAR-30전구)일등/직부등(LED PAR-30전구)",
+      store: "매장 : 성동구청",
+      lastModified: "최근수정일 : 2026-07-09",
+      status: "repair-completed",
+      statusLabel: "공사(수선)완료/금액청구",
+    },
+    {
+      id: "8",
+      title: "[수선] 에어커튼(전기누전)관련(에어커튼900)",
+      store: "매장 : 강동구청",
+      lastModified: "최근수정일 : 2026-04-28",
+      status: "partner-received",
+      statusLabel: "협력업체접수",
+    },
   ]);
+
+  //status별 count 계산
+  const statusCountMap = progressItems.reduce<Record<string, number>>((acc, item) => {
+    acc[item.status] = (acc[item.status] ?? 0) + 1;
+    return acc;
+  }, {});
+
+  // 필터 옵션
+  const filterOptions = [
+    { id: "all", label: "전체",  count: progressItems.length },
+    { id: "store-request", label: "매장요청", count: statusCountMap["store-request"] ?? 0 },
+    { id: "partner-received", label: "협력업체접수", count: statusCountMap["partner-received"] ?? 0 },
+    { id: "repair-completed", label: "수선완료/청구", count: statusCountMap["repair-completed"] ?? 0 },
+  ];
 
   // 필터링된 아이템
   const filteredItems =
@@ -112,25 +150,33 @@ const ProgressStatusPage = () => {
         <div className="progress-status-page__select-section">
           <Dropdown
             options={statusOptions}
+            value={selectedStatus}
             placeholder="진행상태"
             fullWidth={true}
-            onChange={(opt) => setSelectedStatus(opt.value)}
+            onChange={(opt) => {
+              const next = typeof opt === "string" ? opt : opt.value;
+              setActiveFilter(next);
+              setSelectedStatus(next);
+            }}
           />
         </div>
 
         {/* 필터 탭 (스크롤 모드) */}
         <div 
           id="progress-status-filter-scroll"
-          className="progress-status-page__filters"
         >
           <Tabs
+            activeTabId={activeFilter}
             type="scroll"
             scrollContainerId="progress-status-filter-scroll"
             items={filterOptions.map((f) => ({
               id: f.id,
               label: f.count !== null ? `${f.label}(${f.count})` : f.label,
             }))}
-            onChange={(activeId) => setActiveFilter(activeId)}
+            onChange={(nextId) => {
+              setActiveFilter(nextId);
+              setSelectedStatus(nextId);
+            }}
             showContent={false}
           />
         </div>

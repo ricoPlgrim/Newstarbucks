@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import AccessibilityHelper from './AccessibilityHelper';
+import React from 'react'
 
 const meta = {
   title: 'Components/AccessibilityHelper',
@@ -27,7 +28,7 @@ const DefaultWrapper = () => {
         fontScale={fontScale}
         setFontScale={setFontScale}
       />
-      <div style={{ padding: '40px' }}>
+      <div style={{ padding: '40px' }}> 
         <h1>접근성 도우미</h1>
         <p>오른쪽 가운데 옵션 버튼을 클릭하여 테마와 폰트 크기를 변경할 수 있습니다.</p>
       </div>

@@ -6,6 +6,7 @@ type DropdownVariant = "outline" | "filled" | "ghost";
 
 type DropdownProps = {
   options?: DropdownOption[];
+  value?: string; 
   variant?: DropdownVariant;
   placeholder?: string;
   disabled?: boolean;
@@ -21,6 +22,7 @@ const defaultOptions: DropdownOption[] = [
 
 const Dropdown = ({
   options = defaultOptions,
+  value,
   variant = "outline", // outline | filled | ghost
   placeholder = "선택하세요",
   disabled = false,
@@ -41,10 +43,17 @@ const Dropdown = ({
     return () => document.removeEventListener("click", onClickOutside);
   }, []);
 
-  useEffect(() => {
-    // 옵션이 바뀌면 선택값을 첫 항목으로 리셋
-    setSelected(options[0] || null);
-  }, [options]);
+   // ⭐ value가 있으면 그 value에 맞는 옵션을 선택값으로 동기화
+   useEffect(() => {
+    if (!options.length) {
+      setSelected(null);
+      return;
+    }
+
+    const next = options.find((o) => o.value === value) ?? options[0];
+    setSelected(next);
+  }, [value, options]);
+
 
   const handleSelect = (opt: DropdownOption) => {
     setSelected(opt);
